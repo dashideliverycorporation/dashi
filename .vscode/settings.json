@@ -1,0 +1,28 @@
+{
+  "files.autoSave": "afterDelay",
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "editor.formatOnSave": true,
+  "workbench.colorTheme": "Night Owl",
+  "files.eol": "\n",
+  "prisma.showPrismaDataPlatformNotification": false,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "redhat.telemetry.enabled": true,
+  "amazonQ.workspaceIndex": true,
+  "amazonQ.suppressPrompts": {
+    "amazonQChatDisclaimer": true
+  },
+
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "file": "docs/prd.md"
+    },
+    {
+      "file": "docs/dev-agent.md"
+    },
+    {
+      "comment": "For implementation details, reference additional files as needed: docs/coding-standards.md, docs/data-models.md"
+    }
+  ]
+}
