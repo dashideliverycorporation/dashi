@@ -89,7 +89,7 @@ This document defines the main entities and data models used in the Dashi food d
   export enum OrderStatus {
     NEW = "NEW",
     PREPARING = "PREPARING",
-    READY_FOR_PICKUP_DELIVERY = "READY_FOR_PICKUP_DELIVERY",
+    READY_FOR_DELIVERY = "READY_FOR_DELIVERY",
     COMPLETED = "COMPLETED", // Future state
     CANCELLED = "CANCELLED", // Future state
   }
@@ -226,7 +226,7 @@ model MenuItem {
 enum OrderStatus {
   NEW
   PREPARING
-  READY_FOR_PICKUP_DELIVERY
+  READY_FOR_DELIVERY
   COMPLETED
   CANCELLED
 }
