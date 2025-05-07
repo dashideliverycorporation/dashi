@@ -10,6 +10,9 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: ["app/generated/**/*"], // Ignore all files in the app/generated directory
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
