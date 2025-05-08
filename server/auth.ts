@@ -5,9 +5,9 @@
 import NextAuth, { type DefaultSession, type NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs"; // Changed from bcrypt to bcryptjs
 import { UserRole } from "@/prisma/app/generated/prisma/client";
-import { db } from "../app/lib/db";
+import { db } from "../lib/db";
 import type { Adapter } from "next-auth/adapters";
 
 /**
