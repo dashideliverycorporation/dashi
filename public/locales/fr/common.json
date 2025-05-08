@@ -1,0 +1,141 @@
+{
+  "app": {
+    "name": "Dashi",
+    "tagline": "Des plats délicieux, livrés"
+  },
+  "nav": {
+    "home": "Accueil",
+    "restaurants": "Restaurants",
+    "orders": "Commandes",
+    "account": "Compte",
+    "cart": "Panier",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "logout": "Déconnexion"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant",
+    "confirm": "Confirmer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "required": "Obligatoire",
+    "optional": "Optionnel",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "restaurant": {
+    "title": "Restaurants",
+    "single": "Restaurant",
+    "menu": "Menu",
+    "categories": "Catégories",
+    "popular": "Populaire",
+    "featured": "En vedette",
+    "hours": "Heures d'ouverture",
+    "address": "Adresse",
+    "phone": "Téléphone",
+    "closed": "Fermé",
+    "open": "Ouvert",
+    "viewMenu": "Voir le menu"
+  },
+  "menu": {
+    "items": "Plats au menu",
+    "categories": "Catégories",
+    "addToCart": "Ajouter au panier",
+    "price": "Prix",
+    "description": "Description",
+    "unavailable": "Indisponible",
+    "available": "Disponible",
+    "popular": "Populaire"
+  },
+  "cart": {
+    "title": "Votre panier",
+    "empty": "Votre panier est vide",
+    "subtotal": "Sous-total",
+    "total": "Total",
+    "checkout": "Commander",
+    "continueShopping": "Continuer les achats",
+    "clearCart": "Vider le panier",
+    "itemCount": "{{count}} article",
+    "itemCount_plural": "{{count}} articles",
+    "quantity": "Quantité",
+    "remove": "Retirer"
+  },
+  "order": {
+    "title": "Commande",
+    "status": "Statut",
+    "date": "Date",
+    "items": "Articles",
+    "total": "Total",
+    "address": "Adresse de livraison",
+    "notes": "Notes",
+    "history": "Historique des commandes",
+    "new": "Nouvelle",
+    "preparing": "En préparation",
+    "ready": "Prête pour le retrait/livraison",
+    "completed": "Terminée",
+    "cancelled": "Annulée",
+    "placed": "Commande passée",
+    "trackOrder": "Suivre la commande",
+    "reorder": "Commander à nouveau",
+    "viewDetails": "Voir les détails"
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "logout": "Déconnexion",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "name": "Nom",
+    "forgotPassword": "Mot de passe oublié ?",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "createAccount": "Créer un compte",
+    "loginRequired": "Veuillez vous connecter pour continuer"
+  },
+  "user": {
+    "profile": "Profil",
+    "orders": "Commandes",
+    "settings": "Paramètres",
+    "addresses": "Adresses",
+    "payment": "Méthodes de paiement",
+    "saveChanges": "Enregistrer les modifications",
+    "personalInfo": "Informations personnelles"
+  },
+  "footer": {
+    "about": "À propos de nous",
+    "contact": "Contact",
+    "terms": "Conditions générales",
+    "privacy": "Politique de confidentialité",
+    "howItWorks": "Comment ça marche",
+    "copyright": "© {{year}} Dashi. Tous droits réservés."
+  },
+  "language": {
+    "title": "Langue",
+    "english": "Anglais",
+    "french": "Français",
+    "select": "Choisir la langue"
+  },
+  "errors": {
+    "required": "Ce champ est obligatoire",
+    "invalidEmail": "Veuillez entrer une adresse email valide",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "minLength": "Doit contenir au moins {{length}} caractères",
+    "maxLength": "Ne doit pas dépasser {{length}} caractères",
+    "serverError": "Erreur serveur, veuillez réessayer plus tard",
+    "notFound": "Non trouvé",
+    "unauthorized": "Accès non autorisé",
+    "forbidden": "Accès interdit",
+    "noConnection": "Pas de connexion internet"
+  }
+}
