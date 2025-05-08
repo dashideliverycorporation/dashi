@@ -14,6 +14,13 @@ const eslintConfig = [
     ignores: ["app/generated/**/*"], // Ignore all files in the app/generated directory
   },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    rules: {
+      // Explicitly enable no-explicit-any rule
+      "@typescript-eslint/no-explicit-any": "error",
+    },
+  },
 ];
 
 export default eslintConfig;
