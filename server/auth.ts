@@ -52,15 +52,16 @@ export async function hashPassword(password: string): Promise<string> {
  * Custom adapter that extends the PrismaAdapter to handle our custom User model with role
  * This resolves type incompatibility between @auth/prisma-adapter and next-auth
  */
-function customPrismaAdapter(prisma: typeof db): Adapter {
-  const adapter = PrismaAdapter(prisma) as Adapter;
-  return adapter;
+function customPrismaAdapter(prisma: typeof db) {
+  // Use type casting to resolve the incompatibility between @auth/prisma-adapter and next-auth
+  return PrismaAdapter(prisma) as unknown as Adapter;
 }
 
 /**
  * Auth.js configuration options
  */
 export const authOptions: NextAuthOptions = {
+  // Apply the adapter with proper type casting
   adapter: customPrismaAdapter(db),
   session: {
     strategy: "jwt",
