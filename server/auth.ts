@@ -6,7 +6,7 @@ import NextAuth, { type DefaultSession, type NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@/prisma/app/generated/prisma/client";
 import { db } from "../app/lib/db";
 import type { Adapter } from "next-auth/adapters";
 
@@ -49,20 +49,13 @@ export async function hashPassword(password: string): Promise<string> {
 }
 
 /**
- * Custom adapter that extends the PrismaAdapter to handle our custom User model with role
- * This resolves type incompatibility between @auth/prisma-adapter and next-auth
- */
-function customPrismaAdapter(prisma: typeof db) {
-  // Use type casting to resolve the incompatibility between @auth/prisma-adapter and next-auth
-  return PrismaAdapter(prisma) as unknown as Adapter;
-}
-
-/**
- * Auth.js configuration options
+ * Direct implementation of the auth adapter to avoid type compatibility issues
+ * between @auth/prisma-adapter and next-auth
  */
 export const authOptions: NextAuthOptions = {
-  // Apply the adapter with proper type casting
-  adapter: customPrismaAdapter(db),
+  // Using PrismaAdapter with a type assertion to avoid TypeScript errors
+  // @ts-expect-error - TypeScript has trouble with the adapter types
+  adapter: PrismaAdapter(db),
   session: {
     strategy: "jwt",
   },
