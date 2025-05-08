@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
 }
 
 datasource db {
@@ -29,18 +28,61 @@ enum OrderStatus {
   CANCELLED
 }
 
+// Auth.js models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 // Core entities
 model User {
-  id                String         @id @default(cuid())
-  email             String         @unique
+  id                String    @id @default(cuid())
+  email             String    @unique
   name              String?
-  password          String // Hashed password
+  password          String?   // Hashed password (now optional because OAuth providers don't use it)
   role              UserRole
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  emailVerified     DateTime?
+  image             String?   // User profile image (often provided by OAuth)
   // Relations
   customer          Customer?
   restaurantManager RestaurantManager?
+  accounts          Account[]
+  sessions          Session[]
 }
 
 model Customer {
@@ -93,7 +135,7 @@ model MenuItem {
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
   deletedAt    DateTime?
   createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  updatedAt    DateTime  @default(now())
   // Relations
   orderItems   OrderItem[]
 }
@@ -123,5 +165,5 @@ model OrderItem {
   menuItemId  String
   menuItem    MenuItem @relation(fields: [menuItemId], references: [id])
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @default(now())
 }
