@@ -7,9 +7,7 @@
 
 import { createInstance } from "i18next";
 import { initReactI18next } from "react-i18next";
-import Backend from "i18next-http-backend";
 import resourcesToBackend from "i18next-resources-to-backend";
-import { join } from "path";
 import {
   DEFAULT_NAMESPACE,
   ALL_NAMESPACES,
@@ -17,12 +15,21 @@ import {
   getSupportedLanguages,
 } from "./settings";
 
+/**
+ * Interface for HTTP request with cookies
+ */
+interface RequestWithCookies {
+  cookies?: {
+    get(name: string): string | undefined;
+  };
+}
+
 // Define language detection order for server
 const serverLanguageDetectionOrder = [
   // Detect from cookies
   {
     name: "cookie",
-    lookup: (req: any) => {
+    lookup: (req: RequestWithCookies) => {
       let found;
       if (req?.cookies) {
         const langCookie = req.cookies.get("i18next");

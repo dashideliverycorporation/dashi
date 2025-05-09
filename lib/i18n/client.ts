@@ -18,8 +18,16 @@ import {
   getDefaultLanguage,
   getSupportedLanguages,
   isLanguageSupported,
-  LANGUAGE_CODES,
 } from "./settings";
+import { saveLanguagePreference, getLanguagePreference } from "./storage";
+
+/**
+ * Type declaration for navigator language properties
+ */
+interface ExtendedNavigator extends Navigator {
+  userLanguage?: string;
+  browserLanguage?: string;
+}
 
 /**
  * Get the best matching language from browser settings
@@ -33,10 +41,11 @@ export const getBrowserLanguage = (): string | null => {
   }
 
   // Get browser languages
-  const browserLanguages: readonly string[] = window.navigator.languages || [
-    window.navigator.language ||
-      (window.navigator as any).userLanguage ||
-      (window.navigator as any).browserLanguage,
+  const extendedNavigator = window.navigator as ExtendedNavigator;
+  const browserLanguages: readonly string[] = extendedNavigator.languages || [
+    extendedNavigator.language ||
+      extendedNavigator.userLanguage ||
+      extendedNavigator.browserLanguage,
   ];
 
   // Find the first supported language
@@ -113,18 +122,15 @@ const applyBrowserLanguageDetection = () => {
   // Only run in browser environment
   if (typeof window !== "undefined") {
     try {
-      // Check for stored preferences first
-      const storedLang =
-        localStorage.getItem("i18nextLng") ||
-        (typeof document !== "undefined"
-          ? document.cookie.match(/i18next=([^;]+)/)?.[1]
-          : null);
+      // Check for stored preferences first using our storage utility
+      const storedLang = getLanguagePreference();
 
-      if (!storedLang || !isLanguageSupported(storedLang)) {
-        // If no stored preference or it's not supported, try browser language
+      if (!storedLang) {
+        // If no stored preference, try browser language
         const detectedLang = getBrowserLanguage();
 
         if (detectedLang && i18nClient.language !== detectedLang) {
+          // Change language and save preference
           i18nClient.changeLanguage(detectedLang).catch((error) => {
             console.error("Failed to set detected browser language:", error);
           });
@@ -154,5 +160,19 @@ export default i18nClient;
  * @returns Promise resolving when language is changed
  */
 export const changeLanguage = (lng: string) => {
-  return i18nClient.changeLanguage(lng);
+  if (isLanguageSupported(lng)) {
+    // Save the language preference to localStorage
+    saveLanguagePreference(lng);
+
+    // Update the HTML lang attribute for accessibility
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = lng;
+    }
+
+    // Change the language in i18next
+    return i18nClient.changeLanguage(lng);
+  }
+
+  console.warn(`Language '${lng}' is not supported`);
+  return Promise.resolve();
 };

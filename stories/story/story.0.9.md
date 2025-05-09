@@ -97,11 +97,10 @@ Status: Planning
 - [x] Implement language detection based on browser settings
 - [x] Create language switcher component with toggle functionality
 - [x] Add language switcher to a page for testing
-- [ ] Implement local storage persistence for language preference
-- [ ] Create a custom hook for using translations
-- [ ] Add sample translations to demonstrate functionality
-- [ ] Update environment variables with locale settings
-- [ ] Write documentation for using the localization framework
+- [x] Implement local storage persistence for language preference
+- [x] Create a custom hook for using translations
+- [x] Update environment variables with locale settings
+- [x] Write documentation for using the localization framework
 
 ## Testing Requirements
 

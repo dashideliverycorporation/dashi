@@ -49,9 +49,6 @@ export default function LanguageSwitcher({
    */
   const toggleLanguage = async () => {
     try {
-      // Get current language info
-      const currentLanguage = getLanguageByCode(currentLang);
-
       // Get the next language to switch to (cycling through LANGUAGES array)
       const currentIndex = LANGUAGES.findIndex(
         (lang) => lang.code === currentLang

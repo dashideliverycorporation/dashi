@@ -9,18 +9,19 @@ Environment variables are loaded into the Dashi application using the following 
 
 ## Required Variables
 
-| Variable Name                | Description                                      | Example / Default Value               | Required? (Yes/No) | Sensitive? (Yes/No) |
-| :--------------------------- | :----------------------------------------------- | :------------------------------------ | :----------------- | :------------------ |
-| `NODE_ENV`                   | Runtime environment                              | `development` / `production`          | Yes                | No                  |
-| `DATABASE_URL`               | Connection string for PostgreSQL database        | `postgresql://user:pass@host:port/db` | Yes                | Yes                 |
-| `NEXTAUTH_SECRET`            | Secret for Auth.js (NextAuth) session encryption | `your-secret-key-at-least-32-chars`   | Yes                | Yes                 |
-| `NEXTAUTH_URL`               | Base URL for Auth.js callbacks                   | `http://localhost:3000`               | Yes                | No                  |
-| `RESEND_API_KEY`             | API Key for Resend email service                 | `re_...`                              | Yes                | Yes                 |
-| `EMAIL_FROM`                 | Email address used as sender for notifications   | `orders@dashi.com`                    | Yes                | No                  |
-| `DEFAULT_ADMIN_EMAIL`        | Default admin user email (for initial setup)     | `admin@dashi.com`                     | No                 | Yes                 |
-| `DEFAULT_ADMIN_PASSWORD`     | Default admin user password (for initial setup)  | `complex-initial-password`            | No                 | Yes                 |
-| `NEXT_PUBLIC_APP_URL`        | Public-facing application URL                    | `https://dashi.vercel.app`            | No                 | No                  |
-| `NEXT_PUBLIC_DEFAULT_LOCALE` | Default locale for internationalization          | `en`                                  | No                 | No                  |
+| Variable Name                   | Description                                      | Example / Default Value               | Required? (Yes/No) | Sensitive? (Yes/No) |
+| :------------------------------ | :----------------------------------------------- | :------------------------------------ | :----------------- | :------------------ |
+| `NODE_ENV`                      | Runtime environment                              | `development` / `production`          | Yes                | No                  |
+| `DATABASE_URL`                  | Connection string for PostgreSQL database        | `postgresql://user:pass@host:port/db` | Yes                | Yes                 |
+| `NEXTAUTH_SECRET`               | Secret for Auth.js (NextAuth) session encryption | `your-secret-key-at-least-32-chars`   | Yes                | Yes                 |
+| `NEXTAUTH_URL`                  | Base URL for Auth.js callbacks                   | `http://localhost:3000`               | Yes                | No                  |
+| `RESEND_API_KEY`                | API Key for Resend email service                 | `re_...`                              | Yes                | Yes                 |
+| `EMAIL_FROM`                    | Email address used as sender for notifications   | `orders@dashi.com`                    | Yes                | No                  |
+| `DEFAULT_ADMIN_EMAIL`           | Default admin user email (for initial setup)     | `admin@dashi.com`                     | No                 | Yes                 |
+| `DEFAULT_ADMIN_PASSWORD`        | Default admin user password (for initial setup)  | `complex-initial-password`            | No                 | Yes                 |
+| `NEXT_PUBLIC_APP_URL`           | Public-facing application URL                    | `https://dashi.vercel.app`            | No                 | No                  |
+| `NEXT_PUBLIC_DEFAULT_LOCALE`    | Default locale for internationalization          | `en`                                  | No                 | No                  |
+| `NEXT_PUBLIC_SUPPORTED_LOCALES` | Supported locales for internationalization       | `en,fr`                               | No                 | No                  |
 
 ## Notes
 
@@ -40,8 +41,9 @@ Environment variables are loaded into the Dashi application using the following 
 
 ## Change Log
 
-| Change        | Date       | Version | Description                         | Author         |
-| ------------- | ---------- | ------- | ----------------------------------- | -------------- |
-| Initial draft | 2025-05-05 | 0.1     | Initial Dashi environment variables | GitHub Copilot |
+| Change                 | Date       | Version | Description                                              | Author         |
+| ---------------------- | ---------- | ------- | -------------------------------------------------------- | -------------- |
+| Initial draft          | 2025-05-05 | 0.1     | Initial Dashi environment variables                      | GitHub Copilot |
+| Added locale variables | 2025-05-09 | 0.2     | Added NEXT_PUBLIC_SUPPORTED_LOCALES environment variable | GitHub Copilot |
 
 <!-- Generated by Copilot -->

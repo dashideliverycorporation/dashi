@@ -32,7 +32,7 @@ export type TranslateFunction = (
  * @param ns - Namespace for the translation
  * @returns Function that prefixes keys with the namespace
  */
-export const createTranslationKeys = <T extends Record<string, any>>(
+export const createTranslationKeys = <T extends Record<string, unknown>>(
   ns: string
 ) => {
   return {
@@ -40,6 +40,12 @@ export const createTranslationKeys = <T extends Record<string, any>>(
     keys: {} as T,
   };
 };
+
+/**
+ * Export custom translation hook
+ */
+export { useTranslation } from "@/hooks/useTranslation";
+export type { UseTranslationReturn } from "@/hooks/useTranslation";
 
 /**
  * Re-export client-side utilities for direct import in client components
