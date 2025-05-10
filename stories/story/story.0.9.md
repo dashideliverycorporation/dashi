@@ -1,6 +1,6 @@
 # Story 0.9: Localization Framework Setup (react-i18next)
 
-Status: Planning
+Status: Completed
 
 ## Goal & Context
 

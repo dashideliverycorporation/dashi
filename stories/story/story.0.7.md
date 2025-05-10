@@ -2,7 +2,7 @@
 
 # Story 0.7: tRPC Core Setup
 
-Status: Planning
+Status: Completed
 
 ## Goal & Context
 

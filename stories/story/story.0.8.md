@@ -1,6 +1,6 @@
 # Story 0.8: Email Service Setup (Resend)
 
-Status: Planning
+Status: Completed
 
 ## Goal & Context
 

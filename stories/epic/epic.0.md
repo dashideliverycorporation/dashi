@@ -65,11 +65,11 @@ This epic requires setting up several key infrastructure components:
   - AC4: Project is under Git version control with appropriate `.gitignore`
   - AC5: Project structure follows Next.js App Router conventions with `app/` directory
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Install Node.js and pnpm
-  - [ ] Create Next.js project using `create-next-app`
-  - [ ] Configure TypeScript settings
-  - [ ] Initialize Git repository
-  - [ ] Update README.md with project information
+  - [x] Install Node.js and pnpm
+  - [x] Create Next.js project using `create-next-app`
+  - [x] Configure TypeScript settings
+  - [x] Initialize Git repository
+  - [x] Update README.md with project information
 - **Dependencies:** None (starts the project)
 
 ---
@@ -92,12 +92,12 @@ This epic requires setting up several key infrastructure components:
   - AC4: Application can connect to the database and perform basic operations
   - AC5: A utility exists to verify database connection
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Install PostgreSQL locally or set up a cloud instance
-  - [ ] Install Prisma dependencies
-  - [ ] Create initial Prisma schema
-  - [ ] Configure environment variables
-  - [ ] Run initial migration
-  - [ ] Create database connection test
+  - [x] Install PostgreSQL locally or set up a cloud instance
+  - [x] Install Prisma dependencies
+  - [x] Create initial Prisma schema
+  - [x] Configure environment variables
+  - [x] Run initial migration
+  - [x] Create database connection test
 - **Dependencies:** Story 0.1
 
 ---
@@ -118,11 +118,11 @@ This epic requires setting up several key infrastructure components:
   - AC4: Application is accessible via the Vercel-provided URL
   - AC5: Preview Environments are configured for Pull Requests
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Create or access Vercel account
-  - [ ] Connect repository to Vercel
-  - [ ] Configure environment variables
-  - [ ] Deploy initial application
-  - [ ] Test deployed application
+  - [x] Create or access Vercel account
+  - [x] Connect repository to Vercel
+  - [x] Configure environment variables
+  - [x] Deploy initial application
+  - [x] Test deployed application
 - **Dependencies:** Story 0.1
 
 ---
@@ -143,11 +143,11 @@ This epic requires setting up several key infrastructure components:
   - AC4: Light/dark mode toggle functions correctly
   - AC5: Component styling matches the DoorDash-inspired aesthetic
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Install Shadcn UI and dependencies
-  - [ ] Configure Tailwind CSS
-  - [ ] Set up theme colors
-  - [ ] Create test page with components
-  - [ ] Implement theme toggle
+  - [x] Install Shadcn UI and dependencies
+  - [x] Configure Tailwind CSS
+  - [x] Set up theme colors
+  - [x] Create test page with components
+  - [x] Implement theme toggle
 - **Dependencies:** Story 0.1
 
 ---
@@ -170,11 +170,11 @@ This epic requires setting up several key infrastructure components:
   - AC4: Sample component test passes
   - AC5: Test coverage report is generated
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Install testing dependencies
-  - [ ] Configure Jest
-  - [ ] Create sample tests
-  - [ ] Add test scripts to package.json
-  - [ ] Configure coverage reporting
+  - [x] Install testing dependencies
+  - [x] Configure Jest
+  - [x] Create sample tests
+  - [x] Add test scripts to package.json
+  - [x] Configure coverage reporting
 - **Dependencies:** Story 0.1, Story 0.4
 
 ---
@@ -196,11 +196,11 @@ This epic requires setting up several key infrastructure components:
   - AC4: Protected routes are properly guarded
   - AC5: User roles (Customer, Restaurant, Admin) are properly handled
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Install Auth.js and Prisma adapter
-  - [ ] Configure Auth.js
-  - [ ] Create sign-in and sign-up pages
-  - [ ] Implement session provider
-  - [ ] Create authentication utilities
+  - [x] Install Auth.js and Prisma adapter
+  - [x] Configure Auth.js
+  - [x] Create sign-in and sign-up pages
+  - [x] Implement session provider
+  - [x] Create authentication utilities
 - **Dependencies:** Story 0.1, Story 0.2
 
 ---
@@ -223,12 +223,12 @@ This epic requires setting up several key infrastructure components:
   - AC5: Type safety works end-to-end
   - AC6: Authentication middleware is integrated with tRPC
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Install tRPC dependencies
-  - [ ] Set up tRPC server router and context
-  - [ ] Create API route handler
-  - [ ] Configure tRPC client
-  - [ ] Create and test a simple procedure
-  - [ ] Implement authentication middleware
+  - [x] Install tRPC dependencies
+  - [x] Set up tRPC server router and context
+  - [x] Create API route handler
+  - [x] Configure tRPC client
+  - [x] Create and test a simple procedure
+  - [x] Implement authentication middleware
 - **Dependencies:** Story 0.1, Story 0.6
 
 ---
@@ -251,12 +251,12 @@ This epic requires setting up several key infrastructure components:
   - AC4: Test email can be sent successfully
   - AC5: Email template renders correctly
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Create Resend account
-  - [ ] Obtain and configure API key
-  - [ ] Install Resend SDK
-  - [ ] Create email utility module
-  - [ ] Implement test email template
-  - [ ] Create and run test function
+  - [x] Create Resend account
+  - [x] Obtain and configure API key
+  - [x] Install Resend SDK
+  - [x] Create email utility module
+  - [x] Implement test email template
+  - [x] Create and run test function
 - **Dependencies:** Story 0.1
 
 ---
@@ -279,13 +279,13 @@ This epic requires setting up several key infrastructure components:
   - AC4: Language switcher works correctly
   - AC5: Sample content is correctly translated when language is changed
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Install react-i18next
-  - [ ] Configure i18n instance
-  - [ ] Create translation files
-  - [ ] Implement i18n provider
-  - [ ] Create language switcher component
-  - [ ] Add sample translations
-  - [ ] Update layout
+  - [x] Install react-i18next
+  - [x] Configure i18n instance
+  - [x] Create translation files
+  - [x] Implement i18n provider
+  - [x] Create language switcher component
+  - [x] Add sample translations
+  - [x] Update layout
 - **Dependencies:** Story 0.1
 
 ## Change Log
@@ -293,5 +293,6 @@ This epic requires setting up several key infrastructure components:
 | Change        | Date       | Version | Description                          | Author         |
 | ------------- | ---------- | ------- | ------------------------------------ | -------------- |
 | Initial draft | 2025-05-05 | 0.1     | Created initial Epic 0 documentation | GitHub Copilot |
+| Update tasks  | 2025-05-10 | 0.2     | Marked all tasks as completed        | GitHub Copilot |
 
 <!-- Generated by Copilot -->
