@@ -1,12 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Existing theme mappings - keep these for Shadcn UI compatibility */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -37,86 +39,282 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Dashi theme-specific mappings for radii */
+  --radius-sm: var(--radius-small);
+  --radius-md: var(--radius-default);
+  --radius-lg: var(--radius-medium);
+  --radius-xl: var(--radius-large);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Core Shadcn UI variables (modified with Dashi values) */
+  --radius: 0.5rem;
+  --radius-small: 0.25rem;
+  --radius-default: 0.5rem;
+  --radius-medium: 0.75rem;
+  --radius-large: 1rem;
+
+  /* Font family configuration */
+  --font-inter: "Inter", sans-serif;
+  --font-system: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
+  /* Background and foreground colors */
+  --background: #ffffff;
+  --foreground: #333333;
+
+  /* Card and popover components */
+  --card: #ffffff;
+  --card-foreground: #333333;
+  --popover: #ffffff;
+  --popover-foreground: #333333;
+
+  /* Primary color - Dashi Orange */
+  --primary: #ff4f00;
+  --primary-foreground: #ffffff;
+
+  /* Secondary color */
+  --secondary: #f7f7f7;
+  --secondary-foreground: #333333;
+
+  /* Muted elements */
+  --muted: #f7f7f7;
+  --muted-foreground: #717171;
+
+  /* Accent colors */
+  --accent: #ff4f00;
+  --accent-foreground: #ffffff;
+
+  /* Destructive actions */
+  --destructive: #f44336;
+  --destructive-foreground: #ffffff;
+
+  /* Borders and inputs */
+  --border: #d4d4d4;
+  --input: #d4d4d4;
+  --ring: rgba(255, 79, 0, 0.5);
+
+  /* Chart colors */
+  --chart-1: #ff4f00;
+  --chart-2: #4caf50;
+  --chart-3: #2196f3;
+  --chart-4: #e64600;
+  --chart-5: #f44336;
+
+  /* Sidebar styling */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #333333;
+  --sidebar-primary: #ff4f00;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f7f7f7;
+  --sidebar-accent-foreground: #333333;
+  --sidebar-border: #d4d4d4;
+  --sidebar-ring: rgba(255, 79, 0, 0.5);
+
+  /* Success state colors */
+  --success: #4caf50;
+  --success-foreground: #ffffff;
+  --success-light: rgba(76, 175, 80, 0.1);
+
+  /* Error state colors */
+  --error: #f44336;
+  --error-foreground: #ffffff;
+  --error-light: rgba(244, 67, 54, 0.1);
+
+  /* Info state colors */
+  --info: #2196f3;
+  --info-foreground: #ffffff;
+  --info-light: rgba(33, 150, 243, 0.1);
+
+  /* Typography scale */
+  --font-size-display: 2.25rem;
+  --font-size-h1: 1.875rem;
+  --font-size-h2: 1.5rem;
+  --font-size-h3: 1.25rem;
+  --font-size-h4: 1.125rem;
+  --font-size-body-large: 1rem;
+  --font-size-body: 0.875rem;
+  --font-size-small: 0.75rem;
+
+  /* Font weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.5;
+
+  /* Spacing scale (based on 4px grid) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+  /* Animations */
+  --animation-fast: 150ms;
+  --animation-default: 200ms;
+  --animation-slow: 300ms;
+
+  /* Transitions */
+  --transition-default: ease-out;
+  --transition-enter: ease-out;
+  --transition-exit: ease-in;
+
+  /* Container */
+  --container-padding-mobile: 1rem;
+  --container-padding-tablet: 1.5rem;
+  --container-padding-desktop: 2rem;
+  --container-width-laptop: 1024px;
+  --container-width-desktop: 1280px;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Background and foreground colors */
+  --background: #1a1a1a;
+  --foreground: #f7f7f7;
+
+  /* Card and popover components */
+  --card: #242424;
+  --card-foreground: #f7f7f7;
+  --popover: #242424;
+  --popover-foreground: #f7f7f7;
+
+  /* Primary color - Dashi Orange (slightly darker for dark mode) */
+  --primary: #ff4f00;
+  --primary-foreground: #ffffff;
+
+  /* Secondary color */
+  --secondary: #2a2a2a;
+  --secondary-foreground: #f7f7f7;
+
+  /* Muted elements */
+  --muted: #2a2a2a;
+  --muted-foreground: #a0a0a0;
+
+  /* Accent colors */
+  --accent: #ff4f00;
+  --accent-foreground: #ffffff;
+
+  /* Destructive actions */
+  --destructive: #f44336;
+  --destructive-foreground: #ffffff;
+
+  /* Borders and inputs */
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: rgba(255, 79, 0, 0.5);
+
+  /* Chart colors */
+  --chart-1: #ff4f00;
+  --chart-2: #4caf50;
+  --chart-3: #2196f3;
+  --chart-4: #e64600;
+  --chart-5: #f44336;
+
+  /* Sidebar styling */
+  --sidebar: #242424;
+  --sidebar-foreground: #f7f7f7;
+  --sidebar-primary: #ff4f00;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: #f7f7f7;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: rgba(255, 79, 0, 0.5);
+
+  /* Keep other variables same as light mode */
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    font-family: var(--font-inter), var(--font-system);
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "pnum" on, "lnum" on;
+  }
+
+  h1,
+  .h1 {
+    font-size: var(--font-size-h1);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+  }
+
+  h2,
+  .h2 {
+    font-size: var(--font-size-h2);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+  }
+
+  h3,
+  .h3 {
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-normal);
+  }
+
+  h4,
+  .h4 {
+    font-size: var(--font-size-h4);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+  }
+
+  p {
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-relaxed);
+  }
+
+  small,
+  .small {
+    font-size: var(--font-size-small);
+    line-height: var(--line-height-relaxed);
+  }
+}
+
+/* Utility classes for margins and paddings based on our spacing scale */
+@layer utilities {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--container-padding-mobile);
+    padding-right: var(--container-padding-mobile);
+
+    @screen md {
+      padding-left: var(--container-padding-tablet);
+      padding-right: var(--container-padding-tablet);
+    }
+
+    @screen lg {
+      max-width: var(--container-width-laptop);
+      padding-left: var(--container-padding-desktop);
+      padding-right: var(--container-padding-desktop);
+    }
+
+    @screen xl {
+      max-width: var(--container-width-desktop);
+    }
   }
 }

@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import SessionProvider from "@/components/custom/session-provider";
 import TRPCProvider from "@/lib/trpc/trpc-provider";
 import { getDefaultLanguage } from "@/lib/i18n/settings";
-import I18nProvider from "@/components/custom/i18n-provider";
+// import I18nProvider from "@/components/custom/i18n-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,9 +36,9 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider session={session}>
-          <I18nProvider initialLang={defaultLanguage}>
             <TRPCProvider>{children}</TRPCProvider>
-          </I18nProvider>
+          {/* <I18nProvider initialLang={defaultLanguage}>
+          </I18nProvider> */}
         </SessionProvider>
       </body>
     </html>
