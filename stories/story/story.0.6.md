@@ -1,6 +1,6 @@
 # Story 0.6: Authentication Library Setup (Auth.js)
 
-Status: Planning
+Status: Completed
 
 ## Goal & Context
 
