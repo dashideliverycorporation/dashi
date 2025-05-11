@@ -79,7 +79,7 @@ Status: Draft
 
 ## Tasks / Subtasks
 
-- [ ] Create admin dashboard layout with navigation structure
+- [x] Create admin dashboard layout with navigation structure
 - [ ] Implement session check to verify Admin role
 - [ ] Create redirect logic for non-admin users
 - [ ] Build access denied page for unauthorized access attempts
