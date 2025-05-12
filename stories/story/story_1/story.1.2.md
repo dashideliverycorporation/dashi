@@ -2,7 +2,7 @@
 
 Status: Draft
 
-## Goal & Context
+## Goal & C- [x] Write tests for admin route protection [x] Write tests for admin route protectionntext
 
 **User Story:** As an admin, I want to access a protected dashboard so that I can manage restaurants and restaurant users.
 
@@ -80,16 +80,16 @@ Status: Draft
 ## Tasks / Subtasks
 
 - [x] Create admin dashboard layout with navigation structure
-- [ ] Implement session check to verify Admin role
-- [ ] Create redirect logic for non-admin users
-- [ ] Build access denied page for unauthorized access attempts
-- [ ] Create sidebar navigation component with menu items
-- [ ] Create dashboard header with user information
-- [ ] Add placeholder for dashboard metrics/overview
-- [ ] Style all components using Shadcn UI and the design system
-- [ ] Implement responsive design for different screen sizes
-- [ ] Update middleware to protect admin routes
-- [ ] Write tests for admin route protection
+- [x] Implement session check to verify Admin role
+- [x] Create redirect logic for non-admin users
+- [x] Build access denied page for unauthorized access attempts
+- [x] Create sidebar navigation component with menu items
+- [x] Create dashboard header with user information
+- [x] Add placeholder for dashboard metrics/overview
+- [x] Style all components using Shadcn UI and the design system
+- [x] Implement responsive design for different screen sizes
+- [x] Update middleware to protect admin routes
+- [x] Write tests for admin route protection
 
 ## Testing Requirements
 
