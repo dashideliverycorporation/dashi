@@ -15,10 +15,12 @@
     "lint": "next lint",
     "preinstall": "npx only-allow pnpm",
     "seed": "prisma db seed",
+    "seed:simple": "tsx scripts/simple-seed.ts",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:db": "tsx scripts/test-db-connection.ts"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
