@@ -1,0 +1,298 @@
+/**
+ * Simple seed script that doesn't depend on auth.ts
+ * This avoids ESM compatibility issues when running with ts-node
+ */
+import { PrismaClient } from '../prisma/app/generated/prisma/client';
+import * as bcrypt from 'bcryptjs';
+
+const prisma = new PrismaClient();
+
+/**
+ * Hash a password
+ */
+async function hashPassword(password: string): Promise<string> {
+  return await bcrypt.hash(password, 12);
+}
+
+/**
+ * Main seed function
+ */
+async function main() {
+  console.log("🌱 Starting database seeding...");
+
+  // Clear existing data (optional - be careful in production)
+  await clearDatabase();
+
+  // Create admin user
+  const adminPassword = await hashPassword("admin123");
+  const admin = await prisma.user.create({
+    data: {
+      email: "admin@dashi.com",
+      name: "Admin User",
+      password: adminPassword,
+      role: "ADMIN",
+    },
+  });
+  console.log(`👤 Created admin user: ${admin.email}`);
+
+  // Create restaurant manager users and restaurants
+  const restaurants = [
+    {
+      name: "Pizza Palace",
+      description: "Best pizza in town with authentic Italian recipes",
+      email: "info@pizzapalace.com",
+      phoneNumber: "+243123456789",
+      address: "123 Main St, Goma, DRC",
+      manager: {
+        email: "manager@pizzapalace.com",
+        name: "Mario Pizza",
+      },
+    },
+    {
+      name: "Burger Bliss",
+      description: "Juicy burgers with fresh ingredients",
+      email: "info@burgerbliss.com",
+      phoneNumber: "+243987654321",
+      address: "456 Oak Ave, Goma, DRC",
+      manager: {
+        email: "manager@burgerbliss.com",
+        name: "Bob Burger",
+      },
+    },
+    {
+      name: "Sushi Sensation",
+      description: "Fresh and delicious sushi made with care",
+      email: "info@sushisensation.com",
+      phoneNumber: "+243456789123",
+      address: "789 Elm Blvd, Goma, DRC",
+      manager: {
+        email: "manager@sushisensation.com",
+        name: "Sakura Sushi",
+      },
+    },
+  ];
+
+  // Create restaurants and their managers
+  for (const restaurantData of restaurants) {
+    const { manager, ...restData } = restaurantData;
+
+    // Create manager user
+    const managerPassword = await hashPassword("manager123");
+    const managerUser = await prisma.user.create({
+      data: {
+        email: manager.email,
+        name: manager.name,
+        password: managerPassword,
+        role: "RESTAURANT",
+      },
+    });
+
+    // Create restaurant
+    const restaurant = await prisma.restaurant.create({
+      data: {
+        ...restData,
+        managers: {
+          create: {
+            userId: managerUser.id,
+          },
+        },
+      },
+    });
+
+    // Create menu items for this restaurant
+    await createMenuItems(restaurant.id);
+
+    console.log(
+      `🍽️ Created restaurant: ${restaurant.name} with manager: ${managerUser.email}`
+    );
+  }
+
+  // Create customer users
+  const customers = [
+    {
+      email: "john@example.com",
+      name: "John Doe",
+      phoneNumber: "+243111222333",
+      address: "321 Pine St, Goma, DRC",
+    },
+    {
+      email: "jane@example.com",
+      name: "Jane Smith",
+      phoneNumber: "+243444555666",
+      address: "654 Cedar Rd, Goma, DRC",
+    },
+    {
+      email: "sam@example.com",
+      name: "Sam Wilson",
+      phoneNumber: "+243777888999",
+      address: "987 Birch Ave, Goma, DRC",
+    },
+  ];
+
+  for (const customerData of customers) {
+    const { email, name, phoneNumber, address } = customerData;
+
+    // Create customer user
+    const customerPassword = await hashPassword("customer123");
+    const customerUser = await prisma.user.create({
+      data: {
+        email,
+        name,
+        password: customerPassword,
+        role: "CUSTOMER",
+        customer: {
+          create: {
+            phoneNumber,
+            address,
+          },
+        },
+      },
+    });
+
+    console.log(`👤 Created customer: ${customerUser.email}`);
+  }
+
+  // Create sample orders
+  await createSampleOrders();
+
+  console.log("✅ Database seeding completed successfully");
+}
+
+/**
+ * Create menu items for a restaurant
+ */
+async function createMenuItems(restaurantId: string) {
+  const menuItems = [
+    {
+      name: "Margherita Pizza",
+      description: "Classic pizza with tomato sauce, mozzarella, and basil",
+      price: 12.99,
+      category: "Pizza",
+    },
+    {
+      name: "Pepperoni Pizza",
+      description: "Pizza with tomato sauce, mozzarella, and pepperoni",
+      price: 14.99,
+      category: "Pizza",
+    },
+    {
+      name: "Veggie Burger",
+      description: "Plant-based burger with lettuce, tomato, and special sauce",
+      price: 10.99,
+      category: "Burger",
+    },
+    {
+      name: "Classic Burger",
+      description: "Beef patty with cheese, lettuce, tomato, and sauce",
+      price: 11.99,
+      category: "Burger",
+    },
+    {
+      name: "California Roll",
+      description: "Sushi roll with crab, avocado, and cucumber",
+      price: 8.99,
+      category: "Sushi",
+    },
+    {
+      name: "French Fries",
+      description: "Crispy golden fries with salt",
+      price: 4.99,
+      category: "Sides",
+    },
+  ];
+
+  for (const item of menuItems) {
+    await prisma.menuItem.create({
+      data: {
+        ...item,
+        restaurantId,
+      },
+    });
+  }
+}
+
+/**
+ * Create sample orders
+ */
+async function createSampleOrders() {
+  // Get customers
+  const customers = await prisma.customer.findMany({
+    include: { user: true },
+  });
+
+  // Get restaurants with menu items
+  const restaurants = await prisma.restaurant.findMany({
+    include: { menuItems: true },
+  });
+
+  // For each customer, create a couple of orders
+  for (const customer of customers) {
+    // Create orders from different restaurants
+    for (const restaurant of restaurants) {
+      if (restaurant.menuItems.length === 0) continue;
+
+      // Select random menu items (1-3 items)
+      const menuItems = restaurant.menuItems.slice(
+        0,
+        Math.floor(Math.random() * 3) + 1
+      );
+
+      // Calculate total amount
+      let totalAmount = 0;
+      const orderItems = menuItems.map((item) => {
+        const quantity = Math.floor(Math.random() * 2) + 1;
+        totalAmount += Number(item.price) * quantity;
+
+        return {
+          menuItemId: item.id,
+          quantity,
+          price: item.price,
+        };
+      });
+
+      // Create the order
+      await prisma.order.create({
+        data: {
+          totalAmount,
+          status: "NEW",
+          customerId: customer.id,
+          restaurantId: restaurant.id,
+          customerNotes: "Please deliver ASAP. Thank you!",
+          deliveryAddress: customer.address || "Default Address",
+          orderItems: {
+            create: orderItems,
+          },
+        },
+      });
+    }
+  }
+
+  console.log("📦 Created sample orders");
+}
+
+/**
+ * Clear existing data (use with caution)
+ */
+async function clearDatabase() {
+  // Order of deletion matters due to foreign key constraints
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
+  await prisma.menuItem.deleteMany();
+  await prisma.restaurantManager.deleteMany();
+  await prisma.restaurant.deleteMany();
+  await prisma.customer.deleteMany();
+  await prisma.user.deleteMany();
+
+  console.log("🗑️ Cleared existing data");
+}
+
+// Execute the main function
+main()
+  .catch((e) => {
+    console.error("❌ Error during seeding:", e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    // Close Prisma client connection
+    await prisma.$disconnect();
+  });
