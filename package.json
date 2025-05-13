@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "pnpm dlx prisma generate && next build",
+    "vercel-build": "prisma generate && ls -R ./prisma/app/generated && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "pnpm dlx prisma generate",
