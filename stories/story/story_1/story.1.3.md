@@ -2,9 +2,21 @@
 
 Status: Draft
 
-## Goal & Context
+## Goal & C- [ ] Write tests for restaurant and user creation
 
-**User Story:** As an admin, I want to add restaurants and create associated user accounts so that restaurant owners can access the platform.
+- [ ] Write unit tests for restaurant creation tRPC procedure
+  - [ ] Set up test file structure and test environment
+  - [ ] Create mocks for Prisma client
+  - [ ] Test successful restaurant creation with complete data
+  - [ ] Test successful restaurant creation with minimal required data
+  - [ ] Test error handling when database operations fail
+  - [ ] Test validation for required fields (name, phone)
+  - [ ] Test validation for field constraints (email format, name length)
+- [ ] Write unit tests for user creation tRPC procedure
+- [ ] Write tests for restaurant form validation using React Testing Library
+- [ ] Write tests for user form validation using React Testing Library
+- [ ] Create integration tests for the restaurant creation flow
+- [ ] Create integration tests for the user creation flower Story:\*\* As an admin, I want to add restaurants and create associated user accounts so that restaurant owners can access the platform.
 
 **Context:** This is the third story in Epic 1 (Authentication & User/Restaurant Admin Management). It focuses on implementing functionality for administrators to add new restaurants to the system and create associated user accounts with the Restaurant role. This is a critical feature for the onboarding process in the MVP.
 
@@ -102,9 +114,21 @@ Status: Draft
   - [x] Add restaurant selection dropdown to UserForm
   - [x] Create the users/new page component that uses UserForm
   - [x] Add navigation in admin UI to the user creation page
-- [ ] Write tests for restaurant and user creation
-  - [ ] Write unit tests for restaurant creation tRPC procedure
+- [ ] Write tests for restaurant and user creation - [x] Write unit tests for restaurant creation tRPC procedure
+  - [x] Set up test file structure and test environment
+  - [x] Create mocks for Prisma client
+  - [x] Test successful restaurant creation with complete data
+  - [x] Test successful restaurant creation with minimal required data
+  - [x] Test error handling when database operations fail
   - [ ] Write unit tests for user creation tRPC procedure
+    - [x] Set up test file structure and test environment for user tests
+    - [x] Create mocks for Prisma client (user and restaurant models)
+    - [ ] Test successful user creation with complete data
+    - [ ] Test successful user creation with minimal required data
+    - [ ] Test error handling when database operations fail
+    - [ ] Test validation for restaurant association (users with RESTAURANT_ADMIN role must have a restaurant)
+    - [ ] Test validation for required fields (name, email, password, role)
+    - [ ] Test validation for field constraints (email format, password strength)
   - [ ] Write tests for restaurant form validation using React Testing Library
   - [ ] Write tests for user form validation using React Testing Library
   - [ ] Create integration tests for the restaurant creation flow
