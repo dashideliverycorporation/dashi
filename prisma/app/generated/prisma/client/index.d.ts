@@ -8479,6 +8479,7 @@ export namespace Prisma {
     email: string | null
     phoneNumber: string | null
     address: string | null
+    serviceArea: string | null
     isActive: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -8492,6 +8493,7 @@ export namespace Prisma {
     email: string | null
     phoneNumber: string | null
     address: string | null
+    serviceArea: string | null
     isActive: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -8505,6 +8507,7 @@ export namespace Prisma {
     email: number
     phoneNumber: number
     address: number
+    serviceArea: number
     isActive: number
     deletedAt: number
     createdAt: number
@@ -8520,6 +8523,7 @@ export namespace Prisma {
     email?: true
     phoneNumber?: true
     address?: true
+    serviceArea?: true
     isActive?: true
     deletedAt?: true
     createdAt?: true
@@ -8533,6 +8537,7 @@ export namespace Prisma {
     email?: true
     phoneNumber?: true
     address?: true
+    serviceArea?: true
     isActive?: true
     deletedAt?: true
     createdAt?: true
@@ -8546,6 +8551,7 @@ export namespace Prisma {
     email?: true
     phoneNumber?: true
     address?: true
+    serviceArea?: true
     isActive?: true
     deletedAt?: true
     createdAt?: true
@@ -8629,9 +8635,10 @@ export namespace Prisma {
     id: string
     name: string
     description: string | null
-    email: string
-    phoneNumber: string | null
+    email: string | null
+    phoneNumber: string
     address: string | null
+    serviceArea: string | null
     isActive: boolean
     deletedAt: Date | null
     createdAt: Date
@@ -8662,6 +8669,7 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     address?: boolean
+    serviceArea?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -8679,6 +8687,7 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     address?: boolean
+    serviceArea?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -8692,6 +8701,7 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     address?: boolean
+    serviceArea?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -8705,13 +8715,14 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     address?: boolean
+    serviceArea?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RestaurantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "email" | "phoneNumber" | "address" | "isActive" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurant"]>
+  export type RestaurantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "email" | "phoneNumber" | "address" | "serviceArea" | "isActive" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurant"]>
   export type RestaurantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     menuItems?: boolean | Restaurant$menuItemsArgs<ExtArgs>
     orders?: boolean | Restaurant$ordersArgs<ExtArgs>
@@ -8732,9 +8743,10 @@ export namespace Prisma {
       id: string
       name: string
       description: string | null
-      email: string
-      phoneNumber: string | null
+      email: string | null
+      phoneNumber: string
       address: string | null
+      serviceArea: string | null
       isActive: boolean
       deletedAt: Date | null
       createdAt: Date
@@ -9171,6 +9183,7 @@ export namespace Prisma {
     readonly email: FieldRef<"Restaurant", 'String'>
     readonly phoneNumber: FieldRef<"Restaurant", 'String'>
     readonly address: FieldRef<"Restaurant", 'String'>
+    readonly serviceArea: FieldRef<"Restaurant", 'String'>
     readonly isActive: FieldRef<"Restaurant", 'Boolean'>
     readonly deletedAt: FieldRef<"Restaurant", 'DateTime'>
     readonly createdAt: FieldRef<"Restaurant", 'DateTime'>
@@ -13248,6 +13261,7 @@ export namespace Prisma {
     email: 'email',
     phoneNumber: 'phoneNumber',
     address: 'address',
+    serviceArea: 'serviceArea',
     isActive: 'isActive',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
@@ -13836,9 +13850,10 @@ export namespace Prisma {
     id?: StringFilter<"Restaurant"> | string
     name?: StringFilter<"Restaurant"> | string
     description?: StringNullableFilter<"Restaurant"> | string | null
-    email?: StringFilter<"Restaurant"> | string
-    phoneNumber?: StringNullableFilter<"Restaurant"> | string | null
+    email?: StringNullableFilter<"Restaurant"> | string | null
+    phoneNumber?: StringFilter<"Restaurant"> | string
     address?: StringNullableFilter<"Restaurant"> | string | null
+    serviceArea?: StringNullableFilter<"Restaurant"> | string | null
     isActive?: BoolFilter<"Restaurant"> | boolean
     deletedAt?: DateTimeNullableFilter<"Restaurant"> | Date | string | null
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
@@ -13852,9 +13867,10 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
-    email?: SortOrder
-    phoneNumber?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phoneNumber?: SortOrder
     address?: SortOrderInput | SortOrder
+    serviceArea?: SortOrderInput | SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -13871,9 +13887,10 @@ export namespace Prisma {
     NOT?: RestaurantWhereInput | RestaurantWhereInput[]
     name?: StringFilter<"Restaurant"> | string
     description?: StringNullableFilter<"Restaurant"> | string | null
-    email?: StringFilter<"Restaurant"> | string
-    phoneNumber?: StringNullableFilter<"Restaurant"> | string | null
+    email?: StringNullableFilter<"Restaurant"> | string | null
+    phoneNumber?: StringFilter<"Restaurant"> | string
     address?: StringNullableFilter<"Restaurant"> | string | null
+    serviceArea?: StringNullableFilter<"Restaurant"> | string | null
     isActive?: BoolFilter<"Restaurant"> | boolean
     deletedAt?: DateTimeNullableFilter<"Restaurant"> | Date | string | null
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
@@ -13887,9 +13904,10 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
-    email?: SortOrder
-    phoneNumber?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phoneNumber?: SortOrder
     address?: SortOrderInput | SortOrder
+    serviceArea?: SortOrderInput | SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -13906,9 +13924,10 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Restaurant"> | string
     name?: StringWithAggregatesFilter<"Restaurant"> | string
     description?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
-    email?: StringWithAggregatesFilter<"Restaurant"> | string
-    phoneNumber?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+    email?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+    phoneNumber?: StringWithAggregatesFilter<"Restaurant"> | string
     address?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+    serviceArea?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
     isActive?: BoolWithAggregatesFilter<"Restaurant"> | boolean
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Restaurant"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
@@ -14571,9 +14590,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    email: string
-    phoneNumber?: string | null
+    email?: string | null
+    phoneNumber: string
     address?: string | null
+    serviceArea?: string | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -14587,9 +14607,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    email: string
-    phoneNumber?: string | null
+    email?: string | null
+    phoneNumber: string
     address?: string | null
+    serviceArea?: string | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -14603,9 +14624,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14619,9 +14641,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14635,9 +14658,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    email: string
-    phoneNumber?: string | null
+    email?: string | null
+    phoneNumber: string
     address?: string | null
+    serviceArea?: string | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -14648,9 +14672,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14661,9 +14686,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15354,6 +15380,7 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     address?: SortOrder
+    serviceArea?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -15367,6 +15394,7 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     address?: SortOrder
+    serviceArea?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -15380,6 +15408,7 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     address?: SortOrder
+    serviceArea?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -17023,9 +17052,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    email: string
-    phoneNumber?: string | null
+    email?: string | null
+    phoneNumber: string
     address?: string | null
+    serviceArea?: string | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17038,9 +17068,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    email: string
-    phoneNumber?: string | null
+    email?: string | null
+    phoneNumber: string
     address?: string | null
+    serviceArea?: string | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17110,9 +17141,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17125,9 +17157,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17309,9 +17342,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    email: string
-    phoneNumber?: string | null
+    email?: string | null
+    phoneNumber: string
     address?: string | null
+    serviceArea?: string | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17324,9 +17358,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    email: string
-    phoneNumber?: string | null
+    email?: string | null
+    phoneNumber: string
     address?: string | null
+    serviceArea?: string | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17383,9 +17418,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17398,9 +17434,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17465,9 +17502,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    email: string
-    phoneNumber?: string | null
+    email?: string | null
+    phoneNumber: string
     address?: string | null
+    serviceArea?: string | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17480,9 +17518,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    email: string
-    phoneNumber?: string | null
+    email?: string | null
+    phoneNumber: string
     address?: string | null
+    serviceArea?: string | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17568,9 +17607,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17583,9 +17623,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

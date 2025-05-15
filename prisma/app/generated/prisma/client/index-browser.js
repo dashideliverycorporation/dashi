@@ -184,6 +184,7 @@ exports.Prisma.RestaurantScalarFieldEnum = {
   email: 'email',
   phoneNumber: 'phoneNumber',
   address: 'address',
+  serviceArea: 'serviceArea',
   isActive: 'isActive',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',

@@ -90,12 +90,12 @@ Status: Draft
 
 ## Tasks / Subtasks
 
-- [ ] Update Prisma schema to add Restaurant model
-- [ ] Add relation between User and Restaurant models
-- [ ] Run Prisma migration to update database schema
-- [ ] Create tRPC procedure for adding restaurants
-- [ ] Create tRPC procedure for creating restaurant users
-- [ ] Build restaurant creation form with Shadcn UI components
+- [x] Update Prisma schema to add Restaurant model
+- [x] Add relation between User and Restaurant models
+- [x] Run Prisma migration to update database schema
+- [x] Create tRPC procedure for adding restaurants
+- [x] Create tRPC procedure for creating restaurant users
+- [x] Build restaurant creation form with Shadcn UI components
 - [ ] Build user creation form with restaurant selection
 - [ ] Implement form validation using Zod
 - [ ] Add error handling for form submissions
