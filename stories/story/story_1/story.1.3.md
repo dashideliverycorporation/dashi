@@ -96,12 +96,19 @@ Status: Draft
 - [x] Create tRPC procedure for adding restaurants
 - [x] Create tRPC procedure for creating restaurant users
 - [x] Build restaurant creation form with Shadcn UI components
-- [ ] Build user creation form with restaurant selection
-- [ ] Implement form validation using Zod
-- [ ] Add error handling for form submissions
-- [ ] Add success feedback for form submissions
-- [ ] Create restaurant management page with navigation
+- [x] Build user creation form with restaurant selection
+  - [x] Create getAllRestaurants query in restaurant router for dropdown
+  - [x] Build UserForm component with form fields (name, email, password)
+  - [x] Add restaurant selection dropdown to UserForm
+  - [x] Create the users/new page component that uses UserForm
+  - [x] Add navigation in admin UI to the user creation page
 - [ ] Write tests for restaurant and user creation
+  - [ ] Write unit tests for restaurant creation tRPC procedure
+  - [ ] Write unit tests for user creation tRPC procedure
+  - [ ] Write tests for restaurant form validation using React Testing Library
+  - [ ] Write tests for user form validation using React Testing Library
+  - [ ] Create integration tests for the restaurant creation flow
+  - [ ] Create integration tests for the user creation flow
 
 ## Testing Requirements
 

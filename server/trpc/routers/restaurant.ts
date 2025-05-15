@@ -16,6 +16,36 @@ import { createRestaurantSchema } from "@/server/schemas/restaurant.schema";
  */
 export const restaurantRouter = router({
   /**
+   * Get all active restaurants (admin-only procedure)
+   * Returns a list of all active restaurants for selection in forms
+   */
+  getAllRestaurants: adminProcedure.query(async () => {
+    try {
+      const restaurants = await prisma.restaurant.findMany({
+        where: {
+          isActive: true,
+          deletedAt: null,
+        },
+        orderBy: {
+          name: "asc",
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+      });
+
+      return restaurants;
+    } catch (error) {
+      console.error("Error fetching restaurants:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to fetch restaurants",
+      });
+    }
+  }),
+
+  /**
    * Create a new restaurant (admin-only procedure)
    * Takes restaurant details and saves them to the database
    */
