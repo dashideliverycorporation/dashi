@@ -58,13 +58,15 @@ export const invalidRestaurantData = {
 /**
  * Sample valid user data for testing
  */
+import { UserRole } from "@/prisma/app/generated/prisma/client";
+
 export const validUserData = {
   // Complete data
   complete: {
     name: "John Doe",
     email: "john@example.com",
     password: "SecurePass123!",
-    role: "RESTAURANT_ADMIN",
+    role: UserRole.RESTAURANT,
     restaurantId: "restaurant-id-1",
   },
   // Minimal data
@@ -72,7 +74,7 @@ export const validUserData = {
     name: "Jane Smith",
     email: "jane@example.com",
     password: "Password123",
-    role: "RESTAURANT_ADMIN",
+    role: UserRole.RESTAURANT,
     restaurantId: "restaurant-id-2",
   },
 };
@@ -85,7 +87,7 @@ export const invalidUserData = {
   missingEmail: {
     name: "Missing Email User",
     password: "Password123",
-    role: "RESTAURANT_ADMIN",
+    role: UserRole.RESTAURANT,
     restaurantId: "restaurant-id-1",
   },
   // Invalid email format
@@ -93,7 +95,7 @@ export const invalidUserData = {
     name: "Invalid Email User",
     email: "not-an-email",
     password: "Password123",
-    role: "RESTAURANT_ADMIN",
+    role: UserRole.RESTAURANT,
     restaurantId: "restaurant-id-1",
   },
   // Password too short
@@ -101,7 +103,7 @@ export const invalidUserData = {
     name: "Password Test User",
     email: "password@example.com",
     password: "short", // Too short based on requirements
-    role: "RESTAURANT_ADMIN",
+    role: UserRole.RESTAURANT,
     restaurantId: "restaurant-id-1",
   },
   // Missing restaurant ID for restaurant admin
@@ -109,7 +111,7 @@ export const invalidUserData = {
     name: "Missing Restaurant User",
     email: "missing@example.com",
     password: "Password123",
-    role: "RESTAURANT_ADMIN",
+    role: UserRole.RESTAURANT,
     // Missing restaurantId
   },
 };
@@ -138,7 +140,8 @@ export const dbResponses = {
       id: "user-id-1",
       name: "John Doe",
       email: "john@example.com",
-      role: "RESTAURANT",
+      password: "hashed_SecurePass123!", // Add password field
+      role: UserRole.RESTAURANT,
       createdAt: new Date(),
       updatedAt: new Date(),
       emailVerified: null,

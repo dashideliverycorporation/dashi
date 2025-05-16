@@ -1,4 +1,3 @@
-import { RestaurantForm } from "@/components/admin/RestaurantForm";
 import {
   Card,
   CardContent,
@@ -10,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { JSX } from "react/jsx-runtime";
+import { RestaurantForm } from "../components/restaurant-form";
 
 /**
  * Add New Restaurant Page

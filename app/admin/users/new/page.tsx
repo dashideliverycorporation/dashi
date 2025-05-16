@@ -1,4 +1,4 @@
-import { UserForm } from "@/components/admin/UserForm";
+import { UserForm } from "@/app/admin/users/components/user-form";
 import {
   Card,
   CardContent,
