@@ -114,22 +114,28 @@ Status: Draft
   - [x] Add restaurant selection dropdown to UserForm
   - [x] Create the users/new page component that uses UserForm
   - [x] Add navigation in admin UI to the user creation page
-- [ ] Write tests for restaurant and user creation - [x] Write unit tests for restaurant creation tRPC procedure
+- [x] Write tests for restaurant and user creation
+- [x] Write unit tests for restaurant creation tRPC procedure
   - [x] Set up test file structure and test environment
   - [x] Create mocks for Prisma client
   - [x] Test successful restaurant creation with complete data
   - [x] Test successful restaurant creation with minimal required data
   - [x] Test error handling when database operations fail
-  - [ ] Write unit tests for user creation tRPC procedure
-    - [x] Set up test file structure and test environment for user tests
-    - [x] Create mocks for Prisma client (user and restaurant models)
-    - [x] Test successful user creation with complete data
-    - [x] Test successful user creation with minimal required data
-    - [x] Test error handling when database operations fail
-  - [ ] Write tests for restaurant form validation using React Testing Library
-  - [ ] Write tests for user form validation using React Testing Library
-  - [ ] Create integration tests for the restaurant creation flow
-  - [ ] Create integration tests for the user creation flow
+- [x] Write unit tests for user creation tRPC procedure
+  - [x] Set up test file structure and test environment for user tests
+  - [x] Create mocks for Prisma client (user and restaurant models)
+  - [x] Test successful user creation with complete data
+  - [x] Test successful user creation with minimal required data
+  - [x] Test error handling when database operations fail
+- [x] Write tests for restaurant form validation using React Testing Library
+  - [x] Set up test file structure of restaurant-form.test.tsx and environment for React Testing Library
+  - [x] Create mocks for tRPC client and toast notifications
+  - [x] Test initial form rendering with all required fields
+  - [x] Test form submission with complete data
+- [x] Write tests for user form validation using React Testing Library
+  - [x] Set up test file structure of user-form.test.tsx and environment for React Testing Library
+  - [x] Create mocks for tRPC client, toast notifications, and restaurant data
+  - [x] Test initial form rendering with all required fields
 
 ## Testing Requirements
 

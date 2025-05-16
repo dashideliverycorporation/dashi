@@ -45,7 +45,7 @@ export default function UsersPage(): JSX.Element {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground text-sm">
-            No users added yet. Click the "Add Restaurant User" button to add
+            No users added yet. Click the &quot;Add Restaurant User&quot; button to add
             your first restaurant user.
           </p>
         </CardContent>

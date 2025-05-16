@@ -12,6 +12,7 @@ import { TRPCError } from "@trpc/server";
  *
  * @param response The mock response to return from the create function
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setupSuccessfulRestaurantCreation(response: any) {
   vi.mocked(prisma.restaurant.create).mockResolvedValue(response);
 }
@@ -30,6 +31,7 @@ export function setupFailedRestaurantCreation(error: Error) {
  *
  * @param response The mock response to return from the create function
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setupSuccessfulUserCreation(response: any) {
   vi.mocked(prisma.user.create).mockResolvedValue(response);
 }
@@ -50,6 +52,7 @@ export function setupFailedUserCreation(error: Error) {
  * @param message The error message
  * @returns A TRPCError
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createTRPCError(code: any, message: string): TRPCError {
   return new TRPCError({
     code,
@@ -62,6 +65,7 @@ export function createTRPCError(code: any, message: string): TRPCError {
  *
  * @param restaurant The restaurant data to return
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setupRestaurantExists(restaurant: any) {
   vi.mocked(prisma.restaurant.findUnique).mockResolvedValue(restaurant);
 }
@@ -80,10 +84,12 @@ export function setupRestaurantNotFound() {
  * @param restaurantManagerResponse The restaurant manager data to return
  */
 export function setupSuccessfulTransaction(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   userResponse: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   restaurantManagerResponse: any
 ) {
-  vi.mocked(prisma.$transaction).mockImplementation(async (callback) => {
+  vi.mocked(prisma.$transaction).mockImplementation(async () => {
     return {
       user: userResponse,
       restaurantManager: restaurantManagerResponse,

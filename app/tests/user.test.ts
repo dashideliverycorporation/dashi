@@ -62,6 +62,7 @@ const mockCtx = {
 };
 
 // Create caller for the router
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const caller = userRouter.createCaller(mockCtx as any);
 
 describe("User Creation", () => {
@@ -327,6 +328,7 @@ describe("User Creation", () => {
 
     // Call the procedure and expect it to throw a validation error
     await expect(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
       caller.createRestaurantUser(testDataMissingEmail as any)
     ).rejects.toThrow();
 
@@ -339,6 +341,7 @@ describe("User Creation", () => {
 
     // Call the procedure and expect it to throw a validation error
     await expect(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
       caller.createRestaurantUser(testDataMissingPassword as any)
     ).rejects.toThrow();
 

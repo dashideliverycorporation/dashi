@@ -45,7 +45,7 @@ export default function RestaurantsPage(): JSX.Element {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground text-sm">
-            No restaurants added yet. Click the "Add Restaurant" button to add
+            No restaurants added yet. Click the &quot;Add Restaurant&quot; button to add
             your first restaurant.
           </p>
         </CardContent>

@@ -43,6 +43,7 @@ const mockCtx = {
 };
 
 // Create caller for the router
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const caller = restaurantRouter.createCaller(mockCtx as any);
 
 describe("Restaurant Creation", () => {
