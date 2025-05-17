@@ -4,6 +4,7 @@ import { authOptions } from "@/server/auth";
 import SessionProvider from "@/components/custom/session-provider";
 import TRPCProvider from "@/lib/trpc/trpc-provider";
 import { ThemeProvider } from "@/components/custom/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 // import { getDefaultLanguage } from "@/lib/i18n/settings";
 // import I18nProvider from "@/components/custom/i18n-provider";
 
@@ -32,8 +33,8 @@ export default async function RootLayout({
 
   return (
     <html
-    // lang={defaultLanguage}
-    suppressHydrationWarning
+      // lang={defaultLanguage}
+      suppressHydrationWarning
     >
       <body
       // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -47,6 +48,7 @@ export default async function RootLayout({
               disableTransitionOnChange
             >
               {children}
+              <Toaster />
             </ThemeProvider>
           </TRPCProvider>
           {/* <I18nProvider initialLang={defaultLanguage}>

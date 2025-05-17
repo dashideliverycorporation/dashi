@@ -4,6 +4,8 @@
  */
 import { router } from "./trpc";
 import { exampleRouter } from "./routers/example";
+import { restaurantRouter } from "./routers/restaurant";
+import { userRouter } from "./routers/user";
 
 /**
  * Main application router
@@ -11,16 +13,14 @@ import { exampleRouter } from "./routers/example";
  *
  * As more features are developed, additional sub-routers can be added here
  * Examples of future routers:
- * - userRouter (user profile management)
- * - restaurantRouter (restaurant management)
  * - menuRouter (menu item management)
  * - orderRouter (order processing)
  */
 export const appRouter = router({
   example: exampleRouter,
+  restaurant: restaurantRouter,
+  user: userRouter,
   // Add additional sub-routers as the application grows
-  // user: userRouter,
-  // restaurant: restaurantRouter,
   // menu: menuRouter,
   // order: orderRouter,
 });

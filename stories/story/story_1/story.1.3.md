@@ -2,9 +2,21 @@
 
 Status: Draft
 
-## Goal & Context
+## Goal & C- [ ] Write tests for restaurant and user creation
 
-**User Story:** As an admin, I want to add restaurants and create associated user accounts so that restaurant owners can access the platform.
+- [ ] Write unit tests for restaurant creation tRPC procedure
+  - [ ] Set up test file structure and test environment
+  - [ ] Create mocks for Prisma client
+  - [ ] Test successful restaurant creation with complete data
+  - [ ] Test successful restaurant creation with minimal required data
+  - [ ] Test error handling when database operations fail
+  - [ ] Test validation for required fields (name, phone)
+  - [ ] Test validation for field constraints (email format, name length)
+- [ ] Write unit tests for user creation tRPC procedure
+- [ ] Write tests for restaurant form validation using React Testing Library
+- [ ] Write tests for user form validation using React Testing Library
+- [ ] Create integration tests for the restaurant creation flow
+- [ ] Create integration tests for the user creation flower Story:\*\* As an admin, I want to add restaurants and create associated user accounts so that restaurant owners can access the platform.
 
 **Context:** This is the third story in Epic 1 (Authentication & User/Restaurant Admin Management). It focuses on implementing functionality for administrators to add new restaurants to the system and create associated user accounts with the Restaurant role. This is a critical feature for the onboarding process in the MVP.
 
@@ -90,18 +102,40 @@ Status: Draft
 
 ## Tasks / Subtasks
 
-- [ ] Update Prisma schema to add Restaurant model
-- [ ] Add relation between User and Restaurant models
-- [ ] Run Prisma migration to update database schema
-- [ ] Create tRPC procedure for adding restaurants
-- [ ] Create tRPC procedure for creating restaurant users
-- [ ] Build restaurant creation form with Shadcn UI components
-- [ ] Build user creation form with restaurant selection
-- [ ] Implement form validation using Zod
-- [ ] Add error handling for form submissions
-- [ ] Add success feedback for form submissions
-- [ ] Create restaurant management page with navigation
-- [ ] Write tests for restaurant and user creation
+- [x] Update Prisma schema to add Restaurant model
+- [x] Add relation between User and Restaurant models
+- [x] Run Prisma migration to update database schema
+- [x] Create tRPC procedure for adding restaurants
+- [x] Create tRPC procedure for creating restaurant users
+- [x] Build restaurant creation form with Shadcn UI components
+- [x] Build user creation form with restaurant selection
+  - [x] Create getAllRestaurants query in restaurant router for dropdown
+  - [x] Build UserForm component with form fields (name, email, password)
+  - [x] Add restaurant selection dropdown to UserForm
+  - [x] Create the users/new page component that uses UserForm
+  - [x] Add navigation in admin UI to the user creation page
+- [x] Write tests for restaurant and user creation
+- [x] Write unit tests for restaurant creation tRPC procedure
+  - [x] Set up test file structure and test environment
+  - [x] Create mocks for Prisma client
+  - [x] Test successful restaurant creation with complete data
+  - [x] Test successful restaurant creation with minimal required data
+  - [x] Test error handling when database operations fail
+- [x] Write unit tests for user creation tRPC procedure
+  - [x] Set up test file structure and test environment for user tests
+  - [x] Create mocks for Prisma client (user and restaurant models)
+  - [x] Test successful user creation with complete data
+  - [x] Test successful user creation with minimal required data
+  - [x] Test error handling when database operations fail
+- [x] Write tests for restaurant form validation using React Testing Library
+  - [x] Set up test file structure of restaurant-form.test.tsx and environment for React Testing Library
+  - [x] Create mocks for tRPC client and toast notifications
+  - [x] Test initial form rendering with all required fields
+  - [x] Test form submission with complete data
+- [x] Write tests for user form validation using React Testing Library
+  - [x] Set up test file structure of user-form.test.tsx and environment for React Testing Library
+  - [x] Create mocks for tRPC client, toast notifications, and restaurant data
+  - [x] Test initial form rendering with all required fields
 
 ## Testing Requirements
 

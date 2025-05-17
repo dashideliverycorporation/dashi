@@ -104,18 +104,21 @@ model RestaurantManager {
   userId       String     @unique
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   restaurantId String
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+
+  @@index([restaurantId])
 }
 
 model Restaurant {
   id          String              @id @default(cuid())
   name        String
   description String?
-  email       String
-  phoneNumber String?
+  email       String?
+  phoneNumber String
   address     String?
+  serviceArea String?
   isActive    Boolean             @default(true)
   deletedAt   DateTime?
   createdAt   DateTime            @default(now())
