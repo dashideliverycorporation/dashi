@@ -1,6 +1,6 @@
 # Story 1.4: Admin Dashboard - Restaurant Listing View
 
-Status: Draft
+Status: Completed
 
 ## Goal & Context
 
