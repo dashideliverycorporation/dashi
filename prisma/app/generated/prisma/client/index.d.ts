@@ -379,8 +379,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.8.1
-   * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
+   * Prisma Client JS version: 6.7.0
+   * Query Engine version: 3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
    */
   export type PrismaVersion = {
     client: string
@@ -6437,7 +6437,7 @@ export namespace Prisma {
   export type CustomerGroupByOutputType = {
     id: string
     userId: string
-    phoneNumber: string | null
+    phoneNumber: string
     address: string | null
     createdAt: Date
     updatedAt: Date
@@ -6523,7 +6523,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      phoneNumber: string | null
+      phoneNumber: string
       address: string | null
       createdAt: Date
       updatedAt: Date
@@ -7409,6 +7409,7 @@ export namespace Prisma {
   export type RestaurantManagerMinAggregateOutputType = {
     id: string | null
     userId: string | null
+    phoneNumber: string | null
     restaurantId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7417,6 +7418,7 @@ export namespace Prisma {
   export type RestaurantManagerMaxAggregateOutputType = {
     id: string | null
     userId: string | null
+    phoneNumber: string | null
     restaurantId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7425,6 +7427,7 @@ export namespace Prisma {
   export type RestaurantManagerCountAggregateOutputType = {
     id: number
     userId: number
+    phoneNumber: number
     restaurantId: number
     createdAt: number
     updatedAt: number
@@ -7435,6 +7438,7 @@ export namespace Prisma {
   export type RestaurantManagerMinAggregateInputType = {
     id?: true
     userId?: true
+    phoneNumber?: true
     restaurantId?: true
     createdAt?: true
     updatedAt?: true
@@ -7443,6 +7447,7 @@ export namespace Prisma {
   export type RestaurantManagerMaxAggregateInputType = {
     id?: true
     userId?: true
+    phoneNumber?: true
     restaurantId?: true
     createdAt?: true
     updatedAt?: true
@@ -7451,6 +7456,7 @@ export namespace Prisma {
   export type RestaurantManagerCountAggregateInputType = {
     id?: true
     userId?: true
+    phoneNumber?: true
     restaurantId?: true
     createdAt?: true
     updatedAt?: true
@@ -7532,6 +7538,7 @@ export namespace Prisma {
   export type RestaurantManagerGroupByOutputType = {
     id: string
     userId: string
+    phoneNumber: string
     restaurantId: string
     createdAt: Date
     updatedAt: Date
@@ -7557,6 +7564,7 @@ export namespace Prisma {
   export type RestaurantManagerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    phoneNumber?: boolean
     restaurantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7567,6 +7575,7 @@ export namespace Prisma {
   export type RestaurantManagerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    phoneNumber?: boolean
     restaurantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7577,6 +7586,7 @@ export namespace Prisma {
   export type RestaurantManagerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    phoneNumber?: boolean
     restaurantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7587,12 +7597,13 @@ export namespace Prisma {
   export type RestaurantManagerSelectScalar = {
     id?: boolean
     userId?: boolean
+    phoneNumber?: boolean
     restaurantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RestaurantManagerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurantManager"]>
+  export type RestaurantManagerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "phoneNumber" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurantManager"]>
   export type RestaurantManagerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
@@ -7615,6 +7626,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
+      phoneNumber: string
       restaurantId: string
       createdAt: Date
       updatedAt: Date
@@ -8045,6 +8057,7 @@ export namespace Prisma {
   interface RestaurantManagerFieldRefs {
     readonly id: FieldRef<"RestaurantManager", 'String'>
     readonly userId: FieldRef<"RestaurantManager", 'String'>
+    readonly phoneNumber: FieldRef<"RestaurantManager", 'String'>
     readonly restaurantId: FieldRef<"RestaurantManager", 'String'>
     readonly createdAt: FieldRef<"RestaurantManager", 'DateTime'>
     readonly updatedAt: FieldRef<"RestaurantManager", 'DateTime'>
@@ -13246,6 +13259,7 @@ export namespace Prisma {
   export const RestaurantManagerScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
+    phoneNumber: 'phoneNumber',
     restaurantId: 'restaurantId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -13728,7 +13742,7 @@ export namespace Prisma {
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     id?: StringFilter<"Customer"> | string
     userId?: StringFilter<"Customer"> | string
-    phoneNumber?: StringNullableFilter<"Customer"> | string | null
+    phoneNumber?: StringFilter<"Customer"> | string
     address?: StringNullableFilter<"Customer"> | string | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
@@ -13739,7 +13753,7 @@ export namespace Prisma {
   export type CustomerOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    phoneNumber?: SortOrderInput | SortOrder
+    phoneNumber?: SortOrder
     address?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13753,7 +13767,7 @@ export namespace Prisma {
     AND?: CustomerWhereInput | CustomerWhereInput[]
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
-    phoneNumber?: StringNullableFilter<"Customer"> | string | null
+    phoneNumber?: StringFilter<"Customer"> | string
     address?: StringNullableFilter<"Customer"> | string | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
@@ -13764,7 +13778,7 @@ export namespace Prisma {
   export type CustomerOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    phoneNumber?: SortOrderInput | SortOrder
+    phoneNumber?: SortOrder
     address?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13779,7 +13793,7 @@ export namespace Prisma {
     NOT?: CustomerScalarWhereWithAggregatesInput | CustomerScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Customer"> | string
     userId?: StringWithAggregatesFilter<"Customer"> | string
-    phoneNumber?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    phoneNumber?: StringWithAggregatesFilter<"Customer"> | string
     address?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
@@ -13791,6 +13805,7 @@ export namespace Prisma {
     NOT?: RestaurantManagerWhereInput | RestaurantManagerWhereInput[]
     id?: StringFilter<"RestaurantManager"> | string
     userId?: StringFilter<"RestaurantManager"> | string
+    phoneNumber?: StringFilter<"RestaurantManager"> | string
     restaurantId?: StringFilter<"RestaurantManager"> | string
     createdAt?: DateTimeFilter<"RestaurantManager"> | Date | string
     updatedAt?: DateTimeFilter<"RestaurantManager"> | Date | string
@@ -13801,6 +13816,7 @@ export namespace Prisma {
   export type RestaurantManagerOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
+    phoneNumber?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13814,6 +13830,7 @@ export namespace Prisma {
     AND?: RestaurantManagerWhereInput | RestaurantManagerWhereInput[]
     OR?: RestaurantManagerWhereInput[]
     NOT?: RestaurantManagerWhereInput | RestaurantManagerWhereInput[]
+    phoneNumber?: StringFilter<"RestaurantManager"> | string
     restaurantId?: StringFilter<"RestaurantManager"> | string
     createdAt?: DateTimeFilter<"RestaurantManager"> | Date | string
     updatedAt?: DateTimeFilter<"RestaurantManager"> | Date | string
@@ -13824,6 +13841,7 @@ export namespace Prisma {
   export type RestaurantManagerOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
+    phoneNumber?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13838,6 +13856,7 @@ export namespace Prisma {
     NOT?: RestaurantManagerScalarWhereWithAggregatesInput | RestaurantManagerScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"RestaurantManager"> | string
     userId?: StringWithAggregatesFilter<"RestaurantManager"> | string
+    phoneNumber?: StringWithAggregatesFilter<"RestaurantManager"> | string
     restaurantId?: StringWithAggregatesFilter<"RestaurantManager"> | string
     createdAt?: DateTimeWithAggregatesFilter<"RestaurantManager"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"RestaurantManager"> | Date | string
@@ -14468,7 +14487,7 @@ export namespace Prisma {
 
   export type CustomerCreateInput = {
     id?: string
-    phoneNumber?: string | null
+    phoneNumber: string
     address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14479,7 +14498,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateInput = {
     id?: string
     userId: string
-    phoneNumber?: string | null
+    phoneNumber: string
     address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14488,7 +14507,7 @@ export namespace Prisma {
 
   export type CustomerUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14499,7 +14518,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14509,7 +14528,7 @@ export namespace Prisma {
   export type CustomerCreateManyInput = {
     id?: string
     userId: string
-    phoneNumber?: string | null
+    phoneNumber: string
     address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14517,7 +14536,7 @@ export namespace Prisma {
 
   export type CustomerUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14526,7 +14545,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14534,6 +14553,7 @@ export namespace Prisma {
 
   export type RestaurantManagerCreateInput = {
     id?: string
+    phoneNumber: string
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutRestaurantManagerInput
@@ -14543,6 +14563,7 @@ export namespace Prisma {
   export type RestaurantManagerUncheckedCreateInput = {
     id?: string
     userId: string
+    phoneNumber: string
     restaurantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14550,6 +14571,7 @@ export namespace Prisma {
 
   export type RestaurantManagerUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutRestaurantManagerNestedInput
@@ -14559,6 +14581,7 @@ export namespace Prisma {
   export type RestaurantManagerUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14567,6 +14590,7 @@ export namespace Prisma {
   export type RestaurantManagerCreateManyInput = {
     id?: string
     userId: string
+    phoneNumber: string
     restaurantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14574,6 +14598,7 @@ export namespace Prisma {
 
   export type RestaurantManagerUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14581,6 +14606,7 @@ export namespace Prisma {
   export type RestaurantManagerUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15327,6 +15353,7 @@ export namespace Prisma {
   export type RestaurantManagerCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    phoneNumber?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15335,6 +15362,7 @@ export namespace Prisma {
   export type RestaurantManagerMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    phoneNumber?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15343,6 +15371,7 @@ export namespace Prisma {
   export type RestaurantManagerMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    phoneNumber?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16658,7 +16687,7 @@ export namespace Prisma {
 
   export type CustomerCreateWithoutUserInput = {
     id?: string
-    phoneNumber?: string | null
+    phoneNumber: string
     address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16667,7 +16696,7 @@ export namespace Prisma {
 
   export type CustomerUncheckedCreateWithoutUserInput = {
     id?: string
-    phoneNumber?: string | null
+    phoneNumber: string
     address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16681,6 +16710,7 @@ export namespace Prisma {
 
   export type RestaurantManagerCreateWithoutUserInput = {
     id?: string
+    phoneNumber: string
     createdAt?: Date | string
     updatedAt?: Date | string
     restaurant: RestaurantCreateNestedOneWithoutManagersInput
@@ -16688,6 +16718,7 @@ export namespace Prisma {
 
   export type RestaurantManagerUncheckedCreateWithoutUserInput = {
     id?: string
+    phoneNumber: string
     restaurantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16771,7 +16802,7 @@ export namespace Prisma {
 
   export type CustomerUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16780,7 +16811,7 @@ export namespace Prisma {
 
   export type CustomerUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16800,6 +16831,7 @@ export namespace Prisma {
 
   export type RestaurantManagerUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restaurant?: RestaurantUpdateOneRequiredWithoutManagersNestedInput
@@ -16807,6 +16839,7 @@ export namespace Prisma {
 
   export type RestaurantManagerUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17241,6 +17274,7 @@ export namespace Prisma {
 
   export type RestaurantManagerCreateWithoutRestaurantInput = {
     id?: string
+    phoneNumber: string
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutRestaurantManagerInput
@@ -17249,6 +17283,7 @@ export namespace Prisma {
   export type RestaurantManagerUncheckedCreateWithoutRestaurantInput = {
     id?: string
     userId: string
+    phoneNumber: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17333,6 +17368,7 @@ export namespace Prisma {
     NOT?: RestaurantManagerScalarWhereInput | RestaurantManagerScalarWhereInput[]
     id?: StringFilter<"RestaurantManager"> | string
     userId?: StringFilter<"RestaurantManager"> | string
+    phoneNumber?: StringFilter<"RestaurantManager"> | string
     restaurantId?: StringFilter<"RestaurantManager"> | string
     createdAt?: DateTimeFilter<"RestaurantManager"> | Date | string
     updatedAt?: DateTimeFilter<"RestaurantManager"> | Date | string
@@ -17477,7 +17513,7 @@ export namespace Prisma {
 
   export type CustomerCreateWithoutOrdersInput = {
     id?: string
-    phoneNumber?: string | null
+    phoneNumber: string
     address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17487,7 +17523,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateWithoutOrdersInput = {
     id?: string
     userId: string
-    phoneNumber?: string | null
+    phoneNumber: string
     address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17576,7 +17612,7 @@ export namespace Prisma {
 
   export type CustomerUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17586,7 +17622,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17935,6 +17971,7 @@ export namespace Prisma {
   export type RestaurantManagerCreateManyRestaurantInput = {
     id?: string
     userId: string
+    phoneNumber: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18014,6 +18051,7 @@ export namespace Prisma {
 
   export type RestaurantManagerUpdateWithoutRestaurantInput = {
     id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutRestaurantManagerNestedInput
@@ -18022,6 +18060,7 @@ export namespace Prisma {
   export type RestaurantManagerUncheckedUpdateWithoutRestaurantInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18029,6 +18068,7 @@ export namespace Prisma {
   export type RestaurantManagerUncheckedUpdateManyWithoutRestaurantInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

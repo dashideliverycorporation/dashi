@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import type { CreateRestaurantInput } from "@/server/schemas/restaurant.schema";
 import { JSX } from "react/jsx-runtime";
@@ -34,8 +33,6 @@ import { toastNotification } from "@/components/custom/toast-notification";
 export function RestaurantForm(): JSX.Element {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   // Initialize form with zod validation
   const form = useForm<CreateRestaurantInput>({
@@ -54,7 +51,10 @@ export function RestaurantForm(): JSX.Element {
   const createRestaurantMutation = trpc.restaurant.createRestaurant.useMutation(
     {
       onSuccess: () => {
-        setSuccess("Restaurant created successfully");
+        toastNotification.success(
+          "Restaurant created successfully",
+          "You have added a new restaurant, you will be redirected to the restaurant list"
+        );
         setIsLoading(false);
         // Reset form
         form.reset();
@@ -64,7 +64,11 @@ export function RestaurantForm(): JSX.Element {
         }, 2000);
       },
       onError: (error) => {
-        setError(error.message || "Failed to create restaurant");
+        toastNotification.error(
+        "Failed to create restaurant",
+        `${error.message}! 
+        Please try again`
+      );
         setIsLoading(false);
       },
     }
@@ -78,14 +82,9 @@ export function RestaurantForm(): JSX.Element {
   const onSubmit = async (values: CreateRestaurantInput): Promise<void> => {
     try {
       setIsLoading(true);
-      setError(null);
-      setSuccess(null);
-
       // Call the mutation to create the restaurant
       createRestaurantMutation.mutate(values);
-      toastNotification.success("Restaurant created successfully", 'Redirecting...');
     } catch (err) {
-      toastNotification.error("Failed to create restaurant", 'Please try again');
       setIsLoading(false);
       console.error("Error submitting form:", err);
     }
@@ -93,20 +92,6 @@ export function RestaurantForm(): JSX.Element {
 
   return (
     <div className="max-w-2xl">
-      {error && (
-        <Alert variant="destructive" className="mb-6">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {success && (
-        <Alert className="mb-6 bg-green-50 border-green-500">
-          <AlertDescription className="text-green-800">
-            {success}
-          </AlertDescription>
-        </Alert>
-      )}
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="text-sm text-muted-foreground mb-4">

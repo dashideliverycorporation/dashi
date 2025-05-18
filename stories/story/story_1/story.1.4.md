@@ -94,6 +94,11 @@ Status: Completed
 - [x] Add placeholder edit links for future functionality
 - [x] Create responsive design for different screen sizes
 - [x] Write tests for the restaurant listing functionality
+  - [x] Unit test for tRPC restaurant fetching procedure
+  - [x] Unit test for restaurant table component rendering
+  - [x] Unit test for pagination functionality
+  - [x] Unit test for sorting functionality
+  - [x] Unit test for filtering capability
 
 ## Testing Requirements
 

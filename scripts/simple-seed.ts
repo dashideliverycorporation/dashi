@@ -94,6 +94,7 @@ async function main() {
         managers: {
           create: {
             userId: managerUser.id,
+             phoneNumber: restData.phoneNumber || "+243999999999", // Use restaurant phone or default
           },
         },
       },

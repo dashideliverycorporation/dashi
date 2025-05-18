@@ -66,6 +66,7 @@ export const validUserData = {
     name: "John Doe",
     email: "john@example.com",
     password: "SecurePass123!",
+    phoneNumber: "+1234567890",
     role: UserRole.RESTAURANT,
     restaurantId: "restaurant-id-1",
   },
@@ -95,6 +96,7 @@ export const invalidUserData = {
     name: "Invalid Email User",
     email: "not-an-email",
     password: "Password123",
+    phoneNumber: "+1234567890",
     role: UserRole.RESTAURANT,
     restaurantId: "restaurant-id-1",
   },
@@ -133,6 +135,84 @@ export const dbResponses = {
       deletedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
+    },
+    list: [
+      {
+        id: "restaurant-id-1",
+        name: "Tasty Pizza",
+        description: "Best pizza in town",
+        email: "contact@tastypizza.com",
+        phoneNumber: "+1234567890",
+        address: "123 Main St, Goma",
+        serviceArea: "Goma downtown area",
+        isActive: true,
+        createdAt: new Date("2025-01-01"),
+        updatedAt: new Date("2025-01-01"),
+        managers: [
+          {
+            id: "manager-id-1",
+            user: {
+              id: "user-id-1",
+              name: "John Doe",
+              email: "john@example.com",
+            },
+          },
+        ],
+      },
+      {
+        id: "restaurant-id-2",
+        name: "Burger Place",
+        description: "Juicy burgers and fries",
+        email: "info@burgerplace.com",
+        phoneNumber: "+9876543210",
+        address: "456 Oak St, Goma",
+        serviceArea: "North Goma area",
+        isActive: true,
+        createdAt: new Date("2025-01-15"),
+        updatedAt: new Date("2025-01-15"),
+        managers: [
+          {
+            id: "manager-id-2",
+            user: {
+              id: "user-id-2",
+              name: "Jane Smith",
+              email: "jane@example.com",
+            },
+          },
+          {
+            id: "manager-id-3",
+            user: {
+              id: "user-id-3",
+              name: "Bob Johnson",
+              email: "bob@example.com",
+            },
+          },
+        ],
+      },
+      {
+        id: "restaurant-id-3",
+        name: "Sushi Corner",
+        description: "Fresh sushi and Japanese cuisine",
+        email: "hello@sushicorner.com",
+        phoneNumber: "+1122334455",
+        address: "789 Pine St, Goma",
+        serviceArea: "East Goma area",
+        isActive: true,
+        createdAt: new Date("2025-02-01"),
+        updatedAt: new Date("2025-02-01"),
+        managers: [],
+      },
+    ],
+    paginatedResponse: {
+      restaurants: [
+        /* Will be filled with the list data */
+      ],
+      pagination: {
+        total: 3,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      },
     },
   },
   user: {
