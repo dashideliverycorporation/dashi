@@ -24,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Eye, EyeOff } from "lucide-react"; // Import Eye and EyeOff icons
 import type { CreateRestaurantUserInput } from "@/server/schemas/user.schema";
 import { toastNotification } from "@/components/custom/toast-notification";
@@ -40,8 +39,6 @@ import { JSX } from "react/jsx-runtime";
 export function UserForm(): JSX.Element {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false); // Add state for password visibility
 
   // Fetch list of restaurants for the dropdown
@@ -59,31 +56,29 @@ export function UserForm(): JSX.Element {
       restaurantId: "",
     },
   });
-
   // Get the user creation mutation from tRPC
   const createUserMutation = trpc.user.createRestaurantUser.useMutation({
     onSuccess: () => {
-      setSuccess("Restaurant user created successfully");
+      toastNotification.success(
+        "User created successfully",
+        "You have added a new user, you will be redirected to the users list"
+      );
       setIsLoading(false);
       // Reset form
       form.reset();
-      // Show toast notification
-      toastNotification.success(
-        "User created successfully",
-        "Redirecting to users list..."
-      );
       // Redirect to users list after a short delay
       setTimeout(() => {
         router.push("/admin/users");
       }, 2000);
     },
     onError: (error) => {
-      setError(error.message || "Failed to create restaurant user");
-      setIsLoading(false);
       toastNotification.error(
         "Failed to create user",
-        error.message || "Please check the form and try again"
+        `${
+          error.message || "Please check the form and try again"
+        }! Please try again`
       );
+      setIsLoading(false);
     },
   });
 
@@ -93,7 +88,6 @@ export function UserForm(): JSX.Element {
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
-
   /**
    * Handle form submission
    *
@@ -102,34 +96,15 @@ export function UserForm(): JSX.Element {
   const onSubmit = async (values: CreateRestaurantUserInput): Promise<void> => {
     try {
       setIsLoading(true);
-      setError(null);
-      setSuccess(null);
-
       // Call the mutation to create the restaurant user
       createUserMutation.mutate(values);
     } catch (err) {
       setIsLoading(false);
-      setError("An unexpected error occurred");
       console.error("Error submitting form:", err);
     }
   };
-
   return (
     <div className="max-w-2xl">
-      {error && (
-        <Alert variant="destructive" className="mb-6">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {success && (
-        <Alert className="mb-6 bg-green-50 border-green-500">
-          <AlertDescription className="text-green-800">
-            {success}
-          </AlertDescription>
-        </Alert>
-      )}
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="text-sm text-muted-foreground mb-4">
@@ -218,10 +193,12 @@ export function UserForm(): JSX.Element {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
                     onClick={togglePasswordVisibility}
                     tabIndex={-1}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4 text-muted-foreground" />

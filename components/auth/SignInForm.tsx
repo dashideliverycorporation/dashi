@@ -102,11 +102,27 @@ export function SignInForm(): JSX.Element {
         setError("Invalid email or password. Please try again.");
         return;
       }
-
       if (result?.ok) {
-        // Redirect to the dashboard or home page on successful sign-in
-        router.push(result.url || "/");
-        router.refresh(); // Refresh to update auth state in the UI
+        // Get user info to check their role after successful sign-in
+        try {
+          // Make a fetch call to get the session info
+          const session = await fetch("/api/auth/session");
+          const sessionData = await session.json();
+
+          if (sessionData && sessionData.user?.role === "ADMIN") {
+            // If the user is an admin, redirect to admin dashboard
+            router.push("/admin");
+          } else {
+            // For non-admin users, use the default redirect
+            router.push(result.url || "/");
+          }
+          router.refresh(); // Refresh to update auth state in the UI
+        } catch (sessionError) {
+          console.error("Error fetching session:", sessionError);
+          // Default redirect if we can't determine role
+          router.push(result.url || "/");
+          router.refresh();
+        }
       }
     } catch (err) {
       console.error("Sign in error:", err);
@@ -168,6 +184,7 @@ export function SignInForm(): JSX.Element {
                   <div className="relative">
                     <FormControl>
                       <Input
+                        placeholder="yourpassword"
                         type={showPassword ? "text" : "password"}
                         disabled={isLoading}
                         {...field}
@@ -177,7 +194,7 @@ export function SignInForm(): JSX.Element {
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
+                      className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground cursor-pointer"
                       onClick={togglePasswordVisibility}
                       tabIndex={-1}
                       aria-label={
@@ -195,7 +212,11 @@ export function SignInForm(): JSX.Element {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              disabled={isLoading}
+            >
               {isLoading
                 ? t("signIn.signingIn", "Signing In...")
                 : t("signIn.signIn", "Sign In")}
