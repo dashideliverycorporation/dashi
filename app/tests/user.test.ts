@@ -162,6 +162,7 @@ describe("User Creation", () => {
     // Create test data with only required fields and proper CUID format for restaurantId
     const testData = {
       ...validUserData.minimal,
+      phoneNumber: "+1234567890", // Add phone number for restaurant manager
       restaurantId: "clh5bqq0f0000ju0dawau5qqd", // Valid CUID format
     };
 

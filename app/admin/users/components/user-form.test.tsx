@@ -5,7 +5,7 @@
  * These tests verify that the form renders correctly, validates inputs, and handles submissions.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen} from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { UserForm } from "./user-form";
 
@@ -62,22 +62,22 @@ vi.mock("next/navigation", () => ({
 
 describe("UserForm", () => {
   // Set up user event for simulating user interactions
-//   const user = userEvent.setup();
+  //   const user = userEvent.setup();
 
   // Reset mocks before each test
   beforeEach(() => {
     vi.clearAllMocks();
   });
-
   it("renders the form with all required fields", () => {
     // Render the component
     render(<UserForm />);
 
-    // Check that the form renders with the expected fields
-    expect(screen.getByLabelText(/Full Name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Restaurant/i)).toBeInTheDocument();
+    // Check that the form renders with the expected fields - using more specific regex patterns
+    expect(screen.getByLabelText(/^Full Name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Phone Number/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Restaurant/i)).toBeInTheDocument();
 
     // Check for submit button
     expect(
