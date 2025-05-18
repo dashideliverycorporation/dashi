@@ -69,6 +69,7 @@ export const userRouter = router({
             data: {
               userId: user.id,
               restaurantId: input.restaurantId,
+              phoneNumber: input.phoneNumber,
             },
           });
 
@@ -87,6 +88,7 @@ export const userRouter = router({
             name: result.user.name,
             role: result.user.role,
             restaurantId: result.restaurantManager.restaurantId,
+            phoneNumber: result.restaurantManager.phoneNumber,
           },
         };
       } catch (error) {

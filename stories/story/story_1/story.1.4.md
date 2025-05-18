@@ -84,16 +84,21 @@ Status: Draft
 
 ## Tasks / Subtasks
 
-- [ ] Create tRPC procedure to fetch restaurants with associated users
-- [ ] Build restaurant table component with Shadcn UI
-- [ ] Implement pagination for the restaurant table
-- [ ] Add sorting functionality for relevant columns
-- [ ] Add filtering capability for restaurant name
-- [ ] Style table according to the design system
-- [ ] Handle loading, empty, and error states
-- [ ] Add placeholder edit links for future functionality
-- [ ] Create responsive design for different screen sizes
-- [ ] Write tests for the restaurant listing functionality
+- [x] Create tRPC procedure to fetch restaurants with associated users
+- [x] Build restaurant table component with Shadcn UI
+- [x] Implement pagination for the restaurant table
+- [x] Add sorting functionality for relevant columns
+- [x] Add filtering capability for restaurant name
+- [x] Style table according to the design system
+- [x] Handle loading, empty, and error states
+- [x] Add placeholder edit links for future functionality
+- [x] Create responsive design for different screen sizes
+- [x] Write tests for the restaurant listing functionality
+  - [x] Unit test for tRPC restaurant fetching procedure
+  - [x] Unit test for restaurant table component rendering
+  - [x] Unit test for pagination functionality
+  - [x] Unit test for sorting functionality
+  - [x] Unit test for filtering capability
 
 ## Testing Requirements
 

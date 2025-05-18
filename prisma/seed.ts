@@ -80,15 +80,14 @@ async function main() {
         password: managerPassword,
         role: "RESTAURANT",
       },
-    });
-
-    // Create restaurant
+    }); // Create restaurant
     const restaurant = await prisma.restaurant.create({
       data: {
         ...restData,
         managers: {
           create: {
             userId: managerUser.id,
+            phoneNumber: restData.phoneNumber || "+243999999999", // Use restaurant phone or default
           },
         },
       },

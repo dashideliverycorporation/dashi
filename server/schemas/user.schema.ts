@@ -16,7 +16,8 @@ export const createRestaurantUserSchema = z.object({
     .min(2, "Name must be at least 2 characters")
     .max(100, "Name must be at most 100 characters"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  restaurantId: z.string().cuid("Invalid restaurant ID"),
+  phoneNumber: z.string().min(1, "Phone number is required"),
+  restaurantId: z.string().cuid("Restaurant is required"),
 });
 
 /**

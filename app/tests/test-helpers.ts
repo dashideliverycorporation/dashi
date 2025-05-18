@@ -84,7 +84,7 @@ export function setupRestaurantNotFound() {
  * @param restaurantManagerResponse The restaurant manager data to return
  */
 export function setupSuccessfulTransaction(
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   userResponse: any,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   restaurantManagerResponse: any
@@ -104,4 +104,30 @@ export function setupSuccessfulTransaction(
  */
 export function setupFailedTransaction(error: Error) {
   vi.mocked(prisma.$transaction).mockRejectedValue(error);
+}
+
+/**
+ * Setup mock for successful restaurant listing with users
+ *
+ * @param restaurants The list of restaurants with users to return
+ * @param total The total number of restaurants (for pagination)
+ * @param page The current page number
+ * @param limit The number of restaurants per page
+ */
+export function setupSuccessfulRestaurantListing(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  restaurants: any[],
+  total: number = restaurants.length,
+) {
+  vi.mocked(prisma.restaurant.findMany).mockResolvedValue(restaurants);
+  vi.mocked(prisma.restaurant.count).mockResolvedValue(total);
+}
+
+/**
+ * Setup mock for failed restaurant listing
+ *
+ * @param error The error to throw from the findMany function
+ */
+export function setupFailedRestaurantListing(error: Error) {
+  vi.mocked(prisma.restaurant.findMany).mockRejectedValue(error);
 }

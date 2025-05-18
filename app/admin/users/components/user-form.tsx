@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react"; // Import Eye and EyeOff icons
 import type { CreateRestaurantUserInput } from "@/server/schemas/user.schema";
 import { toastNotification } from "@/components/custom/toast-notification";
 import { JSX } from "react/jsx-runtime";
@@ -42,6 +42,7 @@ export function UserForm(): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState<boolean>(false); // Add state for password visibility
 
   // Fetch list of restaurants for the dropdown
   const { data: restaurants, isLoading: isLoadingRestaurants } =
@@ -54,7 +55,8 @@ export function UserForm(): JSX.Element {
       name: "",
       email: "",
       password: "",
-      restaurantId: "", // This will be filled from the dropdown in the next subtask
+      phoneNumber: "",
+      restaurantId: "",
     },
   });
 
@@ -84,6 +86,13 @@ export function UserForm(): JSX.Element {
       );
     },
   });
+
+  /**
+   * Toggle password visibility
+   */
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   /**
    * Handle form submission
@@ -172,19 +181,55 @@ export function UserForm(): JSX.Element {
 
           <FormField
             control={form.control}
+            name="phoneNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Phone Number <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="+243 456 7890" type="tel" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Contact phone number for the restaurant manager.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
                   Password <span className="text-red-500">*</span>
                 </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Minimum 8 characters"
-                    type="password"
-                    {...field}
-                  />
-                </FormControl>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      placeholder="Minimum 8 characters"
+                      type={showPassword ? "text" : "password"}
+                      {...field}
+                    />
+                  </FormControl>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={togglePasswordVisibility}
+                    tabIndex={-1}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
+                </div>
                 <FormDescription>
                   Must be at least 8 characters long.
                 </FormDescription>
