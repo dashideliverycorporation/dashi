@@ -1,6 +1,6 @@
 # Story 1.1: Implement Basic Authentication (Login & Registration Backend)
 
-Status: Draft
+Status: Completed
 
 ## Goal & Context
 

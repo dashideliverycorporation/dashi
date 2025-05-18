@@ -17,15 +17,18 @@ This epic builds upon the authentication and database infrastructure established
 ## Local Testability & Command-Line Access
 
 - **Local Development:**
+
   - Run `pnpm dev` to start the Next.js development server
   - Run `pnpm db:studio` to access Prisma Studio for database exploration
   - Run `pnpm test` to run the test suite
 
 - **Command-Line Testing:**
+
   - `pnpm prisma db push` to sync schema changes to the database
   - `pnpm prisma studio` to visually explore the database and verify user/restaurant relationships
 
 - **Environment Testing:**
+
   - Local: Use `.env.local` for development environment variables
   - Development: Vercel preview deployments for each PR
   - Production: Main branch deployment on Vercel
@@ -53,12 +56,12 @@ This epic builds upon the authentication and database infrastructure established
   - AC4: User roles are stored in the database and included in the session
   - AC5: tRPC procedures can be protected based on user roles
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Update Prisma schema with user role field
-  - [ ] Create user registration tRPC procedure
-  - [ ] Implement password hashing
-  - [ ] Create login procedure with Auth.js
-  - [ ] Add role to session token
-  - [ ] Create role-based middleware for tRPC
+  - [x] Update Prisma schema with user role field
+  - [x] Create user registration tRPC procedure
+  - [x] Implement password hashing
+  - [x] Create login procedure with Auth.js
+  - [x] Add role to session token
+  - [x] Create role-based middleware for tRPC
 - **Dependencies:** Epic 0 (Stories 0.2, 0.6, 0.7)
 
 ---
@@ -80,12 +83,12 @@ This epic builds upon the authentication and database infrastructure established
   - AC4: Dashboard displays user role and session information
   - AC5: Dashboard UI follows the established design system
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Create admin dashboard page structure
-  - [ ] Implement Auth.js session check middleware
-  - [ ] Create access denied page
-  - [ ] Build dashboard layout with navigation
-  - [ ] Add session display component
-  - [ ] Style with Shadcn UI components
+  - [x] Create admin dashboard page structure
+  - [x] Implement Auth.js session check middleware
+  - [x] Create access denied page
+  - [x] Build dashboard layout with navigation
+  - [x] Add session display component
+  - [x] Style with Shadcn UI components
 - **Dependencies:** Story 1.1
 
 ---
@@ -107,12 +110,12 @@ This epic builds upon the authentication and database infrastructure established
   - AC4: User is linked to a specific restaurant in the database
   - AC5: Form validation prevents submission of invalid data
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Update Prisma schema for restaurant-user relationship
-  - [ ] Create restaurant addition form
-  - [ ] Implement tRPC procedure for adding restaurants
-  - [ ] Create user creation form with restaurant selection
-  - [ ] Implement tRPC procedure for adding restaurant users
-  - [ ] Add form validation
+  - [x] Update Prisma schema for restaurant-user relationship
+  - [x] Create restaurant addition form
+  - [x] Implement tRPC procedure for adding restaurants
+  - [x] Create user creation form with restaurant selection
+  - [x] Implement tRPC procedure for adding restaurant users
+  - [x] Add form validation
 - **Dependencies:** Story 1.2
 
 ---
@@ -134,12 +137,12 @@ This epic builds upon the authentication and database infrastructure established
   - AC4: Table supports pagination if needed
   - AC5: Table supports basic sorting and filtering
 - **Tasks (Optional Initial Breakdown):**
-  - [ ] Create restaurant listing page in admin dashboard
-  - [ ] Implement tRPC procedure to fetch restaurants with users
-  - [ ] Build responsive table component with Shadcn UI
-  - [ ] Add pagination component
-  - [ ] Implement basic sorting and filtering
-  - [ ] Add placeholder edit links
+  - [x] Create restaurant listing page in admin dashboard
+  - [x] Implement tRPC procedure to fetch restaurants with users
+  - [x] Build responsive table component with Shadcn UI
+  - [x] Add pagination component
+  - [x] Implement basic sorting and filtering
+  - [x] Add placeholder edit links
 - **Dependencies:** Story 1.3
 
 ## Change Log

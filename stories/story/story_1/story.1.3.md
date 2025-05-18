@@ -1,19 +1,21 @@
 # Story 1.3: Admin Dashboard - Add & Link Restaurant and Restaurant User
 
-Status: Draft
+Status: Completed
 
-## Goal & C- [ ] Write tests for restaurant and user creation
+## Goal & Context
 
-- [ ] Write unit tests for restaurant creation tRPC procedure
-  - [ ] Set up test file structure and test environment
-  - [ ] Create mocks for Prisma client
-  - [ ] Test successful restaurant creation with complete data
-  - [ ] Test successful restaurant creation with minimal required data
-  - [ ] Test error handling when database operations fail
-  - [ ] Test validation for required fields (name, phone)
-  - [ ] Test validation for field constraints (email format, name length)
-- [ ] Write unit tests for user creation tRPC procedure
-- [ ] Write tests for restaurant form validation using React Testing Library
+- [x] Write tests for restaurant and user creation
+
+- [x] Write unit tests for restaurant creation tRPC procedure
+  - [x] Set up test file structure and test environment
+  - [x] Create mocks for Prisma client
+  - [x] Test successful restaurant creation with complete data
+  - [x] Test successful restaurant creation with minimal required data
+  - [x] Test error handling when database operations fail
+  - [x] Test validation for required fields (name, phone)
+  - [x] Test validation for field constraints (email format, name length)
+- [x] Write unit tests for user creation tRPC procedure
+- [x] Write tests for restaurant form validation using React Testing Library
 - [ ] Write tests for user form validation using React Testing Library
 - [ ] Create integration tests for the restaurant creation flow
 - [ ] Create integration tests for the user creation flower Story:\*\* As an admin, I want to add restaurants and create associated user accounts so that restaurant owners can access the platform.

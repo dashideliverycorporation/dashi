@@ -1,8 +1,10 @@
 # Story 1.2: Admin Dashboard - Protected Route & Basic View
 
-Status: Draft
+Status: Completed
 
-## Goal & C- [x] Write tests for admin route protection [x] Write tests for admin route protectionntext
+## Goal & Context
+
+- [x] Write tests for admin route protection
 
 **User Story:** As an admin, I want to access a protected dashboard so that I can manage restaurants and restaurant users.
 
