@@ -41,7 +41,7 @@ export default async function RestaurantMenuPage() {
           {restaurantName} Menu
         </h1>
         <p className="text-muted-foreground mt-2">
-          Manage your restaurant's menu items
+          Manage your restaurant&apos;s menu items
         </p>
       </div>
 
@@ -50,7 +50,7 @@ export default async function RestaurantMenuPage() {
         <CardHeader>
           <CardTitle>Menu Items</CardTitle>
           <CardDescription>
-            View and manage your restaurant's menu items
+            View and manage your restaurant&apos;s menu items
           </CardDescription>
         </CardHeader>
         <CardContent>
