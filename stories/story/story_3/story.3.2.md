@@ -104,7 +104,7 @@ Status: In-Progress
 
 ## Tasks / Subtasks
 
-- [ ] Create restaurant menu page route at `/restaurant/menu`
+- [x] Create restaurant menu page route at `/restaurant/menu`
 - [ ] Implement tRPC procedure to fetch menu items for the logged-in restaurant
 - [ ] Create Menu page to display the list of menu items
 - [ ] Create Menu component for individual menu items
