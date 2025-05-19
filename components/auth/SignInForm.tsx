@@ -96,7 +96,6 @@ export function SignInForm(): JSX.Element {
         redirect: false,
         callbackUrl: "/",
       });
-
       if (result?.error) {
         // Handle authentication errors
         setError("Invalid email or password. Please try again.");
@@ -109,11 +108,15 @@ export function SignInForm(): JSX.Element {
           const session = await fetch("/api/auth/session");
           const sessionData = await session.json();
 
+          // Redirect based on user role
           if (sessionData && sessionData.user?.role === "ADMIN") {
             // If the user is an admin, redirect to admin dashboard
             router.push("/admin");
+          } else if (sessionData && sessionData.user?.role === "RESTAURANT") {
+            // If the user is a restaurant, redirect to restaurant dashboard
+            router.push("/restaurant");
           } else {
-            // For non-admin users, use the default redirect
+            // For other users (e.g., customers), use the default redirect
             router.push(result.url || "/");
           }
           router.refresh(); // Refresh to update auth state in the UI
