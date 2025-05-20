@@ -122,13 +122,10 @@ Status: In-Progress
 
 ## Tasks / Subtasks
 
-- [ ] Create "Add New Menu Item" button in the menu management page
-- [ ] Create menu item add page route at `/restaurant/menu/add`
-- [ ] Create MenuItemForm component with required fields
-- [ ] Implement client-side form validation using Zod and React Hook Form
-- [ ] Create Zod schema for menu item validation
-- [ ] Implement tRPC procedure for creating menu items
-- [ ] Add restaurant ID association from the session
+- [x] Create "Add New Menu Item" button in the menu management page
+- [x] Create menu item add page route at `/restaurant/menu/add`
+- [x] Create MenuItemForm component with required fields
+- [x] Implement tRPC procedure for creating menu items
 - [ ] Implement form submission and error handling
 - [ ] Add loading state during form submission
 - [ ] Add success notification after successful creation

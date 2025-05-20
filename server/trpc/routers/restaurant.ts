@@ -5,11 +5,13 @@
  * - Adding new restaurants
  * - Retrieving restaurant information
  * - Updating restaurant details
+ * - Managing menu items
  */
-import { adminProcedure, router } from "../trpc";
+import { adminProcedure, restaurantProcedure, router } from "../trpc";
 import { prisma } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 import { createRestaurantSchema } from "@/server/schemas/restaurant.schema";
+import { createMenuItemSchema } from "@/server/schemas/menu-item.schema";
 import { z } from "zod";
 
 /**
@@ -170,6 +172,55 @@ export const restaurantRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to create restaurant",
+        });
+      }
+    }),
+
+  /**
+   * Create a new menu item for the authenticated restaurant user
+   * Validates the input using Zod schema and creates a new MenuItem in the database
+   * Associates the menu item with the restaurant of the authenticated user
+   */
+  createMenuItem: restaurantProcedure
+    .input(createMenuItemSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        // Get the restaurant ID for the authenticated user
+        const userId = ctx.session.user.id;
+        const restaurantManager = await prisma.restaurantManager.findUnique({
+          where: { userId },
+          select: { restaurantId: true },
+        });
+
+        if (!restaurantManager) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "User is not associated with any restaurant",
+          });
+        }
+
+        // Map input fields to match the Prisma model (isAvailable instead of available)
+        const menuItem = await prisma.menuItem.create({
+          data: {
+            name: input.name,
+            description: input.description,
+            price: input.price,
+            category: input.category,
+            imageUrl: input.imageUrl,
+            isAvailable: input.available,
+            restaurantId: restaurantManager.restaurantId,
+          },
+        });
+
+        return menuItem;
+      } catch (error) {
+        console.error("Error creating menu item:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create menu item",
         });
       }
     }),

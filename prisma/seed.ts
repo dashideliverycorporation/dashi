@@ -162,36 +162,48 @@ async function createMenuItems(restaurantId: string) {
       description: "Classic pizza with tomato sauce, mozzarella, and basil",
       price: 12.99,
       category: "Pizza",
+      imageUrl:
+        "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
     },
     {
       name: "Pepperoni Pizza",
       description: "Pizza with tomato sauce, mozzarella, and pepperoni",
       price: 14.99,
       category: "Pizza",
+      imageUrl:
+        "https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
     },
     {
       name: "Veggie Burger",
       description: "Plant-based burger with lettuce, tomato, and special sauce",
       price: 10.99,
       category: "Burger",
+      imageUrl:
+        "https://images.unsplash.com/photo-1520072959219-c595dc870360?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
     },
     {
       name: "Classic Burger",
       description: "Beef patty with cheese, lettuce, tomato, and sauce",
       price: 11.99,
       category: "Burger",
+      imageUrl:
+        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
     },
     {
       name: "California Roll",
       description: "Sushi roll with crab, avocado, and cucumber",
       price: 8.99,
       category: "Sushi",
+      imageUrl:
+        "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
     },
     {
       name: "French Fries",
       description: "Crispy golden fries with salt",
       price: 4.99,
       category: "Sides",
+      imageUrl:
+        "https://images.unsplash.com/photo-1585109649139-366815a0d713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
     },
   ];
 
