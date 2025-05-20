@@ -126,12 +126,12 @@ Status: In-Progress
 - [x] Create menu item add page route at `/restaurant/menu/add`
 - [x] Create MenuItemForm component with required fields
 - [x] Implement tRPC procedure for creating menu items
-- [ ] Implement form submission and error handling
-- [ ] Add loading state during form submission
-- [ ] Add success notification after successful creation
-- [ ] Implement redirect or menu list update after successful creation
-- [ ] Style the form using Shadcn UI components and the design system
-- [ ] Ensure the form is responsive for different screen sizes
+- [x] Implement form submission and error handling
+- [x] Add loading state during form submission
+- [x] Add success notification after successful creation
+- [x] Implement redirect or menu list update after successful creation
+- [x] Style the form using Shadcn UI components and the design system
+- [x] Ensure the form is responsive for different screen sizes
 - [ ] Write tests for the form components and tRPC procedure
 
 ## Testing Requirements
