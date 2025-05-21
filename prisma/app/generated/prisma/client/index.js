@@ -288,7 +288,7 @@ const config = {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://postgres:1234@localhost:5432/dashi"
+        "value": "postgresql://dashi_db_user:BoetWw8HQInFIRi3A3k6fi8DaCfPml4p@dpg-d0djtj2dbo4c738kp7d0-a.frankfurt-postgres.render.com/dashi_db"
       }
     }
   },
