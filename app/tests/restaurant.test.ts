@@ -236,8 +236,6 @@ describe("Restaurant Listing with Users", () => {
     setupSuccessfulRestaurantListing(
       restaurantList.slice(0, 1),
       restaurantList.length,
-      2,
-      1
     );
 
     // Call the procedure with custom pagination (page 2, limit 1)
@@ -363,4 +361,5 @@ describe("Restaurant Listing with Users", () => {
     // Verify prisma findMany was called
     expect(prisma.restaurant.findMany).toHaveBeenCalledTimes(2);
   });
+  
 });

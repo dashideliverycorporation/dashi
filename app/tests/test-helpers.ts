@@ -1,5 +1,5 @@
 /**
- * Test helpers for restaurant and user tests
+ * Test helpers for restaurant, user, and menu item tests
  *
  * This file provides utility functions to help with testing.
  */
@@ -117,7 +117,7 @@ export function setupFailedTransaction(error: Error) {
 export function setupSuccessfulRestaurantListing(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   restaurants: any[],
-  total: number = restaurants.length,
+  total: number = restaurants.length
 ) {
   vi.mocked(prisma.restaurant.findMany).mockResolvedValue(restaurants);
   vi.mocked(prisma.restaurant.count).mockResolvedValue(total);
@@ -130,4 +130,40 @@ export function setupSuccessfulRestaurantListing(
  */
 export function setupFailedRestaurantListing(error: Error) {
   vi.mocked(prisma.restaurant.findMany).mockRejectedValue(error);
+}
+
+/**
+ * Setup mock for successful menu item creation
+ *
+ * @param response The mock response to return from the create function
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function setupSuccessfulMenuItemCreation(response: any) {
+  vi.mocked(prisma.menuItem.create).mockResolvedValue(response);
+}
+
+/**
+ * Setup mock for failed menu item creation
+ *
+ * @param error The error to throw from the create function
+ */
+export function setupFailedMenuItemCreation(error: Error) {
+  vi.mocked(prisma.menuItem.create).mockRejectedValue(error);
+}
+
+/**
+ * Setup mock for restaurant manager findUnique to return success
+ *
+ * @param manager The restaurant manager data to return
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function setupRestaurantManagerExists(manager: any) {
+  vi.mocked(prisma.restaurantManager.findUnique).mockResolvedValue(manager);
+}
+
+/**
+ * Setup mock for restaurant manager findUnique to return null (not found)
+ */
+export function setupRestaurantManagerNotFound() {
+  vi.mocked(prisma.restaurantManager.findUnique).mockResolvedValue(null);
 }

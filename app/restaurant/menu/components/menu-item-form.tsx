@@ -35,12 +35,10 @@ import Image from "next/image";
 export function MenuItemForm(): JSX.Element {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Initialize form with zod validation
-  const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<boolean>(false);
 
   // Initialize form with zod validation
   const form = useForm<CreateMenuItemInput>({
@@ -67,7 +65,6 @@ export function MenuItemForm(): JSX.Element {
         "Your new menu item has been added to the menu"
       );
       setIsLoading(false);
-      setIsSubmitSuccessful(true);
       // Reset form
       form.reset();
       // Redirect to menu list page after a short delay
@@ -105,16 +102,6 @@ export function MenuItemForm(): JSX.Element {
         "An unexpected error occurred while processing your request."
       );
     }
-  };
-
-  /**
-   * Reset form and clear any errors or success messages
-   */
-  const handleReset = (): void => {
-    form.reset();
-    setIsSubmitSuccessful(false);
-    setImagePreview("");
-    setImageFile(null);
   };
 
   /**
@@ -347,7 +334,7 @@ export function MenuItemForm(): JSX.Element {
                   <FormLabel>Available</FormLabel>
                   <FormDescription>
                     Is this item currently available for order? If unchecked,
-                    the item won't be shown to customers.
+                    the item won&apos;t be shown to customers.
                   </FormDescription>
                 </div>
               </FormItem>
