@@ -122,20 +122,25 @@ Status: In-Progress
 
 ## Tasks / Subtasks
 
-- [ ] Create "Add New Menu Item" button in the menu management page
-- [ ] Create menu item add page route at `/restaurant/menu/add`
-- [ ] Create MenuItemForm component with required fields
-- [ ] Implement client-side form validation using Zod and React Hook Form
-- [ ] Create Zod schema for menu item validation
-- [ ] Implement tRPC procedure for creating menu items
-- [ ] Add restaurant ID association from the session
-- [ ] Implement form submission and error handling
-- [ ] Add loading state during form submission
-- [ ] Add success notification after successful creation
-- [ ] Implement redirect or menu list update after successful creation
-- [ ] Style the form using Shadcn UI components and the design system
-- [ ] Ensure the form is responsive for different screen sizes
-- [ ] Write tests for the form components and tRPC procedure
+- [x] Create "Add New Menu Item" button in the menu management page
+- [x] Create menu item add page route at `/restaurant/menu/add`
+- [x] Create MenuItemForm component with required fields
+- [x] Implement tRPC procedure for creating menu items
+- [x] Implement form submission and error handling
+- [x] Add loading state during form submission
+- [x] Add success notification after successful creation
+- [x] Implement redirect or menu list update after successful creation
+- [x] Style the form using Shadcn UI components and the design system
+- [x] Ensure the form is responsive for different screen sizes
+- [x] Write tests for the tRPC procedure create menu item
+  - [x] Create menu item fixtures for testing
+  - [x] Set up test mocks for restaurant manager association
+  - [x] Test successful menu item creation
+  - [x] Test error handling (database errors)
+- [x] Write tests for the form menu item component
+  - [x] Set up test environment for React component testing
+  - [x] Test form rendering with all required fields
+  - [x] Test form submission with valid data
 
 ## Testing Requirements
 
@@ -144,15 +149,44 @@ Status: In-Progress
 ### Unit Tests:
 
 - Test MenuItemForm component rendering
+  - Verify all form fields render correctly with their labels
+  - Verify default values are applied properly
+  - Verify form elements interact correctly (e.g., select dropdown, availability toggle)
 - Test form validation with valid and invalid inputs
+  - Test each field's validation rules (required fields, positive price, URL format)
+  - Test error messages appear for invalid input
+  - Test form submission is prevented for invalid data
 - Test tRPC procedure for creating menu items
 - Test Zod schema validation
+  - Test validation rules for each field
+  - Test error messages for invalid data
+  - Test optional fields handling
 
 ### Integration Tests:
 
 - Test form submission flow from UI to database
+  - Test that form submission calls the correct tRPC procedure
+  - Test that form data is properly formatted before submission
+  - Test handling of server responses (success, error)
 - Test protected route access for restaurant users vs non-restaurant users
+  - Verify the form is only accessible to restaurant users
+  - Verify proper redirect for unauthorized users
 - Test menu item creation and database persistence
+  - Verify submitted data is correctly stored in the database
+  - Verify restaurant association is maintained
+
+### Testing Tools & Configuration:
+
+- **Testing Framework:** Vitest
+- **Testing Libraries:**
+  - React Testing Library for component testing
+  - MSW (Mock Service Worker) for mocking API calls
+  - @testing-library/user-event for simulating user interactions
+- **Test File Location:** Create a file at `app/tests/components/menu/MenuItemForm.test.tsx`
+- **Test Setup Requirements:**
+  - Mock tRPC client for form submission testing
+  - Mock form submission states (loading, error, success)
+  - Setup test providers (React Context providers needed for the component)
 
 ### Manual/CLI Verification:
 

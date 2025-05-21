@@ -1,8 +1,8 @@
 /**
- * Restaurant Menu Page
+ * Add Menu Item Page
  *
- * Displays a list of menu items for the logged-in restaurant
- * This is a protected route that only restaurant users can access
+ * This page provides a form for restaurant users to add new menu items.
+ * It is a protected route that only restaurant users can access.
  */
 import React from "react";
 import { getServerSession } from "next-auth";
@@ -17,16 +17,17 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { MenuItemForm } from "../components/menu-item-form";
 
 /**
- * Restaurant Menu Page Component
+ * Add Menu Item Page Component
  *
- * Displays all menu items for the logged-in restaurant
+ * Provides a form for restaurant users to create new menu items
  *
- * @returns {JSX.Element} The restaurant menu page
+ * @returns {JSX.Element} The add menu item page
  */
-export default async function RestaurantMenuPage() {
+export default async function AddMenuItemPage() {
   const session = await getServerSession(authOptions);
 
   // Ensure user is logged in and has the RESTAURANT role
@@ -39,35 +40,33 @@ export default async function RestaurantMenuPage() {
 
   return (
     <div className="space-y-6">
-      {" "}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            {restaurantName} Menu
+            Add New Menu Item
           </h1>
           <p className="text-muted-foreground mt-2">
-            Manage your restaurant&apos;s menu items
+            Create a new menu item for {restaurantName}
           </p>
         </div>
-        <Button asChild>
-          <Link href="/restaurant/menu/add">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Menu item
+        <Button variant="outline" asChild>
+          <Link href="/restaurant/menu">
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Back to Menu
           </Link>
         </Button>
       </div>
-      {/* Menu Items List Section */}
+
+      {/* Menu Item Form Card */}
       <Card>
         <CardHeader>
-          <CardTitle>Menu Items</CardTitle>
+          <CardTitle>Menu Item Details</CardTitle>
           <CardDescription>
-            View and manage your restaurant&apos;s menu items
+            Fill in the details below to create a new menu item
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* This is a placeholder. The actual menu item list component will be 
-              implemented in a later task */}
-          <p>Menu items list will be displayed here</p>
+          <MenuItemForm />
         </CardContent>
       </Card>
     </div>

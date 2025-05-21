@@ -9705,6 +9705,7 @@ export namespace Prisma {
     description: string | null
     price: Decimal | null
     category: string | null
+    imageUrl: string | null
     isAvailable: boolean | null
     restaurantId: string | null
     deletedAt: Date | null
@@ -9718,6 +9719,7 @@ export namespace Prisma {
     description: string | null
     price: Decimal | null
     category: string | null
+    imageUrl: string | null
     isAvailable: boolean | null
     restaurantId: string | null
     deletedAt: Date | null
@@ -9731,6 +9733,7 @@ export namespace Prisma {
     description: number
     price: number
     category: number
+    imageUrl: number
     isAvailable: number
     restaurantId: number
     deletedAt: number
@@ -9754,6 +9757,7 @@ export namespace Prisma {
     description?: true
     price?: true
     category?: true
+    imageUrl?: true
     isAvailable?: true
     restaurantId?: true
     deletedAt?: true
@@ -9767,6 +9771,7 @@ export namespace Prisma {
     description?: true
     price?: true
     category?: true
+    imageUrl?: true
     isAvailable?: true
     restaurantId?: true
     deletedAt?: true
@@ -9780,6 +9785,7 @@ export namespace Prisma {
     description?: true
     price?: true
     category?: true
+    imageUrl?: true
     isAvailable?: true
     restaurantId?: true
     deletedAt?: true
@@ -9880,6 +9886,7 @@ export namespace Prisma {
     description: string | null
     price: Decimal
     category: string
+    imageUrl: string
     isAvailable: boolean
     restaurantId: string
     deletedAt: Date | null
@@ -9912,6 +9919,7 @@ export namespace Prisma {
     description?: boolean
     price?: boolean
     category?: boolean
+    imageUrl?: boolean
     isAvailable?: boolean
     restaurantId?: boolean
     deletedAt?: boolean
@@ -9928,6 +9936,7 @@ export namespace Prisma {
     description?: boolean
     price?: boolean
     category?: boolean
+    imageUrl?: boolean
     isAvailable?: boolean
     restaurantId?: boolean
     deletedAt?: boolean
@@ -9942,6 +9951,7 @@ export namespace Prisma {
     description?: boolean
     price?: boolean
     category?: boolean
+    imageUrl?: boolean
     isAvailable?: boolean
     restaurantId?: boolean
     deletedAt?: boolean
@@ -9956,6 +9966,7 @@ export namespace Prisma {
     description?: boolean
     price?: boolean
     category?: boolean
+    imageUrl?: boolean
     isAvailable?: boolean
     restaurantId?: boolean
     deletedAt?: boolean
@@ -9963,7 +9974,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "category" | "isAvailable" | "restaurantId" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["menuItem"]>
+  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "category" | "imageUrl" | "isAvailable" | "restaurantId" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["menuItem"]>
   export type MenuItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
     orderItems?: boolean | MenuItem$orderItemsArgs<ExtArgs>
@@ -9988,6 +9999,7 @@ export namespace Prisma {
       description: string | null
       price: Prisma.Decimal
       category: string
+      imageUrl: string
       isAvailable: boolean
       restaurantId: string
       deletedAt: Date | null
@@ -10423,6 +10435,7 @@ export namespace Prisma {
     readonly description: FieldRef<"MenuItem", 'String'>
     readonly price: FieldRef<"MenuItem", 'Decimal'>
     readonly category: FieldRef<"MenuItem", 'String'>
+    readonly imageUrl: FieldRef<"MenuItem", 'String'>
     readonly isAvailable: FieldRef<"MenuItem", 'Boolean'>
     readonly restaurantId: FieldRef<"MenuItem", 'String'>
     readonly deletedAt: FieldRef<"MenuItem", 'DateTime'>
@@ -13291,6 +13304,7 @@ export namespace Prisma {
     description: 'description',
     price: 'price',
     category: 'category',
+    imageUrl: 'imageUrl',
     isAvailable: 'isAvailable',
     restaurantId: 'restaurantId',
     deletedAt: 'deletedAt',
@@ -13962,6 +13976,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"MenuItem"> | string | null
     price?: DecimalFilter<"MenuItem"> | Decimal | DecimalJsLike | number | string
     category?: StringFilter<"MenuItem"> | string
+    imageUrl?: StringFilter<"MenuItem"> | string
     isAvailable?: BoolFilter<"MenuItem"> | boolean
     restaurantId?: StringFilter<"MenuItem"> | string
     deletedAt?: DateTimeNullableFilter<"MenuItem"> | Date | string | null
@@ -13977,6 +13992,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     price?: SortOrder
     category?: SortOrder
+    imageUrl?: SortOrder
     isAvailable?: SortOrder
     restaurantId?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -13995,6 +14011,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"MenuItem"> | string | null
     price?: DecimalFilter<"MenuItem"> | Decimal | DecimalJsLike | number | string
     category?: StringFilter<"MenuItem"> | string
+    imageUrl?: StringFilter<"MenuItem"> | string
     isAvailable?: BoolFilter<"MenuItem"> | boolean
     restaurantId?: StringFilter<"MenuItem"> | string
     deletedAt?: DateTimeNullableFilter<"MenuItem"> | Date | string | null
@@ -14010,6 +14027,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     price?: SortOrder
     category?: SortOrder
+    imageUrl?: SortOrder
     isAvailable?: SortOrder
     restaurantId?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -14031,6 +14049,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"MenuItem"> | string | null
     price?: DecimalWithAggregatesFilter<"MenuItem"> | Decimal | DecimalJsLike | number | string
     category?: StringWithAggregatesFilter<"MenuItem"> | string
+    imageUrl?: StringWithAggregatesFilter<"MenuItem"> | string
     isAvailable?: BoolWithAggregatesFilter<"MenuItem"> | boolean
     restaurantId?: StringWithAggregatesFilter<"MenuItem"> | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"MenuItem"> | Date | string | null
@@ -14728,6 +14747,7 @@ export namespace Prisma {
     description?: string | null
     price: Decimal | DecimalJsLike | number | string
     category: string
+    imageUrl: string
     isAvailable?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -14742,6 +14762,7 @@ export namespace Prisma {
     description?: string | null
     price: Decimal | DecimalJsLike | number | string
     category: string
+    imageUrl: string
     isAvailable?: boolean
     restaurantId: string
     deletedAt?: Date | string | null
@@ -14756,6 +14777,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14770,6 +14792,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     restaurantId?: StringFieldUpdateOperationsInput | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14784,6 +14807,7 @@ export namespace Prisma {
     description?: string | null
     price: Decimal | DecimalJsLike | number | string
     category: string
+    imageUrl: string
     isAvailable?: boolean
     restaurantId: string
     deletedAt?: Date | string | null
@@ -14797,6 +14821,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14809,6 +14834,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     restaurantId?: StringFieldUpdateOperationsInput | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15479,6 +15505,7 @@ export namespace Prisma {
     description?: SortOrder
     price?: SortOrder
     category?: SortOrder
+    imageUrl?: SortOrder
     isAvailable?: SortOrder
     restaurantId?: SortOrder
     deletedAt?: SortOrder
@@ -15496,6 +15523,7 @@ export namespace Prisma {
     description?: SortOrder
     price?: SortOrder
     category?: SortOrder
+    imageUrl?: SortOrder
     isAvailable?: SortOrder
     restaurantId?: SortOrder
     deletedAt?: SortOrder
@@ -15509,6 +15537,7 @@ export namespace Prisma {
     description?: SortOrder
     price?: SortOrder
     category?: SortOrder
+    imageUrl?: SortOrder
     isAvailable?: SortOrder
     restaurantId?: SortOrder
     deletedAt?: SortOrder
@@ -17208,6 +17237,7 @@ export namespace Prisma {
     description?: string | null
     price: Decimal | DecimalJsLike | number | string
     category: string
+    imageUrl: string
     isAvailable?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17221,6 +17251,7 @@ export namespace Prisma {
     description?: string | null
     price: Decimal | DecimalJsLike | number | string
     category: string
+    imageUrl: string
     isAvailable?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17323,6 +17354,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"MenuItem"> | string | null
     price?: DecimalFilter<"MenuItem"> | Decimal | DecimalJsLike | number | string
     category?: StringFilter<"MenuItem"> | string
+    imageUrl?: StringFilter<"MenuItem"> | string
     isAvailable?: BoolFilter<"MenuItem"> | boolean
     restaurantId?: StringFilter<"MenuItem"> | string
     deletedAt?: DateTimeNullableFilter<"MenuItem"> | Date | string | null
@@ -17722,6 +17754,7 @@ export namespace Prisma {
     description?: string | null
     price: Decimal | DecimalJsLike | number | string
     category: string
+    imageUrl: string
     isAvailable?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17735,6 +17768,7 @@ export namespace Prisma {
     description?: string | null
     price: Decimal | DecimalJsLike | number | string
     category: string
+    imageUrl: string
     isAvailable?: boolean
     restaurantId: string
     deletedAt?: Date | string | null
@@ -17799,6 +17833,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17812,6 +17847,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     restaurantId?: StringFieldUpdateOperationsInput | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17951,6 +17987,7 @@ export namespace Prisma {
     description?: string | null
     price: Decimal | DecimalJsLike | number | string
     category: string
+    imageUrl: string
     isAvailable?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17982,6 +18019,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17995,6 +18033,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18008,6 +18047,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

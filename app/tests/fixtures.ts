@@ -1,8 +1,8 @@
 /**
- * Test fixtures for restaurant and user tests
+ * Test fixtures for restaurant, user, and menu item tests
  *
  * This file provides shared fixtures and utility functions for tests,
- * including sample data for restaurants and users.
+ * including sample data for restaurants, users, and menu items.
  */
 
 /**
@@ -237,4 +237,139 @@ export const dbResponses = {
       updatedAt: new Date(),
     },
   },
+};
+
+/**
+ * Sample valid menu item data for testing
+ */
+export const validMenuItemData = {
+  // Complete data
+  complete: {
+    name: "Margherita Pizza",
+    description: "Classic pizza with tomato sauce, mozzarella, and basil",
+    price: 12.99,
+    category: "Pizza",
+    imageUrl: "https://example.com/images/margherita.jpg",
+    available: true,
+  },
+  // Minimal data without optional fields
+  minimal: {
+    name: "Fries",
+    price: 4.99,
+    category: "Sides",
+    imageUrl: "https://example.com/images/fries.jpg",
+    available: true,
+  },
+  // With data URL instead of HTTP URL
+  withDataUrl: {
+    name: "Burger",
+    description: "Juicy beef burger with cheese",
+    price: 9.99,
+    category: "Burgers",
+    imageUrl: "data:image/jpeg;base64,/9j/base64encodedstring",
+    available: true,
+  },
+};
+
+/**
+ * Sample invalid menu item data for testing
+ */
+export const invalidMenuItemData = {
+  // Missing required name
+  missingName: {
+    price: 12.99,
+    category: "Pizza",
+    imageUrl: "https://example.com/images/pizza.jpg",
+    available: true,
+  },
+  // Missing required category
+  missingCategory: {
+    name: "Veggie Pizza",
+    price: 14.99,
+    imageUrl: "https://example.com/images/veggie-pizza.jpg",
+    available: true,
+  },
+  // Missing required image URL
+  missingImageUrl: {
+    name: "Calzone",
+    description: "Folded pizza with fillings",
+    price: 15.99,
+    category: "Pizza",
+    available: true,
+  },
+  // Invalid price (negative)
+  negativePrize: {
+    name: "Pasta",
+    description: "Fresh pasta with tomato sauce",
+    price: -10.99,
+    category: "Pasta",
+    imageUrl: "https://example.com/images/pasta.jpg",
+    available: true,
+  },
+  // Invalid price (zero)
+  zeroPrize: {
+    name: "Water",
+    description: "Bottle of water",
+    price: 0,
+    category: "Drinks",
+    imageUrl: "https://example.com/images/water.jpg",
+    available: true,
+  },
+  // Invalid image URL format
+  invalidImageUrl: {
+    name: "Salad",
+    description: "Fresh garden salad",
+    price: 8.99,
+    category: "Salads",
+    imageUrl: "not-a-valid-url",
+    available: true,
+  },
+};
+
+/**
+ * Sample menu item database responses for testing
+ */
+export const menuItemDbResponses = {
+  // Successful menu item creation response
+  successfulCreation: {
+    id: "menu-item-id-1",
+    name: "Margherita Pizza",
+    description: "Classic pizza with tomato sauce, mozzarella, and basil",
+    price: 12.99,
+    category: "Pizza",
+    imageUrl: "https://example.com/images/margherita.jpg",
+    isAvailable: true,
+    restaurantId: "restaurant-id-1",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  // Menu item with processed S3 URL
+  withProcessedImageUrl: {
+    id: "menu-item-id-2",
+    name: "Burger",
+    description: "Juicy beef burger with cheese",
+    price: 9.99,
+    category: "Burgers",
+    imageUrl: "https://s3.example.com/images/burger-12345.jpg", // Processed S3 URL
+    isAvailable: true,
+    restaurantId: "restaurant-id-1",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+};
+
+/**
+ * Sample restaurant manager responses for testing
+ */
+export const restaurantManagerDbResponses = {
+  // Valid restaurant manager
+  validManager: {
+    id: "restaurant-manager-id-1",
+    userId: "user-id-1",
+    restaurantId: "restaurant-id-1",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  // Non-existent restaurant manager
+  nullManager: null,
 };

@@ -5,12 +5,49 @@
  * - Adding new restaurants
  * - Retrieving restaurant information
  * - Updating restaurant details
+ * - Managing menu items
  */
-import { adminProcedure, router } from "../trpc";
+import { adminProcedure, restaurantProcedure, router } from "../trpc";
 import { prisma } from "@/lib/db";
+import { S3Service } from "@/lib/aws";
 import { TRPCError } from "@trpc/server";
 import { createRestaurantSchema } from "@/server/schemas/restaurant.schema";
+import { createMenuItemSchema } from "@/server/schemas/menu-item.schema";
 import { z } from "zod";
+
+/**
+ * Extracts file data from a data URL or processes an image URL
+ *
+ * @param imageUrl - The image URL from the client which might be a data URL
+ * @returns Promise with the actual AWS S3 URL to be stored in the database
+ */
+async function processImageUrl(imageUrl: string): Promise<string> {
+  // Check if the URL is a data URL (base64 encoded)
+  if (imageUrl.startsWith("data:")) {
+    // Extract the MIME type and base64 data
+    const matches = imageUrl.match(/^data:(.+);base64,(.+)$/);
+
+    if (!matches || matches.length !== 3) {
+      throw new Error("Invalid data URL format");
+    }
+
+    const contentType = matches[1];
+    const base64Data = matches[2];
+    const buffer = Buffer.from(base64Data, "base64");
+
+    // Generate a filename based on content type
+    const extension = contentType.split("/")[1] || "png";
+    const fileName = `menu-item-${Date.now()}.${extension}`;
+
+    // Upload to S3 and get the URL
+    const result = await S3Service.uploadFile(buffer, fileName, contentType);
+    return result.url;
+  }
+
+  // If it's not a data URL, return as is
+  // Note: In a production app, you might want to validate external URLs
+  return imageUrl;
+}
 
 /**
  * Restaurant router with procedures for restaurant management
@@ -170,6 +207,57 @@ export const restaurantRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to create restaurant",
+        });
+      }
+    }),
+
+  /**
+   * Create a new menu item for the authenticated restaurant user
+   * Validates the input using Zod schema and creates a new MenuItem in the database
+   * Associates the menu item with the restaurant of the authenticated user
+   */ createMenuItem: restaurantProcedure
+    .input(createMenuItemSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        // Get the restaurant ID for the authenticated user
+        const userId = ctx.session.user.id;
+        const restaurantManager = await prisma.restaurantManager.findUnique({
+          where: { userId },
+          select: { restaurantId: true },
+        });
+
+        if (!restaurantManager) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "User is not associated with any restaurant",
+          });
+        }
+
+        // Process the image URL if provided (convert data URLs to S3 URLs)
+        const processedImageUrl = await processImageUrl(input.imageUrl);
+
+        // Map input fields to match the Prisma model (isAvailable instead of available)
+        const menuItem = await prisma.menuItem.create({
+          data: {
+            name: input.name,
+            description: input.description,
+            price: input.price,
+            category: input.category,
+            imageUrl: processedImageUrl, // Use the processed S3 URL
+            isAvailable: input.available,
+            restaurantId: restaurantManager.restaurantId,
+          },
+        });
+
+        return menuItem;
+      } catch (error) {
+        console.error("Error creating menu item:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create menu item",
         });
       }
     }),
