@@ -39,10 +39,10 @@ export default async function AddMenuItemPage() {
   const restaurantName = session?.user?.name || "Restaurant";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-background p-6 md:p-8 rounded-md">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-2xl font-bold tracking-tight">
             Add New Menu Item
           </h1>
           <p className="text-muted-foreground mt-2">
@@ -58,7 +58,7 @@ export default async function AddMenuItemPage() {
       </div>
 
       {/* Menu Item Form Card */}
-      <Card>
+      <Card className="border-none shadow-none">
         <CardHeader>
           <CardTitle>Menu Item Details</CardTitle>
           <CardDescription>

@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/restaurant/Sidebar";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Header } from "@/components/restaurant/Header";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function RestaurantLayout({
   children,
@@ -49,9 +50,10 @@ export default function RestaurantLayout({
           username={session?.user?.name || ""}
           email={session?.user?.email || ""}
         />
-
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">{children}</main>
+        {/* Page Content with theme-aware background */}
+        <ScrollArea className="flex-1 overflow-hidden p-6 md:p-8 rounded-md">
+          {children}
+        </ScrollArea>
       </div>
     </div>
   );

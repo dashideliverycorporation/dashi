@@ -38,7 +38,7 @@ export default async function RestaurantMenuPage() {
   const restaurantName = session?.user?.name || "Restaurant";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-background p-6 md:p-8 rounded-md">
       {" "}
       <div className="flex items-center justify-between">
         <div>

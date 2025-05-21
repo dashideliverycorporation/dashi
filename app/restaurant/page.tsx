@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/card";
 import { Utensils, ShoppingBag, Clock, Users } from "lucide-react";
 import { JSX } from "react/jsx-runtime";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/server/auth";
 
 /**
  * Restaurant Dashboard Page Component
@@ -19,8 +17,6 @@ import { authOptions } from "@/server/auth";
  * @returns {JSX.Element} The restaurant dashboard page
  */
 export default async function RestaurantDashboardPage(): Promise<JSX.Element> {
-  const session = await getServerSession(authOptions);
-  const restaurantName = session?.user?.name || "Your Restaurant";
 
   // In a real implementation, these would be fetched from the database
   const placeholderStats = {
@@ -32,13 +28,6 @@ export default async function RestaurantDashboardPage(): Promise<JSX.Element> {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">{restaurantName}</h1>
-        <p className="text-muted-foreground mt-2">
-          Welcome to your restaurant dashboard
-        </p>
-      </div>
-
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">

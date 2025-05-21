@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Moon, Sun, User } from "lucide-react";
+import { LogOut, Moon, Sun} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 type HeaderProps = {
   restaurantName: string;
   username: string;
@@ -25,7 +25,7 @@ export function Header({ restaurantName, username, email }: HeaderProps) {
     await signOut({ redirect: true, callbackUrl: "/signin" });
   };
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-6 md:px-8">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between bg-background px-6 md:px-8">
       {/* Restaurant name display on large screens */}
       <div className="hidden md:block">
         <h2 className="text-lg font-semibold">{restaurantName}</h2>
@@ -39,7 +39,17 @@ export function Header({ restaurantName, username, email }: HeaderProps) {
               className="relative flex items-center gap-2 cursor-pointer"
               aria-label="User menu"
             >
-              <User className="h-5 w-5" />
+              <Avatar>
+                <AvatarImage src="https://github.com/shad.png" />
+                <AvatarFallback>
+                  {username.split(" ").length > 1
+                    ? `${username.split(" ")[0][0].toUpperCase()}${username
+                        .split(" ")[1][0]
+                        .toUpperCase()}`
+                    : username[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+
               <span className="hidden md:inline-block font-medium">
                 {username}
               </span>
