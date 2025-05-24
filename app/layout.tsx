@@ -37,8 +37,8 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body
-      // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      className='bg-muted'
+        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className="bg-muted"
       >
         <SessionProvider session={session}>
           <TRPCProvider>
