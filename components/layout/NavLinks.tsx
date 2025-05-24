@@ -3,8 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, User, LogOut } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { ShoppingCart} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +17,6 @@ interface NavLinksProps {
  */
 export function NavLinks({ className, mobile = false }: NavLinksProps) {
   const pathname = usePathname();
-  const { data: session } = useSession();
 
   // Check if a link is active
   const isActive = (path: string) => pathname === path;

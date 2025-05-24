@@ -2,17 +2,15 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, ShoppingCart, X } from "lucide-react";
+import { Menu, ShoppingCart} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "./Container";
-import { Logo } from "./Logo";
 import NavLinks from "./NavLinks";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
-  SheetClose,
 } from "@/components/ui/sheet";
 import Image from "next/image";
 
