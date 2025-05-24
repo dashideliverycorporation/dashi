@@ -15,9 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Plus } from "lucide-react";
+import { MenuItemFormModal } from "./components/menu-item-form-modal";
 
 /**
  * Restaurant Menu Page Component
@@ -48,21 +46,19 @@ export default async function RestaurantMenuPage() {
           <p className="text-muted-foreground mt-2">
             Manage your restaurant&apos;s menu items
           </p>
-        </div>
-        <Button asChild>
-          <Link href="/restaurant/menu/add">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Menu item
-          </Link>
-        </Button>
+        </div>{" "}
+        <MenuItemFormModal />
       </div>
-      {/* Menu Items List Section */}
+      {/* Menu Items List Section */}{" "}
       <Card>
-        <CardHeader>
-          <CardTitle>Menu Items</CardTitle>
-          <CardDescription>
-            View and manage your restaurant&apos;s menu items
-          </CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Menu Items</CardTitle>
+            <CardDescription>
+              View and manage your restaurant&apos;s menu items
+            </CardDescription>
+          </div>
+        
         </CardHeader>
         <CardContent>
           {/* This is a placeholder. The actual menu item list component will be 

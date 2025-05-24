@@ -92,7 +92,7 @@ export function Sidebar({
           className="fixed inset-0 z-40 bg-black/50 md:hidden"
           onClick={() => setMobileOpen(false)}
         />
-      )}{" "}
+      )}
       {/* Sidebar Container */}
       <aside
         className={cn(
@@ -120,8 +120,12 @@ export function Sidebar({
 
         {/* Sidebar Header */}
         <div className="flex h-16 items-center justify-between px-4">
-          {!collapsed && (
-            <Link href="/restaurant" className="flex items-center gap-2">
+          {collapsed ? (
+            <Link href="/admin" className="flex items-center gap-2">
+              <Image src="/logo-icon.svg" width={100} height={100} alt="logo" />
+            </Link>
+          ) : (
+            <Link href="/admin" className="flex items-center gap-2">
               <Image src={logo} width={100} height={100} alt="logo" />
             </Link>
           )}

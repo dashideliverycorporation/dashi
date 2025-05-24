@@ -1,6 +1,4 @@
 "use client";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,11 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Plus } from "lucide-react";
 import { JSX } from "react/jsx-runtime";
 import { trpc } from "@/lib/trpc/client";
 import RestaurantTable from "./components/restaurant-table";
 import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 /**
  * Restaurant Management Page
@@ -40,32 +38,59 @@ export default function RestaurantsPage(): JSX.Element {
     !isLoading &&
     restaurantsCheck?.pagination.total &&
     restaurantsCheck.pagination.total > 0;
-
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Restaurants</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage restaurant listings on the Dashi platform
-          </p>
-        </div>
-        <Button asChild>
-          <Link href="/admin/restaurants/new">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Restaurant
-          </Link>
-        </Button>
-      </div>
-
+    <div className="space-y-6 bg-background p-6 md:p-8 rounded-md min-h-screen">
       {isLoading ? (
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex h-48 items-center justify-center">
-              <p className="text-muted-foreground">Loading restaurants...</p>
+        <div className="w-full space-y-4">
+          <div className="rounded-lg border">
+            <div className="p-1">
+              {/* Table header skeleton */}
+              <div className="flex items-center p-4 bg-muted-foreground/5">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className={`flex-1 ${i === 5 ? "flex-0 w-16" : ""}`}
+                  >
+                    <Skeleton className="h-5 w-4/5 bg-muted-foreground/5" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Table rows skeleton */}
+              {[1, 2, 3, 4, 5].map((row) => (
+                <div key={row} className="flex items-center p-4 border-t">
+                  {[1, 2, 3, 4, 5].map((cell) => (
+                    <div
+                      key={`${row}-${cell}`}
+                      className={`flex-1 ${cell === 5 ? "flex-0 w-16" : ""}`}
+                    >
+                      <Skeleton
+                        className={`h-5 bg-muted-foreground/5 w-${
+                          Math.floor(Math.random() * 40) + 60
+                        }%`}
+                      />
+                      {cell === 3 && row % 2 === 0 && (
+                        <Skeleton className="h-5 w-1/3 mt-2 bg-muted-foreground/5" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          {/* Pagination skeleton */}
+          {/* <div className="flex items-center justify-between pt-2">
+            <Skeleton className="h-5 w-40" />
+            <div className="flex items-center space-x-2">
+              <Skeleton className="h-8 w-8" />
+              <Skeleton className="h-8 w-8" />
+              <Skeleton className="h-5 w-24 mx-2" />
+              <Skeleton className="h-8 w-8" />
+              <Skeleton className="h-8 w-8" />
+            </div>
+          </div> */}
+        </div>
       ) : hasRestaurants ? (
         <Suspense
           fallback={

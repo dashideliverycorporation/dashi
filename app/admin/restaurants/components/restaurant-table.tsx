@@ -15,7 +15,6 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableCaption,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -38,6 +37,9 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { RestaurantFormModal } from "./restaurant-form-modal";
+import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
 /**
  * RestaurantTable component props
@@ -233,14 +235,37 @@ export default function RestaurantTable({
   // Loading state
   if (isLoading) {
     return (
-      <div className="w-full space-y-4">
-        <div className="flex justify-between">
-          <h2 className="text-xl font-semibold">Restaurants</h2>
-        </div>
-        <div className="rounded-lg border shadow">
-          <div className="flex h-96 items-center justify-center">
-            <div className="text-muted-foreground">Loading restaurants...</div>
+      <div className="rounded-lg border">
+        <div className="p-1">
+          {/* Table header skeleton */}
+          <div className="flex items-center p-4 bg-muted-foreground/5">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className={`flex-1 ${i === 5 ? "flex-0 w-16" : ""}`}>
+                <Skeleton className="h-5 w-4/5 bg-muted-foreground/5" />
+              </div>
+            ))}
           </div>
+
+          {/* Table rows skeleton */}
+          {[1, 2, 3, 4, 5].map((row) => (
+            <div key={row} className="flex items-center p-4 border-t">
+              {[1, 2, 3, 4, 5].map((cell) => (
+                <div
+                  key={`${row}-${cell}`}
+                  className={`flex-1 ${cell === 5 ? "flex-0 w-16" : ""}`}
+                >
+                  <Skeleton
+                    className={`h-5 bg-muted-foreground/5 w-${
+                      Math.floor(Math.random() * 40) + 60
+                    }%`}
+                  />
+                  {cell === 3 && row % 2 === 0 && (
+                    <Skeleton className="h-5 w-1/3 mt-2 bg-muted-foreground/5" />
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -299,20 +324,30 @@ export default function RestaurantTable({
             )}
           </form>
         </div>
+        <RestaurantFormModal />
       </div>
 
       {/* No results message */}
       {data && data.restaurants.length === 0 ? (
-        <div className="rounded-lg border p-8 text-center">
-          <h3 className="text-lg font-medium">No restaurants found</h3>
-          <p className="mt-2 text-muted-foreground">
+        <div className="rounded-lg border p-8 text-center flex flex-col items-center">
+          <div className="mb-6">
+            <Image
+              src="/empty-restaurant.svg"
+              alt="No restaurants"
+              width={180}
+              height={180}
+              className="mx-auto"
+            />
+          </div>
+          <h3 className="text-xl font-medium">No restaurants found</h3>
+          <p className="mt-2 text-muted-foreground max-w-md">
             {isFiltering
               ? `No restaurants match the filter "${filters.name}"`
               : "No restaurants have been added to the system yet."}
           </p>
           {isFiltering && (
             <Button
-              className="mt-4"
+              className="mt-6"
               variant="outline"
               size="sm"
               onClick={clearFilter}
@@ -324,13 +359,10 @@ export default function RestaurantTable({
       ) : (
         <>
           {/* Restaurant table */}
-          <ScrollArea className="w-full rounded-md border">
+          <ScrollArea className="w-full">
             <Table>
-              <TableCaption>
-                Showing {start}–{end} of {total} restaurants
-              </TableCaption>
-              <TableHeader>
-                <TableRow className="bg-muted-foreground/10">
+              <TableHeader className="rounded-b-lg">
+                <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
                   {columns.map((column) => (
                     <TableHead key={column.id} className="whitespace-nowrap">
                       <div className="flex items-center">
@@ -375,16 +407,14 @@ export default function RestaurantTable({
                           accessorKey.includes(".")
                         ) {
                           // Handle dot notation for nested properties
-                          value = accessorKey
-                            .split(".")
-                            .reduce(
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              (obj: any, key) =>
-                                obj && typeof obj === "object"
-                                  ? obj[key]
-                                  : undefined,
-                              restaurant
-                            );
+                          value = accessorKey.split(".").reduce(
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (obj: any, key) =>
+                              obj && typeof obj === "object"
+                                ? obj[key]
+                                : undefined,
+                            restaurant
+                          );
                         } else if (typeof accessorKey === "string") {
                           // Direct property access - use a type assertion to tell TypeScript this is safe
                           // Since we're defining the columns ourselves, we know these keys exist on the restaurant object
@@ -417,7 +447,7 @@ export default function RestaurantTable({
           </ScrollArea>
 
           {/* Pagination controls */}
-          {totalPages > 1 && (
+          {
             <div className="flex items-center justify-between">
               <div className="text-sm text-muted-foreground">
                 Showing {start}–{end} of {total} restaurants
@@ -468,7 +498,7 @@ export default function RestaurantTable({
                 </Button>
               </div>
             </div>
-          )}
+          }
         </>
       )}
     </div>

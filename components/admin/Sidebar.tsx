@@ -120,7 +120,11 @@ export function Sidebar({
 
         {/* Sidebar Header */}
         <div className="flex h-16 items-center justify-between px-4">
-          {!collapsed && (
+          {collapsed ? (
+            <Link href="/admin" className="flex items-center gap-2">
+              <Image src="/logo-icon.svg" width={100} height={100} alt="logo" />
+            </Link>
+          ) : (
             <Link href="/admin" className="flex items-center gap-2">
               <Image src={logo} width={100} height={100} alt="logo" />
             </Link>

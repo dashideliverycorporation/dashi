@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -7,8 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Plus } from "lucide-react";
 import { JSX } from "react/jsx-runtime";
+import { RestaurantUserFormModal } from "./components/user-form-modal";
 
 /**
  * User Management Page
@@ -27,12 +26,7 @@ export default function UsersPage(): JSX.Element {
             Manage user accounts on the Dashi platform
           </p>
         </div>
-        <Button asChild>
-          <Link href="/admin/users/new">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Restaurant User
-          </Link>
-        </Button>
+        <RestaurantUserFormModal/>
       </div>
 
       <Card>

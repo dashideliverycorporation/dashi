@@ -115,7 +115,7 @@ describe("MenuItemForm", () => {
 
   it("renders the form with all required fields", () => {
     // Render the component
-    render(<MenuItemForm />);
+    render(<MenuItemForm setOpen={()=>{}} />);
 
     // Check that the form renders with all the expected fields and labels
     expect(screen.getByLabelText(/Name/i)).toBeInTheDocument();
@@ -130,7 +130,7 @@ describe("MenuItemForm", () => {
     expect(formElement).toBeInTheDocument();
     const formContent = formElement!.textContent;
     expect(formContent).toContain("Name *");
-    expect(formContent).toContain("Price *");
+    expect(formContent).toContain("Price (USD) *");
     expect(formContent).toContain("Category *");
     expect(formContent).toContain("Image *");
 
@@ -175,7 +175,7 @@ describe("MenuItemForm", () => {
     const mockImageUrl = "data:image/jpeg;base64,mockbase64data";
 
     // Render the component
-    render(<MenuItemForm />);
+    render(<MenuItemForm setOpen={()=>{}} />);
 
     // Complete all form fields
     await user.type(screen.getByRole("textbox", { name: /Name/i }), "Burger Deluxe");

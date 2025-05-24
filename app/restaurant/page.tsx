@@ -17,7 +17,6 @@ import { JSX } from "react/jsx-runtime";
  * @returns {JSX.Element} The restaurant dashboard page
  */
 export default async function RestaurantDashboardPage(): Promise<JSX.Element> {
-
   // In a real implementation, these would be fetched from the database
   const placeholderStats = {
     menuItems: 15,
@@ -90,20 +89,21 @@ export default async function RestaurantDashboardPage(): Promise<JSX.Element> {
             </p>
           </CardContent>
         </Card>
-      </div>
-
+      </div>{" "}
       <div className="mt-6">
         <Card>
-          <CardHeader>
-            <CardTitle>Menu Management</CardTitle>
-            <CardDescription>
-              Add, edit, or remove items from your restaurant menu
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Menu Management</CardTitle>
+              <CardDescription>
+                Add, edit, or remove items from your restaurant menu
+              </CardDescription>
+            </div>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              This section will show your menu items once you add them. Use the
-              menu navigation to add new items.
+              This section will show your menu items once you add them. Click
+              the &quot;Add Menu Item&quot; button above to add new items.
             </p>
           </CardContent>
         </Card>
