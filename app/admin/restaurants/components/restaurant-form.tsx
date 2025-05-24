@@ -27,10 +27,13 @@ import { toastNotification } from "@/components/custom/toast-notification";
  * Restaurant Form Component
  *
  * Form for creating or updating restaurant information
- *
+ * @param {object} props - Component props
+ * @param {Function} [props.setOpen] - function to update the state
  * @returns {JSX.Element} The restaurant form component
  */
-export function RestaurantForm(): JSX.Element {
+export function RestaurantForm({
+  setOpen,
+}: { setOpen: (open: boolean) => void }): JSX.Element {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -56,11 +59,11 @@ export function RestaurantForm(): JSX.Element {
           "You have added a new restaurant, you will be redirected to the restaurant list"
         );
         setIsLoading(false);
-        // Reset form
-        form.reset();
-        // Redirect to restaurants list after a short delay
+       // Reset form
+      form.reset();
         setTimeout(() => {
-          router.push("/admin/restaurants");
+          router.refresh();
+          setOpen(false);
         }, 2000);
       },
       onError: (error) => {
@@ -224,7 +227,10 @@ export function RestaurantForm(): JSX.Element {
               className="cursor-pointer"
               type="button"
               variant="outline"
-              onClick={() => router.push("/admin/restaurants")}
+              onClick={() => {
+                form.reset();
+                setOpen(false);
+              }}
               disabled={isLoading}
             >
               Cancel

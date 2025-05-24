@@ -30,9 +30,13 @@ import Image from "next/image";
  *
  * Form for creating new menu items for a restaurant
  *
+ * @param {object} props - Component props
+ * @param {Function} [props.setOpen] - function to update the state
  * @returns {JSX.Element} The menu item form component
  */
-export function MenuItemForm(): JSX.Element {
+export function MenuItemForm({
+  setOpen,
+}: { setOpen: (open: boolean) => void }): JSX.Element {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -67,11 +71,10 @@ export function MenuItemForm(): JSX.Element {
       setIsLoading(false);
       // Reset form
       form.reset();
-      // Redirect to menu list page after a short delay
-      setTimeout(() => {
-        router.push("/restaurant/menu");
-        router.refresh(); // Refresh the page to show the new menu item
-      }, 2000);
+        setTimeout(() => {
+          router.refresh();
+          setOpen(false);
+        }, 2000);
     },
     onError: (error) => {
       toastNotification.error(
@@ -156,7 +159,6 @@ export function MenuItemForm(): JSX.Element {
             Fields marked with <span className="text-red-500">*</span> are
             required.
           </div>
-
           <FormField
             control={form.control}
             name="name"
@@ -176,7 +178,6 @@ export function MenuItemForm(): JSX.Element {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="description"
@@ -197,7 +198,6 @@ export function MenuItemForm(): JSX.Element {
               </FormItem>
             )}
           />
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
@@ -205,7 +205,7 @@ export function MenuItemForm(): JSX.Element {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Price <span className="text-red-500">*</span>
+                    Price (USD) <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -225,7 +225,7 @@ export function MenuItemForm(): JSX.Element {
                     />
                   </FormControl>
                   <FormDescription>
-                    Enter the price in local currency.
+                    Enter the price in (USD) currency.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -254,7 +254,6 @@ export function MenuItemForm(): JSX.Element {
               )}
             />
           </div>
-
           <FormField
             control={form.control}
             name="imageUrl"
@@ -286,7 +285,7 @@ export function MenuItemForm(): JSX.Element {
                         Upload a file
                       </div>
                       <div className="text-xs text-gray-500">
-                        PNG, JPG, GIF up to 10MB
+                        PNG, JPG, GIF up to 5MB
                       </div>
                     </>
                   ) : (
@@ -318,7 +317,6 @@ export function MenuItemForm(): JSX.Element {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="available"
@@ -340,13 +338,15 @@ export function MenuItemForm(): JSX.Element {
               </FormItem>
             )}
           />
-
           <div className="flex items-center justify-end gap-4 pt-4">
             <Button
               className="cursor-pointer"
               type="button"
               variant="outline"
-              onClick={() => router.push("/restaurant/menu")}
+              onClick={() => {
+                form.reset();
+                setOpen(false);
+              }}
               disabled={isLoading}
             >
               Cancel

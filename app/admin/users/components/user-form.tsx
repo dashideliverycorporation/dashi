@@ -33,10 +33,13 @@ import { JSX } from "react/jsx-runtime";
  * Restaurant User Form Component
  *
  * Form for creating users with restaurant role
- *
+ * @param {object} props - Component props
+ * @param {Function} [props.setOpen] - function to update the state
  * @returns {JSX.Element} The restaurant user form component
  */
-export function UserForm(): JSX.Element {
+export function UserForm({
+  setOpen,
+}: { setOpen: (open: boolean) => void }): JSX.Element {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false); // Add state for password visibility
@@ -66,10 +69,10 @@ export function UserForm(): JSX.Element {
       setIsLoading(false);
       // Reset form
       form.reset();
-      // Redirect to users list after a short delay
-      setTimeout(() => {
-        router.push("/admin/users");
-      }, 2000);
+        setTimeout(() => {
+          router.refresh();
+          setOpen(false);
+        }, 2000);
     },
     onError: (error) => {
       toastNotification.error(
@@ -264,11 +267,14 @@ export function UserForm(): JSX.Element {
               className="cursor-pointer"
               type="button"
               variant="outline"
-              onClick={() => router.push("/admin/users")}
+             onClick={() => {
+                form.reset();
+                setOpen(false);
+              }}
               disabled={isLoading}
             >
               Cancel
-            </Button>{" "}
+            </Button>
             <Button
               className="cursor-pointer"
               type="submit"

@@ -1,0 +1,31 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="90" cy="90" r="89" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="2"/>
+  
+  <!-- Restaurant plate and utensils -->
+  <circle cx="90" cy="90" r="45" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="2"/>
+  <circle cx="90" cy="90" r="35" fill="white" stroke="#E5E7EB" stroke-width="1"/>
+  
+  <!-- Fork -->
+  <path d="M65 55C65 55 65 70 65 75C65 80 68 82 70 85C72 88 70 90 70 95C70 100 65 105 65 105" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Knife -->
+  <path d="M115 55C115 55 115 65 112 70C109 75 105 80 105 90C105 100 115 105 115 105" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Spoon -->
+  <path d="M90 55C90 55 85 60 85 65C85 70 90 75 90 85C90 95 85 105 85 105" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="90" cy="55" r="5" fill="#FB923C" stroke="#FB923C" stroke-width="1"/>
+  
+  <!-- Plate detail -->
+  <path d="M70 90C70 90 80 100 90 100C100 100 110 90 110 90" stroke="#E5E7EB" stroke-width="1"/>
+  
+  <!-- Empty state indicator -->
+  <path d="M75 125H105" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Menu icon -->
+  <rect x="130" y="70" width="20" height="25" rx="2" fill="#FB923C" opacity="0.2" stroke="#FB923C" stroke-width="1"/>
+  <path d="M135 75H145" stroke="#FB923C" stroke-width="1" stroke-linecap="round"/>
+  <path d="M135 80H145" stroke="#FB923C" stroke-width="1" stroke-linecap="round"/>
+  <path d="M135 85H145" stroke="#FB923C" stroke-width="1" stroke-linecap="round"/>
+  <path d="M135 90H140" stroke="#FB923C" stroke-width="1" stroke-linecap="round"/>
+</svg>

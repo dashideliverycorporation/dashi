@@ -156,7 +156,6 @@ describe("RestaurantTable Rendering", () => {
       screen.getByText(/Showing 1–.* of \d+ restaurants/i)
     ).toBeInTheDocument();
   });
-
   it("renders loading state correctly", () => {
     vi.mocked(trpc.restaurant.getRestaurantsWithUsers.useQuery).mockReturnValue(
       {
@@ -189,9 +188,22 @@ describe("RestaurantTable Rendering", () => {
         promise: Promise.resolve(),
       }
     );
-
     render(<RestaurantTable />);
-    expect(screen.getByText("Loading restaurants...")).toBeInTheDocument();
+
+    // Check for skeleton UI elements instead of loading text
+    const skeletons = document.querySelectorAll(
+      '[class*="bg-muted-foreground"]'
+    );
+    expect(skeletons.length).toBeGreaterThan(0); // Should have multiple skeleton elements
+
+    // Verify the skeleton table structure is rendered
+    expect(document.querySelector(".rounded-lg.border")).toBeInTheDocument();
+
+    // Check for table row skeletons (5 rows in the skeleton UI)
+    const rowSkeletons = document.querySelectorAll(
+      ".flex.items-center.p-4.border-t"
+    );
+    expect(rowSkeletons.length).toBe(5);
   });
 
   it("renders error state correctly", () => {

@@ -15,6 +15,8 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import logo from "@/public/logo.svg";
 
 type NavItem = {
   icon: React.ElementType;
@@ -84,7 +86,6 @@ export function Sidebar({
           {mobileOpen ? <X /> : <Menu />}
         </Button>
       </div>
-
       {/* Mobile Overlay */}
       {mobileOpen && (
         <div
@@ -92,34 +93,42 @@ export function Sidebar({
           onClick={() => setMobileOpen(false)}
         />
       )}
-
       {/* Sidebar Container */}
       <aside
         className={cn(
-          "fixed z-50 flex h-full flex-col border-r bg-sidebar text-sidebar-foreground transition-all duration-300 ease-in-out",
+          "fixed z-50 flex h-full flex-col bg-sidebar text-sidebar-foreground transition-all duration-300 ease-in-out",
           collapsed ? "w-16" : "w-64",
           mobileOpen ? "left-0" : "-left-full md:left-0"
         )}
       >
-        {/* Sidebar Header */}
-        <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
-          {!collapsed && (
-            <Link href="/restaurant" className="flex items-center gap-2">
-              <span className="font-bold text-sidebar-primary text-xl">
-                Dashi
-              </span>
-              <span className="font-semibold">Restaurant</span>
-            </Link>
-          )}
+        {/* Collapse/Expand Button - Positioned on the right edge */}
+        <div className="absolute -right-4 top-20 hidden md:block">
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
             onClick={handleToggleCollapse}
-            className="ml-auto text-sidebar-foreground hidden md:flex"
+            className="h-6 w-6 rounded-full border border-neutral-mediumGray bg-white shadow-md cursor-pointer hover:bg-neutral-lightGray "
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {collapsed ? <ChevronRight /> : <ChevronLeft />}
+            {collapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
           </Button>
+        </div>
+
+        {/* Sidebar Header */}
+        <div className="flex h-16 items-center justify-between px-4">
+          {collapsed ? (
+            <Link href="/admin" className="flex items-center gap-2">
+              <Image src="/logo-icon.svg" width={100} height={100} alt="logo" />
+            </Link>
+          ) : (
+            <Link href="/admin" className="flex items-center gap-2">
+              <Image src={logo} width={100} height={100} alt="logo" />
+            </Link>
+          )}
         </div>
 
         {/* Navigation Menu */}

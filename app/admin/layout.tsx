@@ -3,6 +3,7 @@ import { ReactNode, useState} from "react";
 import { Sidebar } from "@/components/admin/Sidebar";
 import { Header } from "@/components/admin/Header";
 import { useSession } from "next-auth/react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Mock admin user for development
 const placeholderAdminUser = {
@@ -33,9 +34,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           username={session?.user?.name || placeholderAdminUser.name}
           email={session?.user?.email || placeholderAdminUser.email}
         />
-
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">{children}</main>
+        <ScrollArea className="flex-1 overflow-hidden p-6 md:p-8 rounded-md">{children}</ScrollArea>
       </div>
     </div>
   );
