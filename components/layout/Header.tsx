@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, ShoppingCart} from "lucide-react";
+import { Menu, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "./Container";
 import NavLinks from "./NavLinks";
@@ -11,8 +11,11 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
+  SheetHeader,
+  SheetTitle,
 } from "@/components/ui/sheet";
 import Image from "next/image";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 
 interface HeaderProps {
   className?: string;
@@ -46,6 +49,11 @@ export function Header({ className }: HeaderProps) {
 
           {/* Right side buttons */}
           <div className="flex items-center space-x-2">
+            {/* Language Switcher - Desktop */}
+            <div className="hidden md:flex">
+              <LanguageSwitcher variant="simple" />
+            </div>
+
             {/* Shopping Cart */}
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="hidden md:flex">
@@ -75,13 +83,21 @@ export function Header({ className }: HeaderProps) {
                   <Button variant="ghost" size="icon" aria-label="Menu">
                     <Menu className="h-6 w-6" />
                   </Button>
-                </SheetTrigger>
+                </SheetTrigger>{" "}
                 <SheetContent
                   side="right"
                   className="w-[250px] sm:w-[300px] p-0"
                 >
-                  <div className="flex flex-col pt-12">
+                  <SheetHeader className="sr-only">
+                    <SheetTitle>Navigation Menu</SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col pt-6">
                     <NavLinks mobile />
+
+                    {/* Language Switcher - Mobile */}
+                    <div className="px-6 py-4">
+                      <LanguageSwitcher variant="full" />
+                    </div>
                   </div>
                 </SheetContent>
               </Sheet>
