@@ -153,7 +153,7 @@ Status: Ready
 
 ## Tasks / Subtasks
 
-- [ ] Create dynamic route for restaurant menu page
+- [x] Create dynamic route for restaurant menu page
 - [ ] Create loading and not-found states for the route
 - [ ] Implement tRPC procedure to fetch restaurant details by slug/id
 - [ ] Implement tRPC procedure to fetch available menu items by restaurant id
