@@ -10,9 +10,17 @@ const nextConfig: NextConfig = {
   //   config.externals = config.externals || [];
   //   config.externals.push("@prisma/client");
   //   return config;
-  // },
-  // Optional: standalone output for better serverless compatibility
+  // },  // Optional: standalone output for better serverless compatibility
   output: process.env.NODE_ENV === "production" ? undefined : "standalone",
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

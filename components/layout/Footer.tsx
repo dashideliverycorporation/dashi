@@ -11,7 +11,7 @@ export function Footer() {
   return (
     <footer className="bg-slate-900 text-white py-10">
       <Container>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="flex flex-col gap-8 lg:flex-row justify-between items-start space-x-8 md:space-x-16 lg:space-x-24">
           {/* Left column - Brand info */}
           <div>
             <h2 className="text-xl font-bold mb-4">Dashi</h2>
