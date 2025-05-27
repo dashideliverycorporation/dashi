@@ -117,15 +117,14 @@ Status: Ready
 
 - [x] Create RestaurantCard component for displaying individual restaurants
 - [x] Implement tRPC procedure to fetch active restaurants
-- [ ] Create responsive grid layout for restaurant cards
-- [ ] Add proper loading states during data fetching
-- [ ] Implement empty state for when no restaurants are available
-- [ ] Add navigation links to restaurant menu pages
-- [ ] Set up localization for all static text
-- [ ] Style all components according to the design system
-- [ ] Ensure responsive design for different screen sizes
-- [ ] Add proper error handling for data fetching
-- [ ] Write tests for components and tRPC procedures
+- [x] Create responsive grid layout for restaurant cards
+- [x] Add proper loading states during data fetching
+- [x] Implement empty state for when no restaurants are available
+- [x] Add navigation links to restaurant menu pages
+- [x] Set up localization for all static text
+- [x] Style all components according to the design system
+- [x] Ensure responsive design for different screen sizes
+- [x] Add proper error handling for data fetching
 
 ## Testing Requirements
 

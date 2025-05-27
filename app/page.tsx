@@ -190,8 +190,10 @@ export default function Home() {
                     <path d="m2 16 20 6-6-20A20 20 0 0 0 2 16"></path>
                     <path d="M5.71 17.11a17.04 17.04 0 0 1 11.4-11.4"></path>
                   </svg>
-                </div>
-                <span className="text-sm">Pizza</span>
+                </div>{" "}
+                <span className="text-sm">
+                  {t("home.categoryPizza", "Pizza")}
+                </span>
               </div>
 
               {/* Coffee */}
@@ -215,8 +217,10 @@ export default function Home() {
                     <line x1="10" y1="2" x2="10" y2="4"></line>
                     <line x1="14" y1="2" x2="14" y2="4"></line>
                   </svg>
-                </div>
-                <span className="text-sm">Coffee</span>
+                </div>{" "}
+                <span className="text-sm">
+                  {t("home.categoryCoffee", "Coffee")}
+                </span>
               </div>
 
               {/* Salads */}
@@ -238,8 +242,10 @@ export default function Home() {
                     <path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"></path>
                     <path d="M11.38 12a2.4 2.4 0 0 1-.4-4.77 2.4 2.4 0 0 1 3.2-2.77 3.2 3.2 0 0 1 3.47-1.63 2.4 2.4 0 0 1 2.33 2 3.6 3.6 0 0 1 1.82 1.47"></path>
                   </svg>
-                </div>
-                <span className="text-sm">Salads</span>
+                </div>{" "}
+                <span className="text-sm">
+                  {t("home.categorySalads", "Salads")}
+                </span>
               </div>
 
               {/* Dessert */}
@@ -259,8 +265,10 @@ export default function Home() {
                   >
                     <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
                   </svg>
-                </div>
-                <span className="text-sm">Dessert</span>
+                </div>{" "}
+                <span className="text-sm">
+                  {t("home.categoryDessert", "Dessert")}
+                </span>
               </div>
 
               {/* Burgers */}
@@ -284,8 +292,10 @@ export default function Home() {
                     <circle cx="12" cy="12" r="1"></circle>
                     <circle cx="12" cy="16" r="1"></circle>
                   </svg>
-                </div>
-                <span className="text-sm">Burgers</span>
+                </div>{" "}
+                <span className="text-sm">
+                  {t("home.categoryBurgers", "Burgers")}
+                </span>
               </div>
 
               {/* Sandwiches */}
@@ -308,8 +318,10 @@ export default function Home() {
                     <path d="m3 11 7.77-6.04a2 2 0 0 1 2.46 0L21 11H3Z"></path>
                     <path d="M12.97 19.77 7 15h12.5l-3.75 4.5a2 2 0 0 1-2.78.27Z"></path>
                   </svg>
-                </div>
-                <span className="text-sm">Sandwiches</span>
+                </div>{" "}
+                <span className="text-sm">
+                  {t("home.categorySandwiches", "Sandwiches")}
+                </span>
               </div>
             </div>
           </div>
@@ -332,7 +344,7 @@ export default function Home() {
                 `}
                 onClick={() => setActiveFilter("all")}
               >
-                All
+                {t("home.filterAll", "All")}
               </Badge>
               <Badge
                 variant="outline"
@@ -346,7 +358,7 @@ export default function Home() {
                 `}
                 onClick={() => setActiveFilter("fastest")}
               >
-                Fastest Delivery
+                {t("home.filterFastest", "Fastest Delivery")}
               </Badge>
               <Badge
                 variant="outline"
@@ -360,7 +372,7 @@ export default function Home() {
                 `}
                 onClick={() => setActiveFilter("topRated")}
               >
-                Top Rated
+                {t("home.filterTopRated", "Top Rated")}
               </Badge>
               <Badge
                 variant="outline"
@@ -374,7 +386,7 @@ export default function Home() {
                 `}
                 onClick={() => setActiveFilter("price")}
               >
-                Price
+                {t("home.filterPrice", "Price")}
               </Badge>
               <Badge
                 variant="outline"
@@ -388,7 +400,7 @@ export default function Home() {
                 `}
                 onClick={() => setActiveFilter("promotions")}
               >
-                Promotions
+                {t("home.filterPromotions", "Promotions")}
               </Badge>
             </div>
             <RestaurantGrid restaurants={restaurants} isLoading={isLoading} />

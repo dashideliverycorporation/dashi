@@ -7,7 +7,7 @@
 
 "use client";
 
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect} from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nClient, {
   changeLanguage,
@@ -33,18 +33,17 @@ export default function I18nProvider({
   children,
   initialLang = getDefaultLanguage(),
 }: I18nProviderProps) {
-  const [isInitialized, setIsInitialized] = useState(false);
+  // Always render the children with the provider to avoid hydration mismatches
+  // Then initialize or update the language in a useEffect
 
-  // Initialize or update the language when the provider mounts or initialLang changes
   useEffect(() => {
     const initializeLanguage = async () => {
       try {
         // First check if there's a stored preference
         const storedLang =
-          typeof window !== "undefined"
-            ? localStorage.getItem("i18nextLng") ||
-              document.cookie.match(/i18next=([^;]+)/)?.[1]
-            : null;
+          localStorage.getItem("i18nextLng") ||
+          document.cookie.match(/i18next=([^;]+)/)?.[1] ||
+          null;
 
         if (storedLang && isLanguageSupported(storedLang)) {
           // Use stored preference if available and supported
@@ -65,18 +64,14 @@ export default function I18nProvider({
         }
       } catch (error) {
         console.error("Failed to initialize language:", error);
-      } finally {
-        setIsInitialized(true);
       }
     };
 
-    initializeLanguage();
+    // Only run in the browser
+    if (typeof window !== "undefined") {
+      initializeLanguage();
+    }
   }, [initialLang]);
-
-  // Don't render children until i18n is initialized to prevent flash of untranslated content
-  if (!isInitialized && typeof window !== "undefined") {
-    return null; // Or a loading indicator if preferred
-  }
 
   return <I18nextProvider i18n={i18nClient}>{children}</I18nextProvider>;
 }

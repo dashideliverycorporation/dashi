@@ -33,7 +33,6 @@ export function RestaurantCard({
   id,
   name,
   slug,
-  description,
   imageUrl,
   className,
   cuisine,

@@ -5,8 +5,8 @@ import SessionProvider from "@/components/custom/session-provider";
 import TRPCProvider from "@/lib/trpc/trpc-provider";
 import { ThemeProvider } from "@/components/custom/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-// import { getDefaultLanguage } from "@/lib/i18n/settings";
-// import I18nProvider from "@/components/custom/i18n-provider";
+import { getDefaultLanguage } from "@/lib/i18n/settings";
+import I18nProvider from "@/components/custom/i18n-provider";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -29,31 +29,25 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(authOptions);
-  // const defaultLanguage = getDefaultLanguage();
-
+  const defaultLanguage = getDefaultLanguage();
   return (
-    <html
-      // lang={defaultLanguage}
-      suppressHydrationWarning
-    >
-      <body
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        className="bg-muted"
-      >
+    <html lang={defaultLanguage} suppressHydrationWarning>
+      <body className="bg-muted" suppressHydrationWarning>
+        {" "}
         <SessionProvider session={session}>
           <TRPCProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-              <Toaster />
-            </ThemeProvider>
+            <I18nProvider initialLang={defaultLanguage}>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+                <Toaster />
+              </ThemeProvider>
+            </I18nProvider>
           </TRPCProvider>
-          {/* <I18nProvider initialLang={defaultLanguage}>
-          </I18nProvider> */}
         </SessionProvider>
       </body>
     </html>

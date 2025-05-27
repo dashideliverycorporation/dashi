@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/sheet";
 import Image from "next/image";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import useTranslation from "@/hooks/useTranslation";
 
 interface HeaderProps {
   className?: string;
@@ -27,6 +28,7 @@ interface HeaderProps {
  */
 export function Header({ className }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
+ const { t } = useTranslation();
 
   return (
     <header
@@ -64,14 +66,14 @@ export function Header({ className }: HeaderProps) {
             {/* Auth Buttons - Desktop */}
             <div className="hidden md:flex items-center space-x-2">
               <Link href="/signin">
-                <Button variant="ghost">Sign In</Button>
+                <Button variant="ghost">  {t("auth.signIn", "Sign In")}</Button>
               </Link>
               <Link href="/signup">
                 <Button
                   variant="default"
                   className="bg-orange-500 hover:bg-orange-600"
                 >
-                  Sign Up
+                  {t("auth.signUp", "Sign Up")}
                 </Button>
               </Link>
             </div>

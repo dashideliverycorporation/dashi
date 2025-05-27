@@ -3,6 +3,25 @@
     "name": "Dashi",
     "tagline": "Des plats délicieux, livrés"
   },
+  "home": {
+    "heroTitle": "Des plats délicieux livrés à votre porte",
+    "heroSubtitle": "Commandez dans vos restaurants préférés et suivez votre livraison en temps réel",
+    "searchPlaceholder": "Rechercher des restaurants ou des plats",
+    "searchButton": "Rechercher",
+    "categories": "Catégories",
+    "nearYou": "Restaurants près de chez vous",
+    "categoryPizza": "Pizza",
+    "categoryCoffee": "Café",
+    "categorySalads": "Salades",
+    "categoryDessert": "Dessert",
+    "categoryBurgers": "Hamburgers",
+    "categorySandwiches": "Sandwiches",
+    "filterAll": "Tous",
+    "filterFastest": "Livraison rapide",
+    "filterTopRated": "Les mieux notés",
+    "filterPrice": "Prix",
+    "filterPromotions": "Promotions"
+  },
   "nav": {
     "home": "Accueil",
     "restaurants": "Restaurants",
@@ -93,6 +112,8 @@
     "login": "Connexion",
     "register": "S'inscrire",
     "logout": "Déconnexion",
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
     "email": "Email",
     "password": "Mot de passe",
     "confirmPassword": "Confirmer le mot de passe",
@@ -118,7 +139,11 @@
     "terms": "Conditions générales",
     "privacy": "Politique de confidentialité",
     "howItWorks": "Comment ça marche",
-    "copyright": "© {{year}} Dashi. Tous droits réservés."
+    "copyright": "© 2025 Dashi. Tous droits réservés.",
+    "slogan": "Des plats délicieux livrés à votre porte, à tout moment et partout.",
+    "address": "123 Rue de Livraison, Ville Gourmande, FC 12345",
+    "phone": "+1 (555) 123-4567",
+    "email": "support@dashi.com"
   },
   "language": {
     "title": "Langue",

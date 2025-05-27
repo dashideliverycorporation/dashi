@@ -3,6 +3,25 @@
     "name": "Dashi",
     "tagline": "Delicious food, delivered"
   },
+  "home": {
+    "heroTitle": "Delicious Food Delivered To Your Door",
+    "heroSubtitle": "Order from your favorite restaurants and track your delivery in real-time",
+    "searchPlaceholder": "Search for restaurants or foods",
+    "searchButton": "Search",
+    "categories": "Categories",
+    "nearYou": "Restaurants Near You",
+    "categoryPizza": "Pizza",
+    "categoryCoffee": "Coffee",
+    "categorySalads": "Salads",
+    "categoryDessert": "Dessert",
+    "categoryBurgers": "Burgers",
+    "categorySandwiches": "Sandwiches",
+    "filterAll": "All",
+    "filterFastest": "Fastest Delivery",
+    "filterTopRated": "Top Rated",
+    "filterPrice": "Price",
+    "filterPromotions": "Promotions"
+  },
   "nav": {
     "home": "Home",
     "restaurants": "Restaurants",
@@ -93,6 +112,8 @@
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
@@ -118,7 +139,11 @@
     "terms": "Terms & Conditions",
     "privacy": "Privacy Policy",
     "howItWorks": "How It Works",
-    "copyright": "© {{year}} Dashi. All rights reserved."
+    "copyright": "© 2025 Dashi. All rights reserved.",
+    "slogan": "Delicious food delivered to your door, anytime and anywhere.",
+    "address": "123 Delivery St, Food City, FC 12345",
+    "phone": "+1 (555) 123-4567",
+    "email": "support@dashi.com"
   },
   "language": {
     "title": "Language",
