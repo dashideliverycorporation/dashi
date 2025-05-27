@@ -3,9 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart} from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface NavLinksProps {
   className?: string;
@@ -17,6 +18,7 @@ interface NavLinksProps {
  */
 export function NavLinks({ className, mobile = false }: NavLinksProps) {
   const pathname = usePathname();
+  const { t } = useTranslation();
 
   // Check if a link is active
   const isActive = (path: string) => pathname === path;
@@ -42,16 +44,16 @@ export function NavLinks({ className, mobile = false }: NavLinksProps) {
 
   return (
     <nav className={containerClass}>
+      {" "}
       {/* Home Link - Only for mobile */}
       {mobile && (
         <Link
           href="/"
           className={cn(linkClass("/"), "w-full px-6 py-2 hover:bg-gray-100")}
         >
-          Home
+          {t("nav.home", "Home")}
         </Link>
       )}
-
       {/* Cart Link */}
       <Link
         href="/cart"
@@ -61,11 +63,11 @@ export function NavLinks({ className, mobile = false }: NavLinksProps) {
         )}
       >
         <div className="flex items-center">
+          {" "}
           <ShoppingCart className="h-5 w-5" />
-          {mobile && <span className="ml-2">Cart</span>}
+          {mobile && <span className="ml-2">{t("nav.cart", "Cart")}</span>}
         </div>
-      </Link>
-
+      </Link>{" "}
       {/* Sign In Link */}
       <Link
         href="/signin"
@@ -74,9 +76,8 @@ export function NavLinks({ className, mobile = false }: NavLinksProps) {
           mobile ? "w-full px-6 py-2 hover:bg-gray-100" : ""
         )}
       >
-        Sign In
+        {t("auth.signIn", "Sign In")}
       </Link>
-
       {/* Sign Up Link */}
       <Link
         href="/signup"
@@ -85,12 +86,13 @@ export function NavLinks({ className, mobile = false }: NavLinksProps) {
           mobile ? "w-full px-6 py-2 hover:bg-gray-100" : ""
         )}
       >
+        {" "}
         {!mobile ? (
           <Button className="bg-orange-500 hover:bg-orange-600 text-white">
-            Sign Up
+            {t("auth.signUp", "Sign Up")}
           </Button>
         ) : (
-          "Sign Up"
+          t("auth.signUp", "Sign Up")
         )}
       </Link>
     </nav>
