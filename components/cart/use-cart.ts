@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import { CartContext } from "./cart-provider";
-import { CartItem, ICartContext } from "@/types/cart";
+import { ICartContext } from "@/types/cart";
 
 /**
  * Custom hook for accessing and manipulating cart state

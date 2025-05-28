@@ -18,6 +18,7 @@ import Image from "next/image";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 import useTranslation from "@/hooks/useTranslation";
 import CartIcon from "@/components/cart/CartIcon";
+import { useCart } from "@/components/cart/use-cart";
 
 interface HeaderProps {
   className?: string;
@@ -30,6 +31,7 @@ interface HeaderProps {
 export function Header({ className }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
+  const { itemCount } = useCart();
 
   return (
     <header
@@ -74,12 +76,24 @@ export function Header({ className }: HeaderProps) {
             </div>
             {/* Mobile navigation */}
             <div className="md:hidden">
+              {" "}
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label="Menu">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Menu"
+                    className="relative"
+                  >
                     <Menu className="h-6 w-6" />
+                    {itemCount > 0 && (
+                      <div
+                        className="absolute top-2.5 right-2 h-1.5 w-1.5 rounded-full bg-orange-500 ring-2 ring-white"
+                        aria-label={`${itemCount} items in cart`}
+                      />
+                    )}
                   </Button>
-                </SheetTrigger>{" "}
+                </SheetTrigger>
                 <SheetContent
                   side="right"
                   className="w-[250px] sm:w-[300px] p-0"

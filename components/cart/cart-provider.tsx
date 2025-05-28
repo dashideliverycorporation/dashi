@@ -27,6 +27,8 @@ const initialCartState: CartState = {
 export const CartContext = createContext<ICartContext>({
   state: initialCartState,
   addItem: () => {},
+  decreaseItemQuantity: () => {},
+  removeItem: () => {},
   clearCart: () => {},
   isCartEmpty: true,
   itemCount: 0,
@@ -45,12 +47,6 @@ interface CartProviderProps {
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const { t } = useTranslation();
   const [state, setState] = useState<CartState>(initialCartState);
-  const [showClearCartDialog, setShowClearCartDialog] = useState(false);
-  const [pendingItem, setPendingItem] = useState<{
-    restaurantId: string;
-    restaurantName: string;
-    item: Omit<CartItem, "quantity">;
-  } | null>(null);
 
   /**
    * Calculate if the cart is empty
@@ -118,16 +114,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       restaurantName: string,
       item: Omit<CartItem, "quantity">
     ) => {
-      // If cart has items from a different restaurant, show confirmation dialog
-      if (
-        state.restaurantId &&
-        state.restaurantId !== restaurantId &&
-        !isCartEmpty
-      ) {
-        setPendingItem({ restaurantId, restaurantName, item });
-        setShowClearCartDialog(true);
-        return;
-      }
 
       setState((prevState) => {
         // Check if the item already exists in the cart
@@ -170,39 +156,71 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     },
     [state.restaurantId, isCartEmpty, calculateSubtotal, t]
   );
+  /**
+   * Decrease the quantity of an item in the cart
+   */
+  const decreaseItemQuantity = useCallback(
+    (itemId: string) => {
+      setState((prevState) => {
+        const existingItemIndex = prevState.items.findIndex(
+          (cartItem) => cartItem.id === itemId
+        );
+
+        if (existingItemIndex === -1) return prevState;
+
+        const updatedItems = [...prevState.items];
+        const currentItem = updatedItems[existingItemIndex];
+
+        // If quantity is 1, remove the item
+        if (currentItem.quantity <= 1) {
+          updatedItems.splice(existingItemIndex, 1);
+        } else {
+          // Otherwise decrease quantity by 1
+          updatedItems[existingItemIndex] = {
+            ...currentItem,
+            quantity: currentItem.quantity - 1,
+          };
+        }
+
+        return {
+          ...prevState,
+          items: updatedItems,
+          subtotal: calculateSubtotal(updatedItems),
+        };
+      });
+    },
+    [calculateSubtotal]
+  );
 
   /**
-   * Handle confirmation of clearing cart when adding item from different restaurant
+   * Remove an item from the cart completely
    */
-  const handleClearCartConfirm = useCallback(() => {
-    if (pendingItem) {
-      setState({
-        restaurantId: pendingItem.restaurantId,
-        restaurantName: pendingItem.restaurantName,
-        items: [{ ...pendingItem.item, quantity: 1 }],
-        subtotal: pendingItem.item.price,
+  const removeItem = useCallback(
+    (itemId: string) => {
+      setState((prevState) => {
+        const updatedItems = prevState.items.filter(
+          (item) => item.id !== itemId
+        );
+
+        // If removing the last item, clear the cart completely
+        if (updatedItems.length === 0) {
+          return initialCartState;
+        }
+
+        return {
+          ...prevState,
+          items: updatedItems,
+          subtotal: calculateSubtotal(updatedItems),
+        };
       });
 
-      setShowClearCartDialog(false);
-      setPendingItem(null);
-
       toastNotification.success(
-        t("cart.switched.title"),
-        // Using the defaultValue as a fallback if the translation key doesn't exist
-        t("cart.switched.message", {
-          defaultValue: "Switched to a new restaurant",
-        }).replace("{{restaurantName}}", pendingItem.restaurantName)
+        t("cart.removed.title", "Item removed"),
+        t("cart.removed.message", "Item removed from your cart")
       );
-    }
-  }, [pendingItem, t]);
-
-  /**
-   * Handle cancellation of clearing cart
-   */
-  const handleClearCartCancel = useCallback(() => {
-    setShowClearCartDialog(false);
-    setPendingItem(null);
-  }, []);
+    },
+    [calculateSubtotal, t]
+  );
 
   /**
    * The cart context value to be provided to consumers
@@ -211,17 +229,25 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     () => ({
       state,
       addItem,
+      decreaseItemQuantity,
+      removeItem,
       clearCart,
       isCartEmpty,
       itemCount,
     }),
-    [state, addItem, clearCart, isCartEmpty, itemCount]
+    [
+      state,
+      addItem,
+      decreaseItemQuantity,
+      removeItem,
+      clearCart,
+      isCartEmpty,
+      itemCount,
+    ]
   );
 
   return (
-    <CartContext.Provider value={contextValue}>
-      {children}
-    </CartContext.Provider>
+    <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
   );
 };
 

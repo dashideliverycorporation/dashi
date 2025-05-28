@@ -2,14 +2,12 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { Trash2, X, ShoppingCart } from "lucide-react";
+import { Trash2, ShoppingCart } from "lucide-react";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetClose,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCart } from "./use-cart";
@@ -26,24 +24,29 @@ interface CartSheetProps {
  */
 export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
   const { t } = useTranslation();
-  const { state, clearCart, isCartEmpty, formattedSubtotal, activeRestaurant } =
-    useCart();
+  const {
+    state,
+    isCartEmpty,
+    activeRestaurant,
+    addItem,
+    decreaseItemQuantity,
+    removeItem,
+  } = useCart();
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:w-[400px] p-0 flex flex-col bg-gray-100">
         <SheetHeader>
           <div className="flex items-center justify-between my-0 py-0">
-            <SheetTitle className="text-xl font-bold m-0">
-              {t("cart.title", "My order")}
+            <SheetTitle className="text-xl font-bold m-0 flex gap-2 items-center justify-center">
+             <ShoppingCart className="h-6 w-6"/> <span>{t("cart.title", "My order")}</span> 
             </SheetTitle>
-            
           </div>
-          {/* {activeRestaurant.name && !isCartEmpty && (
-            <div className="text-sm text-muted-foreground">
+          {activeRestaurant.name && !isCartEmpty && (
+            <div className="text-sm text-muted-foreground mb-2">
               <span className="font-medium">{activeRestaurant.name}</span>
             </div>
-          )} */}
+          )}
         </SheetHeader>
 
         {isCartEmpty ? (
@@ -62,23 +65,13 @@ export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
                 )}
               </p>
             </div>
-            <Link href="/">
-              <SheetClose asChild>
-                <Button className="bg-orange-500 hover:bg-orange-600 hover:shadow-md transition-all duration-200 active:scale-95 px-8 py-6 rounded-md">
-                  {t("cart.empty.browseRestaurants", "Browse Restaurants")}
-                </Button>
-              </SheetClose>
-            </Link>
           </div>
         ) : (
           <>
             <ScrollArea className="flex-grow overflow-hidden">
               <div className="py-3 flex flex-col">
                 {state.items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="px-2 py-2"
-                  >
+                  <div key={item.id} className="px-2 py-2">
                     <div className="flex items-start p-2 rounded-lg bg-background">
                       {item.imageUrl && (
                         <div className="w-24 h-24 relative rounded-md overflow-hidden mr-4 flex-shrink-0">
@@ -92,7 +85,9 @@ export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
                       )}
 
                       <div className="flex-1">
-                        <h3 className="font-medium text-base mb-1">{item.name}</h3>
+                        <h3 className="font-medium text-base mb-1">
+                          {item.name}
+                        </h3>
                         <div className="flex justify-between items-center text-sm text-gray-600">
                           <div className="flex items-center">
                             <span>${item.price.toFixed(2)}</span>
@@ -110,6 +105,8 @@ export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8 rounded-full p-0 hover:bg-orange-100 text-orange-500"
+                              onClick={() => decreaseItemQuantity(item.id)}
+                              aria-label="Decrease quantity"
                             >
                               <span className="font-bold">-</span>
                             </Button>
@@ -120,6 +117,19 @@ export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8 rounded-full p-0 hover:bg-orange-100 text-orange-500"
+                              onClick={() =>
+                                addItem(
+                                  state.restaurantId!,
+                                  state.restaurantName!,
+                                  {
+                                    id: item.id,
+                                    name: item.name,
+                                    price: item.price,
+                                    imageUrl: item.imageUrl,
+                                  }
+                                )
+                              }
+                              aria-label="Increase quantity"
                             >
                               <span className="font-bold">+</span>
                             </Button>
@@ -129,6 +139,8 @@ export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 rounded-full p-0 hover:bg-gray-100 ml-auto"
+                            onClick={() => removeItem(item.id)}
+                            aria-label="Remove item"
                           >
                             <Trash2 className="h-4 w-4 text-gray-400" />
                           </Button>
@@ -159,7 +171,7 @@ export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
 
                 <div className="flex justify-between items-center font-bold mt-3 pt-3 border-t">
                   <span>{t("cart.total", "Total")}</span>
-                  <span>$ {(state.subtotal - 10.7).toFixed(2)}</span>
+                  <span>$ {state.subtotal.toFixed(2)}</span>
                 </div>
               </div>
 

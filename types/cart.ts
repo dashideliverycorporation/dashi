@@ -35,6 +35,8 @@ export interface ICartContext {
     restaurantName: string,
     item: Omit<CartItem, "quantity">
   ) => void;
+  decreaseItemQuantity: (itemId: string) => void;
+  removeItem: (itemId: string) => void;
   clearCart: () => void;
   isCartEmpty: boolean;
   itemCount: number;
