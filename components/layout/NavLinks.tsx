@@ -1,12 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
+import { ShoppingCart } from "lucide-react";
+import { Button } from "../ui/button";
+import CartSheet from "@/components/cart/CartSheet";
+import { useCart } from "@/components/cart/use-cart";
+import { Badge } from "../ui/badge";
 
 interface NavLinksProps {
   className?: string;
@@ -19,6 +22,8 @@ interface NavLinksProps {
 export function NavLinks({ className, mobile = false }: NavLinksProps) {
   const pathname = usePathname();
   const { t } = useTranslation();
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { itemCount } = useCart();
 
   // Check if a link is active
   const isActive = (path: string) => pathname === path;
@@ -53,22 +58,29 @@ export function NavLinks({ className, mobile = false }: NavLinksProps) {
         >
           {t("nav.home", "Home")}
         </Link>
-      )}
-      {/* Cart Link */}
-      <Link
-        href="/cart"
+      )}{" "}
+      {/* Cart Link */}{" "}
+      <div
         className={cn(
-          linkClass("/cart"),
+          "flex items-center cursor-pointer",
           mobile ? "w-full px-6 py-2 hover:bg-gray-100" : ""
         )}
+        onClick={() => setIsCartOpen(true)}
       >
-        <div className="flex items-center">
-          {" "}
+        <div className="relative">
           <ShoppingCart className="h-5 w-5" />
-          {mobile && <span className="ml-2">{t("nav.cart", "Cart")}</span>}
+          {itemCount > 0 && (
+            <Badge
+              variant="destructive"
+              className="absolute -top-2 -right-2 flex items-center justify-center rounded-full bg-orange-500 text-[10px] text-white min-w-[18px] h-[18px] p-0 hover:bg-orange-600"
+            >
+              {itemCount > 99 ? "99+" : itemCount}
+            </Badge>
+          )}
         </div>
-      </Link>{" "}
-      {/* Sign In Link */}
+        {mobile && <span className="ml-2">{t("nav.cart", "Cart")}</span>}
+      </div>
+      <CartSheet open={isCartOpen} onOpenChange={setIsCartOpen} />
       <Link
         href="/signin"
         className={cn(
@@ -86,7 +98,6 @@ export function NavLinks({ className, mobile = false }: NavLinksProps) {
           mobile ? "w-full px-6 py-2 hover:bg-gray-100" : ""
         )}
       >
-        {" "}
         {!mobile ? (
           <Button className="bg-orange-500 hover:bg-orange-600 text-white">
             {t("auth.signUp", "Sign Up")}

@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/custom/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { getDefaultLanguage } from "@/lib/i18n/settings";
 import I18nProvider from "@/components/custom/i18n-provider";
+import CartProvider from "@/components/cart/cart-provider";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default async function RootLayout({
         {" "}
         <SessionProvider session={session}>
           <TRPCProvider>
+            {" "}
             <I18nProvider initialLang={defaultLanguage}>
               <ThemeProvider
                 attribute="class"
@@ -43,8 +45,10 @@ export default async function RootLayout({
                 enableSystem
                 disableTransitionOnChange
               >
-                {children}
-                <Toaster />
+                <CartProvider>
+                  {children}
+                  <Toaster />
+                </CartProvider>
               </ThemeProvider>
             </I18nProvider>
           </TRPCProvider>

@@ -68,21 +68,25 @@ export default function LanguageSwitcher({
       console.error("Failed to change language:", error);
     }
   };
-
   // Simple variant (just a toggle button with flags)
   if (variant === "simple") {
     const currentLanguage = getLanguageByCode(currentLang) || LANGUAGES[0];
+    // For server-side rendering, always use the default language's flag to prevent hydration mismatch
+    // After hydration, React will update with the correct flag in the browser
+    const defaultLanguage = LANGUAGES[0];
 
     return (
       <Button
         variant="ghost"
         size="sm"
         onClick={toggleLanguage}
-        aria-label={t("language.select", "Select Language")}
+        aria-label="Select Language"
         className="px-2 w-12 flex justify-center"
       >
         <span className="text-lg" aria-hidden="true">
-          {currentLanguage.flag}
+          {typeof window === "undefined"
+            ? defaultLanguage.flag
+            : currentLanguage.flag}
         </span>
       </Button>
     );
