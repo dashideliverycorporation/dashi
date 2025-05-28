@@ -7,7 +7,7 @@
 
 "use client";
 
-import { PropsWithChildren, useEffect} from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nClient, {
   changeLanguage,
@@ -35,33 +35,36 @@ export default function I18nProvider({
 }: I18nProviderProps) {
   // Always render the children with the provider to avoid hydration mismatches
   // Then initialize or update the language in a useEffect
-
   useEffect(() => {
     const initializeLanguage = async () => {
       try {
-        // First check if there's a stored preference
-        const storedLang =
-          localStorage.getItem("i18nextLng") ||
-          document.cookie.match(/i18next=([^;]+)/)?.[1] ||
-          null;
-
-        if (storedLang && isLanguageSupported(storedLang)) {
-          // Use stored preference if available and supported
-          if (i18nClient.language !== storedLang) {
-            await changeLanguage(storedLang);
-          }
-        } else if (initialLang !== i18nClient.language) {
-          // If no stored preference, use the initialLang (from server)
+        // Ensure we start with the initialLang to avoid hydration mismatches
+        if (i18nClient.language !== initialLang) {
           await changeLanguage(initialLang);
+        }
 
-          // If initialLang is the default, try browser detection as a better option
-          if (initialLang === getDefaultLanguage()) {
+        // After initial render and hydration, we can check local storage
+        // This ensures any state updates happen after hydration is complete
+        setTimeout(async () => {
+          // First check if there's a stored preference
+          const storedLang =
+            localStorage.getItem("i18nextLng") ||
+            document.cookie.match(/i18next=([^;]+)/)?.[1] ||
+            null;
+
+          if (storedLang && isLanguageSupported(storedLang)) {
+            // Use stored preference if available and supported
+            if (i18nClient.language !== storedLang) {
+              await changeLanguage(storedLang);
+            }
+          } else if (initialLang === getDefaultLanguage()) {
+            // If initialLang is the default and no stored preference, try browser detection
             const browserLang = getBrowserLanguage();
-            if (browserLang && browserLang !== initialLang) {
+            if (browserLang && browserLang !== i18nClient.language) {
               await changeLanguage(browserLang);
             }
           }
-        }
+        }, 0);
       } catch (error) {
         console.error("Failed to initialize language:", error);
       }

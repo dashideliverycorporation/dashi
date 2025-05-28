@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, ShoppingCart } from "lucide-react";
+import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "./Container";
 import NavLinks from "./NavLinks";
@@ -17,6 +17,7 @@ import {
 import Image from "next/image";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 import useTranslation from "@/hooks/useTranslation";
+import CartIcon from "@/components/cart/CartIcon";
 
 interface HeaderProps {
   className?: string;
@@ -28,7 +29,7 @@ interface HeaderProps {
  */
 export function Header({ className }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
- const { t } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <header
@@ -54,19 +55,13 @@ export function Header({ className }: HeaderProps) {
             {/* Language Switcher - Desktop */}
             <div className="hidden md:flex">
               <LanguageSwitcher variant="simple" />
-            </div>
-
+            </div>{" "}
             {/* Shopping Cart */}
-            <Link href="/cart">
-              <Button variant="ghost" size="icon" className="hidden md:flex">
-                <ShoppingCart className="h-5 w-5" />
-              </Button>
-            </Link>
-
+            <CartIcon />
             {/* Auth Buttons - Desktop */}
             <div className="hidden md:flex items-center space-x-2">
               <Link href="/signin">
-                <Button variant="ghost">  {t("auth.signIn", "Sign In")}</Button>
+                <Button variant="ghost"> {t("auth.signIn", "Sign In")}</Button>
               </Link>
               <Link href="/signup">
                 <Button
@@ -77,7 +72,6 @@ export function Header({ className }: HeaderProps) {
                 </Button>
               </Link>
             </div>
-
             {/* Mobile navigation */}
             <div className="md:hidden">
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -94,9 +88,7 @@ export function Header({ className }: HeaderProps) {
                     <SheetTitle>Navigation Menu</SheetTitle>
                   </SheetHeader>
                   <div className="flex flex-col pt-6">
-                    <NavLinks mobile />
-
-                    {/* Language Switcher - Mobile */}
+                    <NavLinks mobile /> {/* Language Switcher - Mobile */}
                     <div className="px-6 py-4">
                       <LanguageSwitcher variant="full" />
                     </div>

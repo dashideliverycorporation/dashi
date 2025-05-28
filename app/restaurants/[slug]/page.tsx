@@ -4,12 +4,15 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, Clock, Plus, ShoppingCart } from "lucide-react";
+import { ChevronLeft, Clock, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
 import Header from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
+import { useCart } from "@/components/cart/use-cart";
+import CartSheet from "@/components/cart/CartSheet";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 // Restaurant type definition
 interface Restaurant {
@@ -154,10 +157,11 @@ const menuItems: Record<string, MenuItem[]> = {
 export default function RestaurantMenuPage() {
   const { slug } = useParams() as { slug: string };
   const [activeCategory, setActiveCategory] = useState("popular");
-  const [cartItemCount, setCartItemCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [items, setItems] = useState<MenuItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { itemCount } = useCart();
 
   // Simulate loading restaurant data
   useEffect(() => {
@@ -170,15 +174,9 @@ export default function RestaurantMenuPage() {
 
     return () => clearTimeout(timer);
   }, [slug]);
-
   // Handle category change
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
-  };
-
-  // Add item to cart
-  const addToCart = () => {
-    setCartItemCount((prev) => prev + 1);
   };
 
   if (isLoading) {
@@ -200,7 +198,6 @@ export default function RestaurantMenuPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-
       {/* Hero Image */}
       <div className="relative w-full h-[300px] lg:h-[400px]">
         <Link
@@ -217,7 +214,6 @@ export default function RestaurantMenuPage() {
           priority
         />
       </div>
-
       {/* Restaurant Info */}
       <Container>
         <div className="flex flex-col md:flex-row md:justify-between md:items-start px-4 py-6">
@@ -298,35 +294,38 @@ export default function RestaurantMenuPage() {
                     <div className="flex items-center justify-between">
                       <span className="font-medium">
                         ${item.price.toFixed(2)}
-                      </span>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="bg-orange-500 text-white h-8 w-8 rounded-full p-0 flex items-center justify-center"
-                        onClick={addToCart}
-                      >
-                        <span className="sr-only">Add to cart</span>
-                        <Plus className="h-4 w-4" />
-                        {/* <span className="text-lg">+</span> */}
-                      </Button>
+                      </span>{" "}
+                      <AddToCartButton
+                        item={{
+                          id: item.id,
+                          name: item.name,
+                          price: item.price,
+                          imageUrl: item.imageUrl,
+                        }}
+                        restaurantId={restaurant.id}
+                        restaurantName={restaurant.name}
+                      />
                     </div>
                   </div>
                 </div>
               ))}
           </div>
         </div>
-      </Container>
-
+      </Container>{" "}
       {/* Cart Button */}
-      {cartItemCount > 0 && (
+      {itemCount > 0 && (
         <div className="fixed bottom-6 left-0 right-0 flex justify-center">
-          <Button className="bg-orange-500 hover:bg-orange-600 px-6 py-6 rounded-full shadow-lg">
+          {" "}
+          <Button
+            className="bg-orange-500 hover:bg-orange-600 hover:shadow-xl px-6 py-6 rounded-full shadow-lg transition-all duration-200 active:scale-95"
+            onClick={() => setIsCartOpen(true)}
+          >
             <ShoppingCart className="mr-2 h-5 w-5" />
-            <span className="font-medium">View Cart ({cartItemCount})</span>
+            <span className="font-medium">View Cart ({itemCount})</span>
           </Button>
         </div>
-      )}
-
+      )}{" "}
+      <CartSheet open={isCartOpen} onOpenChange={setIsCartOpen} />
       <Footer />
     </div>
   );
