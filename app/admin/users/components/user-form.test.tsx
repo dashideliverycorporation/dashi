@@ -70,7 +70,7 @@ describe("UserForm", () => {
   });
   it("renders the form with all required fields", () => {
     // Render the component
-    render(<UserForm />);
+    render(<UserForm setOpen={()=>{}} />);
 
     // Check that the form renders with the expected fields - using more specific regex patterns
     expect(screen.getByLabelText(/^Full Name/i)).toBeInTheDocument();

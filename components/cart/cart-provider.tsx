@@ -154,7 +154,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         return newState;
       });
     },
-    [state.restaurantId, isCartEmpty, calculateSubtotal, t]
+    [calculateSubtotal, t]
   );
   /**
    * Decrease the quantity of an item in the cart
