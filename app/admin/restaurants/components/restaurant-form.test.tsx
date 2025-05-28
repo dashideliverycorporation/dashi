@@ -62,7 +62,7 @@ describe("RestaurantForm", () => {
 
   it("renders the form with all required fields", () => {
     // Render the component
-    render(<RestaurantForm />);
+    render(<RestaurantForm setOpen={()=>{}}/>);
 
     // Check that the form renders with the expected fields
     expect(screen.getByLabelText(/Restaurant Name/i)).toBeInTheDocument();
@@ -93,7 +93,7 @@ describe("RestaurantForm", () => {
     } as any);
 
     // Render the component
-    render(<RestaurantForm />);
+    render(<RestaurantForm setOpen={()=>{}} />);
 
     // Complete all form fields
     await user.type(
