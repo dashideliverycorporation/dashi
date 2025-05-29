@@ -533,16 +533,6 @@ export default function OrderHistoryPage() {
                       onClick={() => setSelectedMobileOrder(order)}
                     >
                       <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0">
-                        <img
-                          src={getRestaurantImageUrl(order.restaurant.name)}
-                          alt={order.restaurant.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            // Fallback image if the main one fails to load
-                            e.currentTarget.src =
-                              "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80";
-                          }}
-                        />
                         <Image
                           src={getRestaurantImageUrl(order.restaurant.name)}
                           alt={order.restaurant.name}

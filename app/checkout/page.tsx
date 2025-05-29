@@ -30,7 +30,7 @@ export default function CheckoutPage() {
   const { t } = useTranslation();
   const router = useRouter();
   const { status } = useSession();
-  const { state} = useCart();
+  const { state } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Protect the route from unauthenticated users and empty carts
@@ -39,8 +39,8 @@ export default function CheckoutPage() {
   //     if (status === "unauthenticated") {
   //       router.push(`/signin?returnUrl=${encodeURIComponent('/checkout')}`);
   //       toastNotification.info(
-  //         t("auth.loginRequired"),
-  //         t("checkout.loginRequired")
+  //         t("auth.loginRequired", "Login Required"),
+  //         t("checkout.loginRequired", "Please login to proceed to checkout")
   //       );
   //       return;
   //     }
@@ -49,8 +49,8 @@ export default function CheckoutPage() {
   //     if (status !== "loading" && isCartEmpty) {
   //       router.push("/");
   //       toastNotification.info(
-  //         t("cart.empty"),
-  //         t("checkout.emptyCartMessage")
+  //         t("cart.empty", "Your cart is empty"),
+  //         t("checkout.emptyCartMessage", "Your cart is empty. Please add items before proceeding to checkout.")
   //       );
   //       return;
   //     }
@@ -80,8 +80,11 @@ export default function CheckoutPage() {
       console.error("Error processing delivery details:", error);
       setIsSubmitting(false);
       toastNotification.error(
-        t("common.error"),
-        t("checkout.errorProcessingDetails")
+        t("common.error", "An error occurred"),
+        t(
+          "checkout.errorProcessingDetails",
+          "Error processing your details. Please try again."
+        )
       );
     }
   };
@@ -116,7 +119,9 @@ export default function CheckoutPage() {
               <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center mb-1 shadow-sm">
                 <span className="text-sm">✓</span>
               </div>
-              <span className="text-xs text-gray-600">{t("cart.title")}</span>
+              <span className="text-xs text-gray-600">
+                {t("cart.title", "Your Cart")}
+              </span>
             </div>
 
             <div className="flex flex-col items-center">
@@ -124,7 +129,7 @@ export default function CheckoutPage() {
                 <span className="text-sm">2</span>
               </div>
               <span className="text-xs text-gray-600">
-                {t("checkout.deliveryDetails")}
+                {t("checkout.deliveryDetails", "Delivery Details")}
               </span>
             </div>
 
@@ -133,7 +138,7 @@ export default function CheckoutPage() {
                 <span className="text-sm text-gray-500">3</span>
               </div>
               <span className="text-xs text-gray-600">
-                {t("checkout.paymentMethod")}
+                {t("checkout.paymentMethod", "Payment Method")}
               </span>
             </div>
 
@@ -142,7 +147,7 @@ export default function CheckoutPage() {
                 <span className="text-sm text-gray-500">4</span>
               </div>
               <span className="text-xs text-gray-600">
-                {t("order.confirmation")}
+                {t("order.confirmation", "Order Confirmation")}
               </span>
             </div>
           </div>
@@ -221,7 +226,7 @@ export default function CheckoutPage() {
               onClick={() => router.back()}
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>{t("checkout.backToCart")}</span>
+              <span>{t("checkout.backToCart", "Back to Cart")}</span>
             </Button>
           </div>
         </div>

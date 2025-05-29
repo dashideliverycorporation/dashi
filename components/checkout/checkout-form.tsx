@@ -86,11 +86,14 @@ export function CheckoutForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base font-medium">
-                    {t("checkout.firstName")}
+                    {t("checkout.firstName", "First Name")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder={t("checkout.enterFirstName")}
+                      placeholder={t(
+                        "checkout.enterFirstName",
+                        "Enter your first name"
+                      )}
                       className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                       {...field}
                     />
@@ -105,11 +108,14 @@ export function CheckoutForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base font-medium">
-                    {t("checkout.lastName")}
+                    {t("checkout.lastName", "Last Name")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder={t("checkout.enterLastName")}
+                      placeholder={t(
+                        "checkout.enterLastName",
+                        "Enter your last name"
+                      )}
                       className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                       {...field}
                     />
@@ -127,12 +133,15 @@ export function CheckoutForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base font-medium">
-                    {t("checkout.email")}
+                    {t("checkout.email", "Email")}
                   </FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder={t("checkout.enterEmail")}
+                      placeholder={t(
+                        "checkout.enterEmail",
+                        "Enter your email address"
+                      )}
                       className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                       {...field}
                     />
@@ -147,11 +156,14 @@ export function CheckoutForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base font-medium">
-                    {t("checkout.phoneNumber")}
+                    {t("checkout.phoneNumber", "Phone Number")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder={t("checkout.enterPhoneNumber")}
+                      placeholder={t(
+                        "checkout.enterPhoneNumber",
+                        "Enter your phone number"
+                      )}
                       className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                       {...field}
                     />
@@ -168,17 +180,23 @@ export function CheckoutForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base font-medium">
-                  {t("checkout.deliveryAddress")}
+                  {t("checkout.deliveryAddress", "Delivery Address")}
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder={t("checkout.enterDeliveryAddress")}
+                    placeholder={t(
+                      "checkout.enterDeliveryAddress",
+                      "Enter your full delivery address"
+                    )}
                     className="min-h-[100px] resize-y border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                     {...field}
                   />
                 </FormControl>
                 <FormDescription>
-                  {t("checkout.deliveryAddressDescription")}
+                  {t(
+                    "checkout.deliveryAddressDescription",
+                    "Please provide a complete address where your order should be delivered"
+                  )}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -191,24 +209,30 @@ export function CheckoutForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base font-medium">
-                  {t("checkout.additionalNotes")}
+                  {t("checkout.additionalNotes", "Additional Notes")}
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder={t("checkout.enterAdditionalNotes")}
+                    placeholder={t(
+                      "checkout.enterAdditionalNotes",
+                      "Special instructions for delivery or food preparation (optional)"
+                    )}
                     className="min-h-[80px] resize-y border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                     {...field}
                   />
                 </FormControl>
                 <FormDescription>
-                  {t("checkout.additionalNotesDescription")}
+                  {t(
+                    "checkout.additionalNotesDescription",
+                    "Any dietary restrictions, delivery instructions, or special requests"
+                  )}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        
+
         {/* <div className="pt-6">
           <div className="p-4 border rounded-md bg-amber-50 text-amber-900 border-amber-200">
             <p className="text-sm font-medium">{t("checkout.paymentNote")}</p>
@@ -218,12 +242,12 @@ export function CheckoutForm({
           <Button
             type="submit"
             className="w-full py-4 font-bold transition-all text-white bg-orange-600 hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-            aria-label={t("checkout.continueToPayment")}
+            aria-label={t("checkout.continueToPayment", "Continue to Payment")}
             disabled={isSubmitting}
           >
             {isSubmitting
               ? t("checkout.processing")
-              : t("checkout.continueToPayment")}
+              : t("checkout.continueToPayment", "Continue to Payment")}
           </Button>
         </div>
       </form>

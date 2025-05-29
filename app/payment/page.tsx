@@ -102,7 +102,9 @@ export default function PaymentPage() {
       <div className="container mx-auto py-10 flex flex-col items-center justify-center min-h-[60vh]">
         <div className="animate-pulse flex flex-col items-center gap-4">
           <ShoppingBag className="h-12 w-12 text-orange-500" />
-          <h1 className="text-xl font-semibold">{t("common.loading")}</h1>
+          <h1 className="text-xl font-semibold">
+            {t("common.loading", "Loading...")}
+          </h1>
         </div>
       </div>
     );
@@ -126,7 +128,9 @@ export default function PaymentPage() {
               <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center mb-1 shadow-sm">
                 <span className="text-sm">✓</span>
               </div>
-              <span className="text-xs text-gray-600">{t("cart.title")}</span>
+              <span className="text-xs text-gray-600">
+                {t("cart.title", "Your Cart")}
+              </span>
             </div>
 
             <div className="flex flex-col items-center">
@@ -134,7 +138,7 @@ export default function PaymentPage() {
                 <span className="text-sm">✓</span>
               </div>
               <span className="text-xs text-gray-600">
-                {t("checkout.deliveryDetails")}
+                {t("checkout.deliveryDetails", "Delivery Details")}
               </span>
             </div>
 
@@ -143,7 +147,7 @@ export default function PaymentPage() {
                 <span className="text-sm">3</span>
               </div>
               <span className="text-xs text-gray-600 font-medium">
-                {t("checkout.paymentMethod")}
+                {t("checkout.paymentMethod", "Payment Method")}
               </span>
             </div>
 
@@ -152,7 +156,7 @@ export default function PaymentPage() {
                 <span className="text-sm text-gray-500">4</span>
               </div>
               <span className="text-xs text-gray-600">
-                {t("order.confirmation")}
+                {t("order.confirmation", "Order Confirmation")}
               </span>
             </div>
           </div>
@@ -232,7 +236,7 @@ export default function PaymentPage() {
               onClick={() => router.back()}
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>{t("checkout.backToCheckout")}</span>
+              <span>{t("checkout.backToCheckout", "Back to Checkout")}</span>
             </Button>
           </div>
         </div>

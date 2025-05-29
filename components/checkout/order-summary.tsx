@@ -49,7 +49,7 @@ export function OrderSummary({
       <CardHeader className="p-0">
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg font-bold">
-            {t("checkout.orderSummary")}
+            {t("checkout.orderSummary", "Order Summary")}
           </CardTitle>
         </div>
       </CardHeader>
@@ -71,7 +71,7 @@ export function OrderSummary({
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">
-                    {t("checkout.subtotal")}
+                    {t("checkout.subtotal", "Subtotal")}
                   </span>
                   <span className="font-medium">${subtotal.toFixed(2)}</span>
                 </div>
@@ -85,7 +85,7 @@ export function OrderSummary({
 
                 <div className="pt-3 mt-2 border-t border-gray-200">
                   <div className="flex justify-between font-bold text-base">
-                    <span>{t("checkout.total")}</span>
+                    <span>{t("checkout.total", "Total")}</span>
                     <span className="text-orange-600">
                       ${subtotal.toFixed(2)}
                     </span>
@@ -106,7 +106,10 @@ export function OrderSummary({
                 <Button
                   type="submit"
                   className="w-full py-4 font-bold transition-all text-white"
-                  aria-label={t("checkout.continueToPayment")}
+                  aria-label={t(
+                    "checkout.continueToPayment",
+                    "Continue to Payment"
+                  )}
                   disabled={isSubmitting}
                   onClick={() => {
                     document
@@ -117,15 +120,15 @@ export function OrderSummary({
                   }}
                 >
                   {isSubmitting
-                    ? t("checkout.processing")
-                    : t("checkout.continueToPayment")}
+                    ? t("checkout.processing", "Processing...")
+                    : t("checkout.continueToPayment", "Continue to Payment")}
                 </Button>
               </div>
             )}
           </div>
         ) : (
           <div className="py-8 text-center text-muted-foreground">
-            {t("cart.empty")}
+            {t("cart.empty", "Your cart is empty")}
           </div>
         )}
       </CardContent>

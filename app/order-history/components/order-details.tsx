@@ -295,8 +295,8 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                 <div className="p-4">
                   <p>{order.deliveryAddress}</p>
                   {order.notes && (
-                    <div className="mt-3 p-3 bg-muted/10 rounded-md">
-                      <p className="text-sm font-medium mb-1 text-gray-600">
+                    <div className="mt-3 bg-muted/10 rounded-md">
+                      <p className="text-sm font-medium mb-1 text-gray-600 border-t pt-1 mb-2">
                         {t("orderHistory.notes", "Notes")}
                       </p>
                       <p className="text-sm">{order.notes}</p>
@@ -307,17 +307,17 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
 
               {/* Order Total */}
               <div className="border-t pt-4">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center text-sm">
                   <span className="font-medium text-gray-500">Subtotal</span>
                   <span>{formatPrice(order.total - 5)}</span>
                 </div>
-                <div className="flex justify-between items-center mt-1">
-                  <span className="font-medium text-gray-500">
+                <div className="flex justify-between items-center mt-1 text-sm">
+                  <span className="font-medium text-gray-500 ">
                     Delivery fee
                   </span>
                   <span>{formatPrice(5)}</span>
                 </div>
-                <div className="flex justify-between items-center font-semibold text-lg mt-3">
+                <div className="flex justify-between items-center font-semibold text-base mt-3">
                   <span>{t("orderHistory.total", "Total")}</span>
                   <span>{formatPrice(order.total)}</span>
                 </div>

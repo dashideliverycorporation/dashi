@@ -43,6 +43,7 @@ export function Header({ className }: HeaderProps) {
       <Container>
         <div className="flex h-16 items-center justify-between">
           <Link href="/">
+          <div className="hidden lg:block">
             <Image
               src="/logo.svg"
               alt="Dashi"
@@ -50,6 +51,16 @@ export function Header({ className }: HeaderProps) {
               height={100}
               priority
             />
+          </div>
+          <div className="block lg:hidden">
+            <Image
+              src="/logo.svg"
+              alt="Dashi"
+              width={80}
+              height={80}
+              priority
+            />
+          </div>
           </Link>
 
           {/* Right side buttons */}
