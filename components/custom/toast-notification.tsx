@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle, Info } from "lucide-react";
 import { toast } from "sonner";
 
 export const toastNotification = {
@@ -31,6 +31,22 @@ export const toastNotification = {
         duration: 5000,
         className: "!bg-red-600 !border-red-700",
         style: { backgroundColor: "#dc2626" },
+      }
+    );
+  },
+  info: (title: string, message: string) => {
+    toast(
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <Info className="h-5 w-5 text-white" />
+          <h3 className="font-medium text-base text-white">{title}</h3>
+        </div>
+        <p className="text-sm text-gray-100 ml-7">{message}</p>
+      </div>,
+      {
+        duration: 5000,
+        className: "!bg-blue-600 !border-blue-700",
+        style: { backgroundColor: "#2563eb" },
       }
     );
   },

@@ -147,15 +147,15 @@ Status: Ready
 
 ## Tasks / Subtasks
 
+- [x] Create CheckoutForm component with address and notes fields
+- [x] Add "Proceed to Checkout" button in CartSheet component
+- [x] Create OrderSummary component to display cart contents and total
+- [ ] Create checkout page with OrderSummary and CheckoutForm
 - [ ] Create Zod schema for checkout form validation
 - [ ] Create middleware protection for the checkout route
 - [ ] Implement cart checking logic to ensure it's not empty
-- [ ] Create OrderSummary component to display cart contents and total
-- [ ] Create CheckoutForm component with address and notes fields
 - [ ] Implement form validation for required fields
-- [ ] Create checkout page with OrderSummary and CheckoutForm
 - [ ] Add redirection logic for unauthenticated users or empty carts
-- [ ] Add "Proceed to Checkout" button in CartSheet component
 - [ ] Style the checkout page according to design system
 - [ ] Set up localization for all text content
 - [ ] Implement responsive styling for different screen sizes

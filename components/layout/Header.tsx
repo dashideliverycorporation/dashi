@@ -76,7 +76,6 @@ export function Header({ className }: HeaderProps) {
             </div>
             {/* Mobile navigation */}
             <div className="md:hidden">
-              {" "}
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
                   <Button
@@ -96,7 +95,7 @@ export function Header({ className }: HeaderProps) {
                 </SheetTrigger>
                 <SheetContent
                   side="right"
-                  className="w-[250px] sm:w-[300px] p-0"
+                  className="w-full sm:w-[300px] p-0"
                 >
                   <SheetHeader className="sr-only">
                     <SheetTitle>Navigation Menu</SheetTitle>
