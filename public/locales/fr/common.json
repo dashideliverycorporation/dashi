@@ -162,5 +162,24 @@
     "unauthorized": "Accès non autorisé",
     "forbidden": "Accès interdit",
     "noConnection": "Pas de connexion internet"
+  },
+  "checkout": {
+    "title": "Paiement",
+    "orderSummary": "Résumé de la commande",
+    "deliveryAddress": "Adresse de livraison",
+    "enterDeliveryAddress": "Entrez votre adresse de livraison complète",
+    "deliveryAddressDescription": "Veuillez fournir une adresse complète où votre commande doit être livrée",
+    "additionalNotes": "Notes supplémentaires",
+    "enterAdditionalNotes": "Instructions spéciales pour la livraison ou la préparation des aliments (facultatif)",
+    "additionalNotesDescription": "Restrictions alimentaires, instructions de livraison ou demandes spéciales",
+    "paymentNote": "Le paiement sera effectué directement au restaurant lors de la livraison (Paiement à la livraison)",
+    "placeOrder": "Passer la commande",
+    "placingOrder": "En cours de traitement...",
+    "backToCart": "Retour au panier",
+    "emptyCartMessage": "Votre panier est vide. Veuillez ajouter des articles avant de passer à la caisse.",
+    "loginRequired": "Veuillez vous connecter pour passer à la caisse",
+    "orderTotal": "Total de la commande",
+    "subtotal": "Sous-total",
+    "items": "Articles"
   }
 }

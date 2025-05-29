@@ -3,6 +3,8 @@
 import React from "react";
 import Image from "next/image";
 import { Trash2, ShoppingCart } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -13,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "./use-cart";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { toastNotification } from "@/components/custom/toast-notification";
 
 interface CartSheetProps {
   open: boolean;
@@ -24,6 +27,8 @@ interface CartSheetProps {
  */
 export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { data: session } = useSession();
   const {
     state,
     isCartEmpty,
@@ -39,7 +44,8 @@ export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
         <SheetHeader>
           <div className="flex items-center justify-between my-0 py-0">
             <SheetTitle className="text-xl font-bold m-0 flex gap-2 items-center justify-center">
-             <ShoppingCart className="h-6 w-6"/> <span>{t("cart.title", "My order")}</span> 
+              <ShoppingCart className="h-6 w-6" />{" "}
+              <span>{t("cart.title", "My order")}</span>
             </SheetTitle>
           </div>
           {activeRestaurant.name && !isCartEmpty && (
@@ -173,10 +179,28 @@ export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
                   <span>{t("cart.total", "Total")}</span>
                   <span>$ {state.subtotal.toFixed(2)}</span>
                 </div>
-              </div>
-
-              <Button className="w-full py-6 bg-orange-500 hover:bg-orange-600 hover:shadow-md transition-all duration-200 active:scale-95 text-white font-medium rounded-md mt-2">
-                {t("cart.checkout", "Order now")}
+              </div>{" "}
+              <Button
+                className="w-full py-6 bg-orange-500 hover:bg-orange-600 hover:shadow-md transition-all duration-200 active:scale-95 text-white font-medium rounded-md mt-2"
+                onClick={() => {
+                  if (!session) {
+                    // Redirect to login with return URL to checkout
+                    router.push(
+                      `/signin?returnUrl=${encodeURIComponent("/checkout")}`
+                    );
+                    onOpenChange(false); // Close cart sheet
+                    toastNotification.info(
+                      t("auth.loginRequired"),
+                      t("checkout.loginRequired")
+                    );
+                  } else {
+                    // User is logged in, proceed to checkout
+                    router.push("/checkout");
+                    onOpenChange(false); // Close cart sheet
+                  }
+                }}
+              >
+                {t("cart.checkout", "Proceed to Checkout")}
               </Button>
             </div>
           </>
