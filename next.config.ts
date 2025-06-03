@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "dashi-restaurant-menu.s3.eu-north-1.amazonaws.com",
+        pathname: "/**",
+      },
     ],
   },
 };

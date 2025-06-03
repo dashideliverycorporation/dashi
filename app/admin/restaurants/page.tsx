@@ -46,18 +46,25 @@ export default function RestaurantsPage(): JSX.Element {
             <div className="p-1">
               {/* Table header skeleton */}
               <div className="flex items-center p-4 bg-muted-foreground/5">
-                {[1, 2, 3, 4, 5].map((i) => (
+                <div className="flex-0 w-16">
+                  <Skeleton className="h-5 w-10 bg-muted-foreground/5" />
+                </div>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
                   <div
                     key={i}
-                    className={`flex-1 ${i === 5 ? "flex-0 w-16" : ""}`}
+                    className={`flex-1 ${i === 9 ? "flex-0 w-16" : ""}`}
                   >
                     <Skeleton 
                       className={`h-5 bg-muted-foreground/5 ${
-                        i === 1 ? "w-24" : 
-                        i === 2 ? "w-28" : 
+                        i === 1 ? "w-28" : 
+                        i === 2 ? "w-20" : 
                         i === 3 ? "w-32" : 
-                        i === 4 ? "w-20" : 
-                        "w-10"
+                        i === 4 ? "w-24" : 
+                        i === 5 ? "w-20" :
+                        i === 6 ? "w-24" :
+                        i === 7 ? "w-36" :
+                        i === 8 ? "w-24" :
+                        "w-12"
                       }`}
                     />
                   </div>
@@ -67,22 +74,29 @@ export default function RestaurantsPage(): JSX.Element {
               {/* Table rows skeleton */}
               {[1, 2, 3, 4, 5].map((row) => (
                 <div key={row} className="flex items-center p-4 border-t">
-                  {[1, 2, 3, 4, 5].map((cell) => (
+                  <div className="flex-0 w-16">
+                    <Skeleton className="h-12 w-12 bg-muted-foreground/5 rounded-md" />
+                  </div>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((cell) => (
                     <div
                       key={`${row}-${cell}`}
-                      className={`flex-1 ${cell === 5 ? "flex-0 w-16" : ""}`}
+                      className={`flex-1 ${cell === 9 ? "flex-0 w-16" : ""}`}
                     >
                       <Skeleton
                         className={`h-5 bg-muted-foreground/5 ${
-                          cell === 1 ? "w-24" : 
-                          cell === 2 ? "w-28" : 
+                          cell === 1 ? "w-28" : 
+                          cell === 2 ? "w-20" : 
                           cell === 3 ? "w-32" : 
-                          cell === 4 ? "w-20" : 
-                          "w-10"
+                          cell === 4 ? "w-24" : 
+                          cell === 5 ? "w-20" :
+                          cell === 6 ? "w-24" :
+                          cell === 7 ? "w-36" :
+                          cell === 8 ? "w-24" :
+                          "w-12"
                         }`}
                       />
-                      {cell === 3 && row % 2 === 0 && (
-                        <Skeleton className="h-5 w-16 mt-2 bg-muted-foreground/5" />
+                      {(cell === 7 || cell === 8) && row % 2 === 0 && (
+                        <Skeleton className="h-5 w-20 mt-2 bg-muted-foreground/5" />
                       )}
                     </div>
                   ))}
