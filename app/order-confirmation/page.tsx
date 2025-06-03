@@ -29,7 +29,7 @@ export default function OrderConfirmationPage() {
 
         <p className="lg:text-lg text-gray-700 mb-6">
           {t("order.number", "Order #")}
-          {Math.floor(1000 + Math.random() * 9000)}
+          {5822} {/* Fixed value to prevent hydration errors */}
         </p>
 
         <div className="bg-gray-50 p-6 rounded-lg mb-6">

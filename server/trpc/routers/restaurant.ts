@@ -19,11 +19,12 @@ import { z } from "zod";
  * Extracts file data from a data URL or processes an image URL
  *
  * @param imageUrl - The image URL from the client which might be a data URL
+ * @param prefix - Prefix for the filename (e.g., 'menu-item' or 'restaurant')
  * @returns Promise with the actual AWS S3 URL to be stored in the database
  */
-async function processImageUrl(imageUrl: string): Promise<string> {
+async function processImageUrl(imageUrl: string, prefix: string = 'image'): Promise<string> {
   // Check if the URL is a data URL (base64 encoded)
-  if (imageUrl.startsWith("data:")) {
+  if (imageUrl?.startsWith("data:")) {
     // Extract the MIME type and base64 data
     const matches = imageUrl.match(/^data:(.+);base64,(.+)$/);
 
@@ -37,7 +38,7 @@ async function processImageUrl(imageUrl: string): Promise<string> {
 
     // Generate a filename based on content type
     const extension = contentType.split("/")[1] || "png";
-    const fileName = `menu-item-${Date.now()}.${extension}`;
+    const fileName = `${prefix}-${Date.now()}.${extension}`;
 
     // Upload to S3 and get the URL
     const result = await S3Service.uploadFile(buffer, fileName, contentType);
@@ -46,7 +47,7 @@ async function processImageUrl(imageUrl: string): Promise<string> {
 
   // If it's not a data URL, return as is
   // Note: In a production app, you might want to validate external URLs
-  return imageUrl;
+  return imageUrl || "";
 }
 
 /**
@@ -184,6 +185,12 @@ export const restaurantRouter = router({
     .input(createRestaurantSchema)
     .mutation(async ({ input }) => {
       try {
+        // Process the image URL if provided (convert data URLs to S3 URLs)
+        let processedImageUrl = input.imageUrl;
+        if (input.imageUrl) {
+          processedImageUrl = await processImageUrl(input.imageUrl, 'restaurant');
+        }
+
         // Create the restaurant in the database
         const restaurant = await prisma.restaurant.create({
           data: {
@@ -193,6 +200,10 @@ export const restaurantRouter = router({
             phoneNumber: input.phoneNumber,
             address: input.address,
             serviceArea: input.serviceArea,
+            imageUrl: processedImageUrl || "",
+            category: input.category || "",
+            preparationTime: input.preparationTime || "",
+            deliveryFee: input.deliveryFee ? parseFloat(input.deliveryFee) : 0,
           },
         });
 
@@ -234,7 +245,7 @@ export const restaurantRouter = router({
         }
 
         // Process the image URL if provided (convert data URLs to S3 URLs)
-        const processedImageUrl = await processImageUrl(input.imageUrl);
+        const processedImageUrl = await processImageUrl(input.imageUrl, 'menu-item');
 
         // Map input fields to match the Prisma model (isAvailable instead of available)
         const menuItem = await prisma.menuItem.create({

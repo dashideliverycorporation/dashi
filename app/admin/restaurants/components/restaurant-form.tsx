@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createRestaurantSchema } from "@/server/schemas/restaurant.schema";
 import { trpc } from "@/lib/trpc/client";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload } from "lucide-react";
 import type { CreateRestaurantInput } from "@/server/schemas/restaurant.schema";
 import { JSX } from "react/jsx-runtime";
 import { toastNotification } from "@/components/custom/toast-notification";
@@ -36,6 +37,10 @@ export function RestaurantForm({
 }: { setOpen: (open: boolean) => void }): JSX.Element {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize form with zod validation
   const form = useForm<CreateRestaurantInput>({
@@ -47,6 +52,10 @@ export function RestaurantForm({
       phoneNumber: "",
       address: "",
       serviceArea: "",
+      imageUrl: "",
+      category: "",
+      preparationTime: "",
+      deliveryFee: "" ,
     },
   });
 
@@ -90,6 +99,50 @@ export function RestaurantForm({
     } catch (err) {
       setIsLoading(false);
       console.error("Error submitting form:", err);
+    }
+  };
+
+  /**
+   * Handle image file selection
+   * Converts the selected image to a data URL and updates the form
+   *
+   * @param {ChangeEvent<HTMLInputElement>} e - Input change event
+   */
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toastNotification.error(
+        "File too large",
+        "Image must be less than 5MB. Please select a smaller file."
+      );
+      return;
+    }
+
+    setImageFile(file);
+
+    // Create a temporary URL for the image preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setImagePreview(result);
+      // Update the form field with the data URL
+      form.setValue("imageUrl", result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  /**
+   * Trigger file input click
+   */
+  const triggerFileInput = (): void => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
@@ -203,6 +256,85 @@ export function RestaurantForm({
 
           <FormField
             control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Restaurant Image</FormLabel>
+                <FormControl>
+                  <Input type="hidden" {...field} />
+                </FormControl>{" "}
+                <div
+                  className="border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors min-h-[120px]"
+                  onClick={triggerFileInput}
+                >
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    id="image-upload"
+                  />
+
+                  {!imagePreview ? (
+                    <>
+                      <Upload className="h-8 w-8 text-gray-400 mb-1" />
+                      <div className="text-orange-500 font-medium">
+                        Upload a file
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        PNG, JPG, GIF up to 5MB
+                      </div>
+                    </>
+                  ) : (
+                    <div className="w-full flex items-center gap-4">
+                      <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden">
+                        <Image
+                          src={imagePreview}
+                          alt="Restaurant image preview"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 flex flex-col">
+                        <p className="text-sm font-medium truncate">
+                          Image Selected
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Click to change image
+                        </p>
+                      </div>
+                      <Upload className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
+                <FormDescription>
+                  Click the box to upload an image of your restaurant.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Restaurant Category</FormLabel>
+                <FormControl>
+                  <Input placeholder="E.g. Italian, Fast Food, Vegetarian" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Type of cuisine or restaurant category.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="serviceArea"
             render={({ field }) => (
               <FormItem>
@@ -221,6 +353,50 @@ export function RestaurantForm({
               </FormItem>
             )}
           />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="preparationTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Preparation Time</FormLabel>
+                  <FormControl>
+                    <Input placeholder="E.g. 30-45 minutes" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Average food preparation time.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="deliveryFee"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Delivery Fee</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="0.00" 
+                      type="number" 
+                      step="0.01"
+                      {...field} 
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Fee charged for delivery service.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <div className="flex items-center justify-end gap-4 pt-4">
             <Button

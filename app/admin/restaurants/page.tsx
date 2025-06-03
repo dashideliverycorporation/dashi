@@ -51,7 +51,15 @@ export default function RestaurantsPage(): JSX.Element {
                     key={i}
                     className={`flex-1 ${i === 5 ? "flex-0 w-16" : ""}`}
                   >
-                    <Skeleton className="h-5 w-4/5 bg-muted-foreground/5" />
+                    <Skeleton 
+                      className={`h-5 bg-muted-foreground/5 ${
+                        i === 1 ? "w-24" : 
+                        i === 2 ? "w-28" : 
+                        i === 3 ? "w-32" : 
+                        i === 4 ? "w-20" : 
+                        "w-10"
+                      }`}
+                    />
                   </div>
                 ))}
               </div>
@@ -65,12 +73,16 @@ export default function RestaurantsPage(): JSX.Element {
                       className={`flex-1 ${cell === 5 ? "flex-0 w-16" : ""}`}
                     >
                       <Skeleton
-                        className={`h-5 bg-muted-foreground/5 w-${
-                          Math.floor(Math.random() * 40) + 60
-                        }%`}
+                        className={`h-5 bg-muted-foreground/5 ${
+                          cell === 1 ? "w-24" : 
+                          cell === 2 ? "w-28" : 
+                          cell === 3 ? "w-32" : 
+                          cell === 4 ? "w-20" : 
+                          "w-10"
+                        }`}
                       />
                       {cell === 3 && row % 2 === 0 && (
-                        <Skeleton className="h-5 w-1/3 mt-2 bg-muted-foreground/5" />
+                        <Skeleton className="h-5 w-16 mt-2 bg-muted-foreground/5" />
                       )}
                     </div>
                   ))}

@@ -237,16 +237,16 @@ export default function RestaurantTable({
     return (
       <div className="rounded-lg border">
         <div className="p-1">
-          {/* Table header skeleton */}
+          {/* Table header skeleton - using fixed width classes */}
           <div className="flex items-center p-4 bg-muted-foreground/5">
             {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className={`flex-1 ${i === 5 ? "flex-0 w-16" : ""}`}>
-                <Skeleton className="h-5 w-4/5 bg-muted-foreground/5" />
+                <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
               </div>
             ))}
           </div>
 
-          {/* Table rows skeleton */}
+          {/* Table rows skeleton - using fixed width classes instead of percentages */}
           {[1, 2, 3, 4, 5].map((row) => (
             <div key={row} className="flex items-center p-4 border-t">
               {[1, 2, 3, 4, 5].map((cell) => (
@@ -255,12 +255,16 @@ export default function RestaurantTable({
                   className={`flex-1 ${cell === 5 ? "flex-0 w-16" : ""}`}
                 >
                   <Skeleton
-                    className={`h-5 bg-muted-foreground/5 w-${
-                      Math.floor(Math.random() * 40) + 60
-                    }%`}
+                    className={`h-5 bg-muted-foreground/5 ${
+                      cell === 1 ? "w-28" : 
+                      cell === 2 ? "w-32" : 
+                      cell === 3 ? "w-36" : 
+                      cell === 4 ? "w-24" : 
+                      "w-12"
+                    }`}
                   />
                   {cell === 3 && row % 2 === 0 && (
-                    <Skeleton className="h-5 w-1/3 mt-2 bg-muted-foreground/5" />
+                    <Skeleton className="h-5 w-20 mt-2 bg-muted-foreground/5" />
                   )}
                 </div>
               ))}

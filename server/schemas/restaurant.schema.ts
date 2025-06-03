@@ -28,6 +28,10 @@ export const createRestaurantSchema = z.object({
     .string()
     .max(200, "Service area description must be at most 200 characters")
     .optional(),
+  imageUrl: z.string().url("Please enter a valid URL").optional(),
+  category: z.string().max(100, "Category must be at most 100 characters").optional(),
+  preparationTime: z.string().max(50, "Preparation time must be at most 50 characters").optional(),
+  deliveryFee: z.string().regex(/^\d+(\.\d{1,2})?$/, "Please enter a valid delivery fee").optional(),
 });
 
 /**

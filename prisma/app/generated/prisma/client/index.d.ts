@@ -8481,8 +8481,22 @@ export namespace Prisma {
 
   export type AggregateRestaurant = {
     _count: RestaurantCountAggregateOutputType | null
+    _avg: RestaurantAvgAggregateOutputType | null
+    _sum: RestaurantSumAggregateOutputType | null
     _min: RestaurantMinAggregateOutputType | null
     _max: RestaurantMaxAggregateOutputType | null
+  }
+
+  export type RestaurantAvgAggregateOutputType = {
+    deliveryFee: Decimal | null
+    rating: number | null
+    ratingCount: number | null
+  }
+
+  export type RestaurantSumAggregateOutputType = {
+    deliveryFee: Decimal | null
+    rating: number | null
+    ratingCount: number | null
   }
 
   export type RestaurantMinAggregateOutputType = {
@@ -8493,6 +8507,12 @@ export namespace Prisma {
     phoneNumber: string | null
     address: string | null
     serviceArea: string | null
+    imageUrl: string | null
+    category: string | null
+    preparationTime: string | null
+    deliveryFee: Decimal | null
+    rating: number | null
+    ratingCount: number | null
     isActive: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -8507,6 +8527,12 @@ export namespace Prisma {
     phoneNumber: string | null
     address: string | null
     serviceArea: string | null
+    imageUrl: string | null
+    category: string | null
+    preparationTime: string | null
+    deliveryFee: Decimal | null
+    rating: number | null
+    ratingCount: number | null
     isActive: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -8521,6 +8547,12 @@ export namespace Prisma {
     phoneNumber: number
     address: number
     serviceArea: number
+    imageUrl: number
+    category: number
+    preparationTime: number
+    deliveryFee: number
+    rating: number
+    ratingCount: number
     isActive: number
     deletedAt: number
     createdAt: number
@@ -8528,6 +8560,18 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type RestaurantAvgAggregateInputType = {
+    deliveryFee?: true
+    rating?: true
+    ratingCount?: true
+  }
+
+  export type RestaurantSumAggregateInputType = {
+    deliveryFee?: true
+    rating?: true
+    ratingCount?: true
+  }
 
   export type RestaurantMinAggregateInputType = {
     id?: true
@@ -8537,6 +8581,12 @@ export namespace Prisma {
     phoneNumber?: true
     address?: true
     serviceArea?: true
+    imageUrl?: true
+    category?: true
+    preparationTime?: true
+    deliveryFee?: true
+    rating?: true
+    ratingCount?: true
     isActive?: true
     deletedAt?: true
     createdAt?: true
@@ -8551,6 +8601,12 @@ export namespace Prisma {
     phoneNumber?: true
     address?: true
     serviceArea?: true
+    imageUrl?: true
+    category?: true
+    preparationTime?: true
+    deliveryFee?: true
+    rating?: true
+    ratingCount?: true
     isActive?: true
     deletedAt?: true
     createdAt?: true
@@ -8565,6 +8621,12 @@ export namespace Prisma {
     phoneNumber?: true
     address?: true
     serviceArea?: true
+    imageUrl?: true
+    category?: true
+    preparationTime?: true
+    deliveryFee?: true
+    rating?: true
+    ratingCount?: true
     isActive?: true
     deletedAt?: true
     createdAt?: true
@@ -8610,6 +8672,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: RestaurantAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RestaurantSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: RestaurantMinAggregateInputType
@@ -8640,6 +8714,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: RestaurantCountAggregateInputType | true
+    _avg?: RestaurantAvgAggregateInputType
+    _sum?: RestaurantSumAggregateInputType
     _min?: RestaurantMinAggregateInputType
     _max?: RestaurantMaxAggregateInputType
   }
@@ -8652,11 +8728,19 @@ export namespace Prisma {
     phoneNumber: string
     address: string | null
     serviceArea: string | null
+    imageUrl: string
+    category: string
+    preparationTime: string
+    deliveryFee: Decimal
+    rating: number
+    ratingCount: number
     isActive: boolean
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: RestaurantCountAggregateOutputType | null
+    _avg: RestaurantAvgAggregateOutputType | null
+    _sum: RestaurantSumAggregateOutputType | null
     _min: RestaurantMinAggregateOutputType | null
     _max: RestaurantMaxAggregateOutputType | null
   }
@@ -8683,6 +8767,12 @@ export namespace Prisma {
     phoneNumber?: boolean
     address?: boolean
     serviceArea?: boolean
+    imageUrl?: boolean
+    category?: boolean
+    preparationTime?: boolean
+    deliveryFee?: boolean
+    rating?: boolean
+    ratingCount?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -8701,6 +8791,12 @@ export namespace Prisma {
     phoneNumber?: boolean
     address?: boolean
     serviceArea?: boolean
+    imageUrl?: boolean
+    category?: boolean
+    preparationTime?: boolean
+    deliveryFee?: boolean
+    rating?: boolean
+    ratingCount?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -8715,6 +8811,12 @@ export namespace Prisma {
     phoneNumber?: boolean
     address?: boolean
     serviceArea?: boolean
+    imageUrl?: boolean
+    category?: boolean
+    preparationTime?: boolean
+    deliveryFee?: boolean
+    rating?: boolean
+    ratingCount?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -8729,13 +8831,19 @@ export namespace Prisma {
     phoneNumber?: boolean
     address?: boolean
     serviceArea?: boolean
+    imageUrl?: boolean
+    category?: boolean
+    preparationTime?: boolean
+    deliveryFee?: boolean
+    rating?: boolean
+    ratingCount?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RestaurantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "email" | "phoneNumber" | "address" | "serviceArea" | "isActive" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurant"]>
+  export type RestaurantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "email" | "phoneNumber" | "address" | "serviceArea" | "imageUrl" | "category" | "preparationTime" | "deliveryFee" | "rating" | "ratingCount" | "isActive" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurant"]>
   export type RestaurantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     menuItems?: boolean | Restaurant$menuItemsArgs<ExtArgs>
     orders?: boolean | Restaurant$ordersArgs<ExtArgs>
@@ -8760,6 +8868,12 @@ export namespace Prisma {
       phoneNumber: string
       address: string | null
       serviceArea: string | null
+      imageUrl: string
+      category: string
+      preparationTime: string
+      deliveryFee: Prisma.Decimal
+      rating: number
+      ratingCount: number
       isActive: boolean
       deletedAt: Date | null
       createdAt: Date
@@ -9197,6 +9311,12 @@ export namespace Prisma {
     readonly phoneNumber: FieldRef<"Restaurant", 'String'>
     readonly address: FieldRef<"Restaurant", 'String'>
     readonly serviceArea: FieldRef<"Restaurant", 'String'>
+    readonly imageUrl: FieldRef<"Restaurant", 'String'>
+    readonly category: FieldRef<"Restaurant", 'String'>
+    readonly preparationTime: FieldRef<"Restaurant", 'String'>
+    readonly deliveryFee: FieldRef<"Restaurant", 'Decimal'>
+    readonly rating: FieldRef<"Restaurant", 'Float'>
+    readonly ratingCount: FieldRef<"Restaurant", 'Int'>
     readonly isActive: FieldRef<"Restaurant", 'Boolean'>
     readonly deletedAt: FieldRef<"Restaurant", 'DateTime'>
     readonly createdAt: FieldRef<"Restaurant", 'DateTime'>
@@ -13289,6 +13409,12 @@ export namespace Prisma {
     phoneNumber: 'phoneNumber',
     address: 'address',
     serviceArea: 'serviceArea',
+    imageUrl: 'imageUrl',
+    category: 'category',
+    preparationTime: 'preparationTime',
+    deliveryFee: 'deliveryFee',
+    rating: 'rating',
+    ratingCount: 'ratingCount',
     isActive: 'isActive',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
@@ -13429,13 +13555,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -13450,20 +13569,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'OrderStatus'
-   */
-  export type EnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'OrderStatus[]'
-   */
-  export type ListEnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -13474,6 +13579,27 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'OrderStatus'
+   */
+  export type EnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'OrderStatus[]'
+   */
+  export type ListEnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus[]'>
     
   /**
    * Deep Input Types
@@ -13887,6 +14013,12 @@ export namespace Prisma {
     phoneNumber?: StringFilter<"Restaurant"> | string
     address?: StringNullableFilter<"Restaurant"> | string | null
     serviceArea?: StringNullableFilter<"Restaurant"> | string | null
+    imageUrl?: StringFilter<"Restaurant"> | string
+    category?: StringFilter<"Restaurant"> | string
+    preparationTime?: StringFilter<"Restaurant"> | string
+    deliveryFee?: DecimalFilter<"Restaurant"> | Decimal | DecimalJsLike | number | string
+    rating?: FloatFilter<"Restaurant"> | number
+    ratingCount?: IntFilter<"Restaurant"> | number
     isActive?: BoolFilter<"Restaurant"> | boolean
     deletedAt?: DateTimeNullableFilter<"Restaurant"> | Date | string | null
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
@@ -13904,6 +14036,12 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     address?: SortOrderInput | SortOrder
     serviceArea?: SortOrderInput | SortOrder
+    imageUrl?: SortOrder
+    category?: SortOrder
+    preparationTime?: SortOrder
+    deliveryFee?: SortOrder
+    rating?: SortOrder
+    ratingCount?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -13924,6 +14062,12 @@ export namespace Prisma {
     phoneNumber?: StringFilter<"Restaurant"> | string
     address?: StringNullableFilter<"Restaurant"> | string | null
     serviceArea?: StringNullableFilter<"Restaurant"> | string | null
+    imageUrl?: StringFilter<"Restaurant"> | string
+    category?: StringFilter<"Restaurant"> | string
+    preparationTime?: StringFilter<"Restaurant"> | string
+    deliveryFee?: DecimalFilter<"Restaurant"> | Decimal | DecimalJsLike | number | string
+    rating?: FloatFilter<"Restaurant"> | number
+    ratingCount?: IntFilter<"Restaurant"> | number
     isActive?: BoolFilter<"Restaurant"> | boolean
     deletedAt?: DateTimeNullableFilter<"Restaurant"> | Date | string | null
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
@@ -13941,13 +14085,21 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     address?: SortOrderInput | SortOrder
     serviceArea?: SortOrderInput | SortOrder
+    imageUrl?: SortOrder
+    category?: SortOrder
+    preparationTime?: SortOrder
+    deliveryFee?: SortOrder
+    rating?: SortOrder
+    ratingCount?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: RestaurantCountOrderByAggregateInput
+    _avg?: RestaurantAvgOrderByAggregateInput
     _max?: RestaurantMaxOrderByAggregateInput
     _min?: RestaurantMinOrderByAggregateInput
+    _sum?: RestaurantSumOrderByAggregateInput
   }
 
   export type RestaurantScalarWhereWithAggregatesInput = {
@@ -13961,6 +14113,12 @@ export namespace Prisma {
     phoneNumber?: StringWithAggregatesFilter<"Restaurant"> | string
     address?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
     serviceArea?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+    imageUrl?: StringWithAggregatesFilter<"Restaurant"> | string
+    category?: StringWithAggregatesFilter<"Restaurant"> | string
+    preparationTime?: StringWithAggregatesFilter<"Restaurant"> | string
+    deliveryFee?: DecimalWithAggregatesFilter<"Restaurant"> | Decimal | DecimalJsLike | number | string
+    rating?: FloatWithAggregatesFilter<"Restaurant"> | number
+    ratingCount?: IntWithAggregatesFilter<"Restaurant"> | number
     isActive?: BoolWithAggregatesFilter<"Restaurant"> | boolean
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Restaurant"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
@@ -14639,6 +14797,12 @@ export namespace Prisma {
     phoneNumber: string
     address?: string | null
     serviceArea?: string | null
+    imageUrl: string
+    category: string
+    preparationTime: string
+    deliveryFee?: Decimal | DecimalJsLike | number | string
+    rating?: number
+    ratingCount?: number
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -14656,6 +14820,12 @@ export namespace Prisma {
     phoneNumber: string
     address?: string | null
     serviceArea?: string | null
+    imageUrl: string
+    category: string
+    preparationTime: string
+    deliveryFee?: Decimal | DecimalJsLike | number | string
+    rating?: number
+    ratingCount?: number
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -14673,6 +14843,12 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    preparationTime?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14690,6 +14866,12 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    preparationTime?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14707,6 +14889,12 @@ export namespace Prisma {
     phoneNumber: string
     address?: string | null
     serviceArea?: string | null
+    imageUrl: string
+    category: string
+    preparationTime: string
+    deliveryFee?: Decimal | DecimalJsLike | number | string
+    rating?: number
+    ratingCount?: number
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -14721,6 +14909,12 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    preparationTime?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14735,6 +14929,12 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    preparationTime?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15403,6 +15603,39 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -15436,10 +15669,22 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     address?: SortOrder
     serviceArea?: SortOrder
+    imageUrl?: SortOrder
+    category?: SortOrder
+    preparationTime?: SortOrder
+    deliveryFee?: SortOrder
+    rating?: SortOrder
+    ratingCount?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type RestaurantAvgOrderByAggregateInput = {
+    deliveryFee?: SortOrder
+    rating?: SortOrder
+    ratingCount?: SortOrder
   }
 
   export type RestaurantMaxOrderByAggregateInput = {
@@ -15450,6 +15695,12 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     address?: SortOrder
     serviceArea?: SortOrder
+    imageUrl?: SortOrder
+    category?: SortOrder
+    preparationTime?: SortOrder
+    deliveryFee?: SortOrder
+    rating?: SortOrder
+    ratingCount?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -15464,10 +15715,70 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     address?: SortOrder
     serviceArea?: SortOrder
+    imageUrl?: SortOrder
+    category?: SortOrder
+    preparationTime?: SortOrder
+    deliveryFee?: SortOrder
+    rating?: SortOrder
+    ratingCount?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type RestaurantSumOrderByAggregateInput = {
+    deliveryFee?: SortOrder
+    rating?: SortOrder
+    ratingCount?: SortOrder
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -15476,17 +15787,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type DecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
   export type OrderItemListRelationFilter = {
@@ -15547,22 +15847,6 @@ export namespace Prisma {
 
   export type MenuItemSumOrderByAggregateInput = {
     price?: SortOrder
-  }
-
-  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type EnumOrderStatusFilter<$PrismaModel = never> = {
@@ -15631,17 +15915,6 @@ export namespace Prisma {
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type OrderScalarRelationFilter = {
     is?: OrderWhereInput
     isNot?: OrderWhereInput
@@ -15690,22 +15963,6 @@ export namespace Prisma {
   export type OrderItemSumOrderByAggregateInput = {
     quantity?: SortOrder
     price?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -16038,6 +16295,30 @@ export namespace Prisma {
     connect?: RestaurantManagerWhereUniqueInput | RestaurantManagerWhereUniqueInput[]
   }
 
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
@@ -16144,14 +16425,6 @@ export namespace Prisma {
     connectOrCreate?: OrderItemCreateOrConnectWithoutMenuItemInput | OrderItemCreateOrConnectWithoutMenuItemInput[]
     createMany?: OrderItemCreateManyMenuItemInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
-  }
-
-  export type DecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type RestaurantUpdateOneRequiredWithoutMenuItemsNestedInput = {
@@ -16274,14 +16547,6 @@ export namespace Prisma {
     create?: XOR<MenuItemCreateWithoutOrderItemsInput, MenuItemUncheckedCreateWithoutOrderItemsInput>
     connectOrCreate?: MenuItemCreateOrConnectWithoutOrderItemsInput
     connect?: MenuItemWhereUniqueInput
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type OrderUpdateOneRequiredWithoutOrderItemsNestedInput = {
@@ -16478,19 +16743,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type NestedDecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -16500,6 +16752,22 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -16518,21 +16786,20 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
-  export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
-  }
-
-  export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.OrderStatus
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumOrderStatusFilter<$PrismaModel>
-    _max?: NestedEnumOrderStatusFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -16551,15 +16818,29 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
+  }
+
+  export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.OrderStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrderStatusFilter<$PrismaModel>
+    _max?: NestedEnumOrderStatusFilter<$PrismaModel>
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -17118,6 +17399,12 @@ export namespace Prisma {
     phoneNumber: string
     address?: string | null
     serviceArea?: string | null
+    imageUrl: string
+    category: string
+    preparationTime: string
+    deliveryFee?: Decimal | DecimalJsLike | number | string
+    rating?: number
+    ratingCount?: number
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17134,6 +17421,12 @@ export namespace Prisma {
     phoneNumber: string
     address?: string | null
     serviceArea?: string | null
+    imageUrl: string
+    category: string
+    preparationTime: string
+    deliveryFee?: Decimal | DecimalJsLike | number | string
+    rating?: number
+    ratingCount?: number
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17207,6 +17500,12 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    preparationTime?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17223,6 +17522,12 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    preparationTime?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17414,6 +17719,12 @@ export namespace Prisma {
     phoneNumber: string
     address?: string | null
     serviceArea?: string | null
+    imageUrl: string
+    category: string
+    preparationTime: string
+    deliveryFee?: Decimal | DecimalJsLike | number | string
+    rating?: number
+    ratingCount?: number
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17430,6 +17741,12 @@ export namespace Prisma {
     phoneNumber: string
     address?: string | null
     serviceArea?: string | null
+    imageUrl: string
+    category: string
+    preparationTime: string
+    deliveryFee?: Decimal | DecimalJsLike | number | string
+    rating?: number
+    ratingCount?: number
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17490,6 +17807,12 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    preparationTime?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17506,6 +17829,12 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    preparationTime?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17574,6 +17903,12 @@ export namespace Prisma {
     phoneNumber: string
     address?: string | null
     serviceArea?: string | null
+    imageUrl: string
+    category: string
+    preparationTime: string
+    deliveryFee?: Decimal | DecimalJsLike | number | string
+    rating?: number
+    ratingCount?: number
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17590,6 +17925,12 @@ export namespace Prisma {
     phoneNumber: string
     address?: string | null
     serviceArea?: string | null
+    imageUrl: string
+    category: string
+    preparationTime: string
+    deliveryFee?: Decimal | DecimalJsLike | number | string
+    rating?: number
+    ratingCount?: number
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -17679,6 +18020,12 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    preparationTime?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17695,6 +18042,12 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: NullableStringFieldUpdateOperationsInput | string | null
     serviceArea?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    preparationTime?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
