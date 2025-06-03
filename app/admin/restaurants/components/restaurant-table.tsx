@@ -33,11 +33,11 @@ import {
   Search,
   ChevronDown,
   ChevronUp,
-  PencilIcon,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { RestaurantFormModal } from "./restaurant-form-modal";
+import { DeleteRestaurantButton } from "./delete-restaurant-button"; 
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 
@@ -242,23 +242,35 @@ export default function RestaurantTable({
       id: "actions",
       accessorKey: "id",
       header: "Actions",
-      cell: () => (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="p-0 hover:bg-transparent"
-          asChild
-        >
-          <a href="#" onClick={(e) => e.preventDefault()}>
-            <PencilIcon className="h-4 w-4 text-muted-foreground" />
-            <span className="sr-only">Edit</span>
-          </a>
-        </Button>
-      ),
+      cell: (info) => {
+        const restaurant = info.row.original as RestaurantWithUsers;
+        return (
+          <div className="flex items-center space-x-2">
+            <RestaurantFormModal 
+              restaurant={restaurant} 
+              isEdit={true}
+              onRestaurantChange={() => {
+                // Invalidate the restaurants query to refresh the data
+                utils.restaurant.getRestaurantsWithUsers.invalidate();
+              }}
+            />
+            <DeleteRestaurantButton 
+              restaurant={restaurant}
+              onDeleteSuccess={() => {
+                // Invalidate the restaurants query to refresh the data
+                utils.restaurant.getRestaurantsWithUsers.invalidate();
+              }}
+            />
+          </div>
+        );
+      },
       enableSorting: false,
     },
   ];
 
+  // Get TRPC utils for query invalidation
+  const utils = trpc.useContext();
+  
   // Fetch restaurant data with pagination, sorting and filtering
   const { data, isLoading, isError, error } =
     trpc.restaurant.getRestaurantsWithUsers.useQuery({
@@ -435,7 +447,12 @@ export default function RestaurantTable({
             )}
           </form>
         </div>
-        <RestaurantFormModal />
+        <RestaurantFormModal 
+          onRestaurantChange={() => {
+            // Invalidate the restaurants query to refresh the data
+            utils.restaurant.getRestaurantsWithUsers.invalidate();
+          }}
+        />
       </div>
 
       {/* No results message */}

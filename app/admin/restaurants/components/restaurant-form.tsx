@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createRestaurantSchema } from "@/server/schemas/restaurant.schema";
+import { createRestaurantSchema, updateRestaurantSchema } from "@/server/schemas/restaurant.schema";
 import { trpc } from "@/lib/trpc/client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -20,7 +21,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Upload } from "lucide-react";
-import type { CreateRestaurantInput } from "@/server/schemas/restaurant.schema";
+import type { CreateRestaurantInput, UpdateRestaurantInput } from "@/server/schemas/restaurant.schema";
+import type { RestaurantWithUsers } from "@/types/restaurant";
 import { JSX } from "react/jsx-runtime";
 import { toastNotification } from "@/components/custom/toast-notification";
 
@@ -30,34 +32,52 @@ import { toastNotification } from "@/components/custom/toast-notification";
  * Form for creating or updating restaurant information
  * @param {object} props - Component props
  * @param {Function} [props.setOpen] - function to update the state
+ * @param {RestaurantWithUsers} [props.restaurant] - restaurant data for editing (optional)
  * @returns {JSX.Element} The restaurant form component
  */
 export function RestaurantForm({
   setOpen,
-}: { setOpen: (open: boolean) => void }): JSX.Element {
+  restaurant,
+  onSuccess,
+}: { 
+  setOpen: (open: boolean) => void;
+  restaurant?: RestaurantWithUsers;
+  onSuccess?: () => void;
+}): JSX.Element {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("");
+  const [imagePreview, setImagePreview] = useState<string>(restaurant?.imageUrl || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isEditing = !!restaurant;
 
   // Initialize form with zod validation
-  const form = useForm<CreateRestaurantInput>({
-    resolver: zodResolver(createRestaurantSchema),
+  const form = useForm<UpdateRestaurantInput>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(isEditing ? updateRestaurantSchema : createRestaurantSchema) as any,
     defaultValues: {
-      name: "",
-      description: "",
-      email: "",
-      phoneNumber: "",
-      address: "",
-      serviceArea: "",
-      imageUrl: "",
-      category: "",
-      preparationTime: "",
-      deliveryFee: "" ,
+      id: restaurant?.id || "",
+      name: restaurant?.name || "",
+      description: restaurant?.description || "",
+      email: restaurant?.email || "",
+      phoneNumber: restaurant?.phoneNumber || "",
+      address: restaurant?.address || "",
+      serviceArea: restaurant?.serviceArea || "",
+      imageUrl: restaurant?.imageUrl || "",
+      category: restaurant?.category || "",
+      preparationTime: restaurant?.preparationTime || "",
+      deliveryFee: restaurant?.deliveryFee ? String(restaurant.deliveryFee) : "",
+      isActive: restaurant?.isActive ?? true,
     },
   });
+
+  // Set image preview when editing
+  useEffect(() => {
+    if (restaurant?.imageUrl) {
+      setImagePreview(restaurant.imageUrl);
+    }
+  }, [restaurant]);
 
   // Get the restaurant creation mutation from tRPC
   const createRestaurantMutation = trpc.restaurant.createRestaurant.useMutation(
@@ -68,8 +88,14 @@ export function RestaurantForm({
           "You have added a new restaurant, you will be redirected to the restaurant list"
         );
         setIsLoading(false);
-       // Reset form
-      form.reset();
+        // Reset form
+        form.reset();
+        
+        // Call onSuccess callback if provided
+        if (onSuccess) {
+          onSuccess();
+        }
+        
         setTimeout(() => {
           router.refresh();
           setOpen(false);
@@ -77,10 +103,41 @@ export function RestaurantForm({
       },
       onError: (error) => {
         toastNotification.error(
-        "Failed to create restaurant",
-        `${error.message}! 
-        Please try again`
-      );
+          "Failed to create restaurant",
+          `${error.message}! 
+          Please try again`
+        );
+        setIsLoading(false);
+      },
+    }
+  );
+
+  // Get the restaurant update mutation from tRPC
+  const updateRestaurantMutation = trpc.restaurant.updateRestaurant.useMutation(
+    {
+      onSuccess: () => {
+        toastNotification.success(
+          "Restaurant updated successfully",
+          "You have updated the restaurant information"
+        );
+        setIsLoading(false);
+        
+        // Call onSuccess callback if provided
+        if (onSuccess) {
+          onSuccess();
+        }
+        
+        setTimeout(() => {
+          router.refresh();
+          setOpen(false);
+        }, 2000);
+      },
+      onError: (error) => {
+        toastNotification.error(
+          "Failed to update restaurant",
+          `${error.message}! 
+          Please try again`
+        );
         setIsLoading(false);
       },
     }
@@ -89,13 +146,21 @@ export function RestaurantForm({
   /**
    * Handle form submission
    *
-   * @param {CreateRestaurantInput} values - Form values
+   * @param {UpdateRestaurantInput} values - Form values
    */
-  const onSubmit = async (values: CreateRestaurantInput): Promise<void> => {
+  const onSubmit = async (values: UpdateRestaurantInput): Promise<void> => {
     try {
       setIsLoading(true);
-      // Call the mutation to create the restaurant
-      createRestaurantMutation.mutate(values);
+      
+      if (isEditing && values.id) {
+        // Update existing restaurant
+        updateRestaurantMutation.mutate(values);
+      } else {
+        // Create new restaurant - remove id and isActive properties for create
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, isActive, ...createValues } = values;
+        createRestaurantMutation.mutate(createValues as CreateRestaurantInput);
+      }
     } catch (err) {
       setIsLoading(false);
       console.error("Error submitting form:", err);
@@ -398,6 +463,33 @@ export function RestaurantForm({
             />
           </div>
 
+          {/* Only show Active Status toggle when editing */}
+          {isEditing && (
+            <FormField
+              control={form.control}
+              name="isActive"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        id="isActive"
+                      />
+                      <label htmlFor="isActive" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Restaurant Active
+                      </label>
+                    </div>
+                  </FormControl>
+                  <FormDescription className="text-xs">
+                    When inactive, the restaurant won&apos;t appear in customer searches.
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+          )}
+
           <div className="flex items-center justify-end gap-4 pt-4">
             <Button
               className="cursor-pointer"
@@ -419,10 +511,10 @@ export function RestaurantForm({
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
+                  {isEditing ? "Updating..." : "Creating..."}
                 </>
               ) : (
-                "Create Restaurant"
+                isEditing ? "Update Restaurant" : "Create Restaurant"
               )}
             </Button>
           </div>

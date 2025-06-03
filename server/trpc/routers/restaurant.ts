@@ -11,9 +11,16 @@ import { adminProcedure, restaurantProcedure, router } from "../trpc";
 import { prisma } from "@/lib/db";
 import { S3Service } from "@/lib/aws";
 import { TRPCError } from "@trpc/server";
-import { createRestaurantSchema } from "@/server/schemas/restaurant.schema";
+import { createRestaurantSchema, updateRestaurantSchema } from "@/server/schemas/restaurant.schema";
 import { createMenuItemSchema } from "@/server/schemas/menu-item.schema";
 import { z } from "zod";
+
+/**
+ * Schema for deleting a restaurant
+ */
+const deleteRestaurantSchema = z.object({
+  id: z.string().cuid("Invalid restaurant ID"),
+});
 
 /**
  * Extracts file data from a data URL or processes an image URL
@@ -224,6 +231,135 @@ export const restaurantRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to create restaurant",
+        });
+      }
+    }),
+
+  /**
+   * Update an existing restaurant (admin-only procedure)
+   * Takes restaurant ID and updated details and updates the record in the database
+   */
+  updateRestaurant: adminProcedure
+    .input(updateRestaurantSchema)
+    .mutation(async ({ input }) => {
+      try {
+        // Check if the restaurant exists
+        const existingRestaurant = await prisma.restaurant.findUnique({
+          where: { id: input.id },
+        });
+
+        if (!existingRestaurant) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Restaurant not found",
+          });
+        }
+
+        // Process the image URL if provided (convert data URLs to S3 URLs)
+        let processedImageUrl = input.imageUrl;
+        if (input.imageUrl && input.imageUrl !== existingRestaurant.imageUrl && input.imageUrl.startsWith("data:")) {
+          processedImageUrl = await processImageUrl(input.imageUrl, 'restaurant');
+        }
+
+        // Update the restaurant in the database
+        const updatedRestaurant = await prisma.restaurant.update({
+          where: { id: input.id },
+          data: {
+            name: input.name,
+            description: input.description,
+            email: input.email,
+            phoneNumber: input.phoneNumber,
+            address: input.address,
+            serviceArea: input.serviceArea,
+            imageUrl: processedImageUrl || existingRestaurant.imageUrl,
+            category: input.category || "",
+            preparationTime: input.preparationTime || "",
+            deliveryFee: input.deliveryFee ? parseFloat(input.deliveryFee) : existingRestaurant.deliveryFee,
+            isActive: input.isActive !== undefined ? input.isActive : existingRestaurant.isActive,
+            updatedAt: new Date(),
+          },
+        });
+
+        return {
+          status: "success",
+          message: "Restaurant updated successfully",
+          data: updatedRestaurant,
+        };
+      } catch (error) {
+        // Handle any database errors
+        console.error("Error updating restaurant:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update restaurant",
+        });
+      }
+    }),
+
+  /**
+   * Delete a restaurant (admin-only procedure)
+   * Performs a soft delete by setting deletedAt field and making the restaurant inactive
+   */
+  deleteRestaurant: adminProcedure
+    .input(deleteRestaurantSchema)
+    .mutation(async ({ input }) => {
+      try {
+        // Check if the restaurant exists
+        const existingRestaurant = await prisma.restaurant.findUnique({
+          where: { id: input.id },
+        });
+
+        if (!existingRestaurant) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Restaurant not found",
+          });
+        }
+        
+        // Check if restaurant has associated orders
+        const orderCount = await prisma.order.count({
+          where: {
+            restaurantId: input.id,
+          },
+        });
+        
+        if (orderCount > 0) {
+          // Soft delete - update isActive and deletedAt if the restaurant has orders
+          const deletedRestaurant = await prisma.restaurant.update({
+            where: { id: input.id },
+            data: {
+              isActive: false,
+              deletedAt: new Date(),
+            },
+          });
+          
+          return {
+            status: "success",
+            message: "Restaurant has been deactivated",
+            data: deletedRestaurant,
+          };
+        } else {
+          // Hard delete if no orders exist for this restaurant
+          await prisma.restaurant.delete({
+            where: { id: input.id },
+          });
+          
+          return {
+            status: "success",
+            message: "Restaurant has been permanently deleted",
+            data: null,
+          };
+        }
+      } catch (error) {
+        console.error("Error deleting restaurant:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to delete restaurant",
         });
       }
     }),
