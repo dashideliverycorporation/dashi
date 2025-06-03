@@ -33,11 +33,11 @@ import {
   Search,
   ChevronDown,
   ChevronUp,
-  PencilIcon,
 } from "lucide-react";
 import { format } from "date-fns";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { RestaurantFormModal } from "./restaurant-form-modal";
+import { DeleteRestaurantButton } from "./delete-restaurant-button"; 
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 
@@ -81,9 +81,45 @@ export default function RestaurantTable({
   // Define table columns
   const columns: RestaurantTableColumn[] = [
     {
+      id: "image",
+      accessorKey: "imageUrl",
+      header: "Image",
+      cell: (info) => {
+        const imageUrl = info.getValue() as string | null;
+        return (
+          <div className="h-12 w-12 rounded-md overflow-hidden relative">
+            {imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt="Restaurant image"
+                fill
+                sizes="48px"
+                className="object-cover"
+              />
+            ) : (
+              <div className="h-full w-full bg-muted flex items-center justify-center text-muted-foreground">
+                <span className="text-xs">No image</span>
+              </div>
+            )}
+          </div>
+        );
+      },
+      enableSorting: false,
+    },
+    {
       id: "name",
       accessorKey: "name",
       header: "Restaurant Name",
+      enableSorting: true,
+    },
+    {
+      id: "category",
+      accessorKey: "category",
+      header: "Category",
+      cell: (info) => {
+        const value = info.getValue() as string | null;
+        return value || "—";
+      },
       enableSorting: true,
     },
     {
@@ -99,6 +135,63 @@ export default function RestaurantTable({
         );
       },
       enableSorting: false,
+    },
+    {
+      id: "preparationTime",
+      accessorKey: "preparationTime",
+      header: "Prep Time",
+      cell: (info) => {
+        const value = info.getValue() as string | null;
+        return value || "—";
+      },
+      enableSorting: false,
+    },
+    {
+      id: "deliveryFee",
+      accessorKey: "deliveryFee",
+      header: "Delivery Fee",
+      cell: (info) => {
+        const value = info.getValue();
+        // Handle different possible types for deliveryFee (string, number, or Decimal)
+        if (!value) return "—";
+        
+        // Convert to number if it's a string or already a number
+        const numValue = typeof value === 'string' ? parseFloat(value) : value;
+        
+        // Check if we have a valid number after conversion
+        return !isNaN(numValue) ? `$${Number(numValue).toFixed(2)}` : "—";
+      },
+      enableSorting: true,
+    },
+    {
+      id: "rating",
+      accessorKey: "rating",
+      header: "Rating",
+      cell: (info) => {
+        const ratingValue = info.getValue();
+        const ratingCount = (info.row.original as RestaurantWithUsers).ratingCount;
+        
+        // Handle different possible types for rating and ensure it's a valid number
+        const rating = typeof ratingValue === 'string' ? parseFloat(ratingValue) : ratingValue as number;
+        
+        if (!rating || rating === 0 || !ratingCount) return "—";
+        
+        return (
+          <div className="flex items-center">
+            <span className="mr-1">{Number(rating).toFixed(1)}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 text-yellow-500"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <span className="text-xs text-muted-foreground ml-1">({ratingCount})</span>
+          </div>
+        );
+      },
+      enableSorting: true,
     },
     {
       id: "contact",
@@ -149,23 +242,35 @@ export default function RestaurantTable({
       id: "actions",
       accessorKey: "id",
       header: "Actions",
-      cell: () => (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="p-0 hover:bg-transparent"
-          asChild
-        >
-          <a href="#" onClick={(e) => e.preventDefault()}>
-            <PencilIcon className="h-4 w-4 text-muted-foreground" />
-            <span className="sr-only">Edit</span>
-          </a>
-        </Button>
-      ),
+      cell: (info) => {
+        const restaurant = info.row.original as RestaurantWithUsers;
+        return (
+          <div className="flex items-center space-x-2">
+            <RestaurantFormModal 
+              restaurant={restaurant} 
+              isEdit={true}
+              onRestaurantChange={() => {
+                // Invalidate the restaurants query to refresh the data
+                utils.restaurant.getRestaurantsWithUsers.invalidate();
+              }}
+            />
+            <DeleteRestaurantButton 
+              restaurant={restaurant}
+              onDeleteSuccess={() => {
+                // Invalidate the restaurants query to refresh the data
+                utils.restaurant.getRestaurantsWithUsers.invalidate();
+              }}
+            />
+          </div>
+        );
+      },
       enableSorting: false,
     },
   ];
 
+  // Get TRPC utils for query invalidation
+  const utils = trpc.useContext();
+  
   // Fetch restaurant data with pagination, sorting and filtering
   const { data, isLoading, isError, error } =
     trpc.restaurant.getRestaurantsWithUsers.useQuery({
@@ -237,30 +342,48 @@ export default function RestaurantTable({
     return (
       <div className="rounded-lg border">
         <div className="p-1">
-          {/* Table header skeleton */}
+          {/* Table header skeleton - using fixed width classes */}
           <div className="flex items-center p-4 bg-muted-foreground/5">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className={`flex-1 ${i === 5 ? "flex-0 w-16" : ""}`}>
-                <Skeleton className="h-5 w-4/5 bg-muted-foreground/5" />
+            {/* Image column header */}
+            <div className="flex-0 w-16">
+              <Skeleton className="h-5 w-10 bg-muted-foreground/5" />
+            </div>
+            {/* Other columns */}
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+              <div key={i} className={`flex-1 ${i === 9 ? "flex-0 w-16" : ""}`}>
+                <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
               </div>
             ))}
           </div>
 
-          {/* Table rows skeleton */}
+          {/* Table rows skeleton - using fixed width classes instead of percentages */}
           {[1, 2, 3, 4, 5].map((row) => (
             <div key={row} className="flex items-center p-4 border-t">
-              {[1, 2, 3, 4, 5].map((cell) => (
+              {/* Image cell skeleton */}
+              <div className="flex-0 w-16">
+                <Skeleton className="h-12 w-12 bg-muted-foreground/5 rounded-md" />
+              </div>
+              {/* Other cells */}
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((cell) => (
                 <div
                   key={`${row}-${cell}`}
-                  className={`flex-1 ${cell === 5 ? "flex-0 w-16" : ""}`}
+                  className={`flex-1 ${cell === 9 ? "flex-0 w-16" : ""}`}
                 >
                   <Skeleton
-                    className={`h-5 bg-muted-foreground/5 w-${
-                      Math.floor(Math.random() * 40) + 60
-                    }%`}
+                    className={`h-5 bg-muted-foreground/5 ${
+                      cell === 1 ? "w-28" : 
+                      cell === 2 ? "w-20" : 
+                      cell === 3 ? "w-32" : 
+                      cell === 4 ? "w-24" : 
+                      cell === 5 ? "w-20" :
+                      cell === 6 ? "w-24" :
+                      cell === 7 ? "w-36" :
+                      cell === 8 ? "w-24" :
+                      "w-12"
+                    }`}
                   />
-                  {cell === 3 && row % 2 === 0 && (
-                    <Skeleton className="h-5 w-1/3 mt-2 bg-muted-foreground/5" />
+                  {(cell === 7 || cell === 8) && row % 2 === 0 && (
+                    <Skeleton className="h-5 w-20 mt-2 bg-muted-foreground/5" />
                   )}
                 </div>
               ))}
@@ -324,7 +447,12 @@ export default function RestaurantTable({
             )}
           </form>
         </div>
-        <RestaurantFormModal />
+        <RestaurantFormModal 
+          onRestaurantChange={() => {
+            // Invalidate the restaurants query to refresh the data
+            utils.restaurant.getRestaurantsWithUsers.invalidate();
+          }}
+        />
       </div>
 
       {/* No results message */}
@@ -359,7 +487,7 @@ export default function RestaurantTable({
       ) : (
         <>
           {/* Restaurant table */}
-          <ScrollArea className="w-full">
+          <ScrollArea className="w-[1150px]">
             <Table>
               <TableHeader className="rounded-b-lg">
                 <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
@@ -444,6 +572,7 @@ export default function RestaurantTable({
                   ))}
               </TableBody>
             </Table>
+              <ScrollBar orientation="horizontal" />
           </ScrollArea>
 
           {/* Pagination controls */}

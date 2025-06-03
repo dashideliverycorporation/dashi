@@ -17,9 +17,16 @@ export type RestaurantWithUsers = {
   phoneNumber: string;
   address: string | null;
   serviceArea: string | null;
+  imageUrl: string;
+  category: string;
+  preparationTime: string;
+  // Decimal values may be serialized as strings when coming from the API
+  deliveryFee: number | string;
+  rating: number | string;
+  ratingCount: number;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | string;
+  updatedAt: Date | string;
   managers: Array<{
     id: string;
     user: {

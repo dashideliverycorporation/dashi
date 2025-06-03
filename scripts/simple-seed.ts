@@ -43,6 +43,9 @@ async function main() {
       email: "info@pizzapalace.com",
       phoneNumber: "+243123456789",
       address: "123 Main St, Goma, DRC",
+      imageUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
+      category: "Italian",
+      preparationTime: "20-30 minutes",
       manager: {
         email: "manager@pizzapalace.com",
         name: "Mario Pizza",
@@ -54,6 +57,9 @@ async function main() {
       email: "info@burgerbliss.com",
       phoneNumber: "+243987654321",
       address: "456 Oak Ave, Goma, DRC",
+      imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
+      category: "Fast Food",
+      preparationTime: "15-25 minutes",
       manager: {
         email: "manager@burgerbliss.com",
         name: "Bob Burger",
@@ -65,6 +71,9 @@ async function main() {
       email: "info@sushisensation.com",
       phoneNumber: "+243456789123",
       address: "789 Elm Blvd, Goma, DRC",
+      imageUrl: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
+      category: "Japanese",
+      preparationTime: "25-40 minutes",
       manager: {
         email: "manager@sushisensation.com",
         name: "Sakura Sushi",
@@ -90,7 +99,7 @@ async function main() {
     // Create restaurant
     const restaurant = await prisma.restaurant.create({
       data: {
-        ...restData,
+        ...restData, // Include all the restaurant data fields
         managers: {
           create: {
             userId: managerUser.id,

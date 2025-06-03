@@ -113,21 +113,27 @@ model RestaurantManager {
 }
 
 model Restaurant {
-  id          String              @id @default(cuid())
-  name        String
-  description String?
-  email       String?
-  phoneNumber String
-  address     String?
-  serviceArea String?
-  isActive    Boolean             @default(true)
-  deletedAt   DateTime?
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  id              String              @id @default(cuid())
+  name            String
+  description     String?
+  email           String?
+  phoneNumber     String
+  address         String?
+  serviceArea     String?
+  imageUrl        String // URL to the restaurant's primary image
+  category        String // Type of cuisine or restaurant category
+  preparationTime String // Average food preparation time (e.g., "30-45 minutes")
+  deliveryFee     Decimal             @default(0.00) @db.Decimal(10, 2) // Fee charged for delivery service
+  rating          Float               @default(0.0) // Average customer rating (0.0-5.0)
+  ratingCount     Int                 @default(0) // Total number of customer ratings
+  isActive        Boolean             @default(true)
+  deletedAt       DateTime?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
   // Relations
-  menuItems   MenuItem[]
-  orders      Order[]
-  managers    RestaurantManager[]
+  menuItems       MenuItem[]
+  orders          Order[]
+  managers        RestaurantManager[]
 }
 
 model MenuItem {

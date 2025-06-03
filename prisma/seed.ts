@@ -38,6 +38,11 @@ async function main() {
       email: "info@pizzapalace.com",
       phoneNumber: "+243123456789",
       address: "123 Main St, Goma, DRC",
+      imageUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
+      category: "Italian",
+      preparationTime: "20-30 minutes",
+      deliveryFee: 2.99,
+      serviceArea: "Central Goma",
       manager: {
         email: "manager@pizzapalace.com",
         name: "Mario Pizza",
@@ -49,6 +54,11 @@ async function main() {
       email: "info@burgerbliss.com",
       phoneNumber: "+243987654321",
       address: "456 Oak Ave, Goma, DRC",
+      imageUrl: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
+      category: "Fast Food",
+      preparationTime: "15-25 minutes",
+      deliveryFee: 1.99,
+      serviceArea: "All of Goma",
       manager: {
         email: "manager@burgerbliss.com",
         name: "Bob Burger",
@@ -60,6 +70,11 @@ async function main() {
       email: "info@sushisensation.com",
       phoneNumber: "+243456789123",
       address: "789 Elm Blvd, Goma, DRC",
+      imageUrl: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
+      category: "Japanese",
+      preparationTime: "25-40 minutes",
+      deliveryFee: 3.99,
+      serviceArea: "North Goma",
       manager: {
         email: "manager@sushisensation.com",
         name: "Sakura Sushi",
@@ -80,17 +95,32 @@ async function main() {
         password: managerPassword,
         role: "RESTAURANT",
       },
-    }); // Create restaurant
+    });    // Create restaurant
     const restaurant = await prisma.restaurant.create({
       data: {
-        ...restData,
-        managers: {
-          create: {
-            userId: managerUser.id,
-            phoneNumber: restData.phoneNumber || "+243999999999", // Use restaurant phone or default
-          },
-        },
+        name: restData.name,
+        description: restData.description,
+        email: restData.email,
+        phoneNumber: restData.phoneNumber,
+        address: restData.address,
+        serviceArea: restData.serviceArea || "Goma",
+        imageUrl: restData.imageUrl,
+        category: restData.category,
+        preparationTime: restData.preparationTime,
+        deliveryFee: parseFloat(String(restData.deliveryFee || 0)),
+        rating: 0,
+        ratingCount: 0,
+        isActive: true,
       },
+    });
+    
+    // Create restaurant manager with link to restaurant
+    await prisma.restaurantManager.create({
+      data: {
+        userId: managerUser.id,
+        phoneNumber: restData.phoneNumber || "+243999999999", // Use restaurant phone or default
+        restaurantId: restaurant.id,
+      }
     });
 
     // Create menu items for this restaurant

@@ -96,11 +96,11 @@ export default function AdminDashboardPage(): JSX.Element {
                         </p>
                         <p className="text-sm text-muted-foreground">
                           Order #{1000 + i} - $
-                          {Math.floor(Math.random() * 50) + 10}.00
+                          {25 + i * 5}.00
                         </p>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        {Math.floor(Math.random() * 50) + 10} min ago
+                        {10 + i * 5} min ago
                       </div>
                     </div>
                   ))}
