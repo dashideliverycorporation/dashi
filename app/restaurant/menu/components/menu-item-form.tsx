@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createMenuItemSchema } from "@/server/schemas/menu-item.schema";
+import { createMenuItemSchema, updateMenuItemSchema } from "@/server/schemas/menu-item.schema";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, Upload } from "lucide-react";
-import type { CreateMenuItemInput } from "@/server/schemas/menu-item.schema";
+import type { CreateMenuItemInput, UpdateMenuItemInput } from "@/server/schemas/menu-item.schema";
 import { toastNotification } from "@/components/custom/toast-notification";
 import { JSX } from "react/jsx-runtime";
 import Image from "next/image";
@@ -28,36 +28,73 @@ import Image from "next/image";
 /**
  * Menu Item Form Component
  *
- * Form for creating new menu items for a restaurant
+ * Form for creating or updating menu items for a restaurant
  *
  * @param {object} props - Component props
- * @param {Function} [props.setOpen] - function to update the state
+ * @param {Function} props.setOpen - function to update the state
+ * @param {object} [props.menuItem] - existing menu item data for editing (optional)
+ * @param {string} [props.restaurantId] - restaurant ID when creating a new menu item
+ * @param {Function} [props.onSuccess] - callback function to run after successful submission
  * @returns {JSX.Element} The menu item form component
  */
 export function MenuItemForm({
   setOpen,
-}: { setOpen: (open: boolean) => void }): JSX.Element {
+  menuItem,
+  restaurantId,
+  onSuccess,
+}: { 
+  setOpen: (open: boolean) => void;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  menuItem?: any;
+  restaurantId?: string;
+  onSuccess?: () => void;
+}): JSX.Element {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("");
+  const [imagePreview, setImagePreview] = useState<string>(menuItem?.imageUrl || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isEditing = !!menuItem;
 
   // Initialize form with zod validation
-  const form = useForm<CreateMenuItemInput>({
-    resolver: zodResolver(createMenuItemSchema),
+  const form = useForm<UpdateMenuItemInput>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(isEditing ? updateMenuItemSchema : createMenuItemSchema) as any,
     defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      category: "",
-      imageUrl: "",
-      available: true,
+      id: menuItem?.id || "",
+      name: menuItem?.name || "",
+      description: menuItem?.description || "",
+      price: menuItem?.price ? Number(menuItem.price) : 0,
+      category: menuItem?.category || "",
+      imageUrl: menuItem?.imageUrl || "",
+      available: menuItem?.isAvailable ?? true,
     },
     // Report validation errors as the user is typing
     mode: "onChange",
   });
+  
+  // Set image preview when editing
+  useEffect(() => {
+    if (menuItem?.imageUrl) {
+      setImagePreview(menuItem.imageUrl);
+    }
+  }, [menuItem]);
+  
+  // This ensures the form will be populated with the correct data if menuItem changes
+  useEffect(() => {
+    if (menuItem) {
+      form.reset({
+        id: menuItem.id || "",
+        name: menuItem.name || "",
+        description: menuItem.description || "",
+        price: menuItem.price ? Number(menuItem.price) : 0,
+        category: menuItem.category || "",
+        imageUrl: menuItem.imageUrl || "",
+        available: menuItem.isAvailable ?? true,
+      });
+    }
+  }, [menuItem, form]);
 
   /**
    * Set up the tRPC mutation for creating menu items
@@ -71,10 +108,16 @@ export function MenuItemForm({
       setIsLoading(false);
       // Reset form
       form.reset();
-        setTimeout(() => {
-          router.refresh();
-          setOpen(false);
-        }, 2000);
+
+      // Call onSuccess callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      setTimeout(() => {
+        router.refresh();
+        setOpen(false);
+      }, 2000);
     },
     onError: (error) => {
       toastNotification.error(
@@ -86,16 +129,66 @@ export function MenuItemForm({
   });
 
   /**
+   * Set up the tRPC mutation for updating menu items
+   */
+  const updateMenuItemMutation = trpc.restaurant.updateMenuItem.useMutation({
+    onSuccess: () => {
+      toastNotification.success(
+        "Menu item updated successfully",
+        "Your menu item has been updated"
+      );
+      setIsLoading(false);
+
+      // Call onSuccess callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      setTimeout(() => {
+        router.refresh();
+        setOpen(false);
+      }, 2000);
+    },
+    onError: (error) => {
+      toastNotification.error(
+        "Failed to update menu item",
+        error.message || "An unexpected error occurred. Please try again."
+      );
+      setIsLoading(false);
+    },
+  });
+
+  /**
    * Handle form submission
    * Submits the form data to the server and handles loading states and errors
    *
-   * @param {CreateMenuItemInput} values - Form values
+   * @param {UpdateMenuItemInput} values - Form values
    */
-  const onSubmit = async (values: CreateMenuItemInput): Promise<void> => {
+  const onSubmit = async (values: UpdateMenuItemInput): Promise<void> => {
     try {
       setIsLoading(true);
-      // Call the tRPC mutation to create the menu item
-      createMenuItemMutation.mutate(values);
+      
+      if (isEditing && values.id) {
+        // Update existing menu item
+        updateMenuItemMutation.mutate(values);
+      } else {
+        // Create new menu item - remove id property
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, ...createValues } = values;
+        
+        // Add restaurantId if provided (for direct creation without a manager context)
+        if (restaurantId) {
+          // Use type assertion after spreading to avoid TypeScript error
+          createMenuItemMutation.mutate({
+            ...createValues,
+            // The restaurantId is handled by the API but not part of the schema type
+            restaurantId
+          } as unknown as CreateMenuItemInput);
+        } else {
+          // Normal creation flow (needs restaurant manager context)
+          createMenuItemMutation.mutate(createValues as CreateMenuItemInput);
+        }
+      }
     } catch (err) {
       // This catch block handles any unexpected errors outside of the tRPC flow
       setIsLoading(false);
@@ -350,8 +443,7 @@ export function MenuItemForm({
               disabled={isLoading}
             >
               Cancel
-            </Button>
-            <Button
+            </Button>              <Button
               className="cursor-pointer"
               type="submit"
               disabled={isLoading}
@@ -359,10 +451,10 @@ export function MenuItemForm({
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
+                  {isEditing ? "Updating..." : "Creating..."}
                 </>
               ) : (
-                "Create Menu Item"
+                isEditing ? "Update Menu Item" : "Create Menu Item"
               )}
             </Button>
           </div>

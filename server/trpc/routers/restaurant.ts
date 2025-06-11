@@ -12,7 +12,7 @@ import { prisma } from "@/lib/db";
 import { S3Service } from "@/lib/aws";
 import { TRPCError } from "@trpc/server";
 import { createRestaurantSchema, updateRestaurantSchema } from "@/server/schemas/restaurant.schema";
-import { createMenuItemSchema } from "@/server/schemas/menu-item.schema";
+import { createMenuItemSchema, updateMenuItemSchema } from "@/server/schemas/menu-item.schema";
 import { z } from "zod";
 
 /**
@@ -20,6 +20,13 @@ import { z } from "zod";
  */
 const deleteRestaurantSchema = z.object({
   id: z.string().cuid("Invalid restaurant ID"),
+});
+
+/**
+ * Schema for deleting a menu item
+ */
+const deleteMenuItemSchema = z.object({
+  id: z.string().cuid("Invalid menu item ID"),
 });
 
 /**
@@ -368,7 +375,8 @@ export const restaurantRouter = router({
    * Create a new menu item for the authenticated restaurant user
    * Validates the input using Zod schema and creates a new MenuItem in the database
    * Associates the menu item with the restaurant of the authenticated user
-   */ createMenuItem: restaurantProcedure
+   */ 
+  createMenuItem: restaurantProcedure
     .input(createMenuItemSchema)
     .mutation(async ({ ctx, input }) => {
       try {
@@ -411,6 +419,318 @@ export const restaurantRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to create menu item",
+        });
+      }
+    }),
+
+  /**
+   * Get all menu items for a restaurant with pagination, sorting and filtering
+   * Returns menu items for the restaurant associated with the authenticated user
+   * or by restaurant ID for admin users
+   */
+  getMenuItems: restaurantProcedure
+    .input(
+      z.object({
+        restaurantId: z.string().cuid("Invalid restaurant ID").optional(),
+        page: z.number().int().positive().default(1),
+        limit: z.number().int().positive().default(10),
+        sortField: z.string().optional().default("name"),
+        sortOrder: z.enum(["asc", "desc"]).optional().default("asc"),
+        filters: z
+          .object({
+            name: z.string().optional().default(""),
+            category: z.string().optional(),
+            isAvailable: z.boolean().optional(),
+          })
+          .optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const { page, limit, sortField, sortOrder, filters, restaurantId } = input;
+        const skip = (page - 1) * limit;
+        const userId = ctx.session.user.id;
+        
+        // Determine which restaurant ID to use
+        let targetRestaurantId: string;
+        
+        if (restaurantId) {
+          // If restaurant ID is directly provided and user has admin role, use it
+          if (ctx.session.user.role === "ADMIN") {
+            targetRestaurantId = restaurantId;
+          } else {
+            // Non-admin users can only access their own restaurant's menu items
+            const restaurantManager = await prisma.restaurantManager.findUnique({
+              where: { userId },
+              select: { restaurantId: true },
+            });
+            
+            if (!restaurantManager) {
+              throw new TRPCError({
+                code: "FORBIDDEN",
+                message: "User is not associated with any restaurant",
+              });
+            }
+            
+            if (restaurantManager.restaurantId !== restaurantId) {
+              throw new TRPCError({
+                code: "FORBIDDEN",
+                message: "Cannot access menu items for other restaurants",
+              });
+            }
+            
+            targetRestaurantId = restaurantManager.restaurantId;
+          }
+        } else {
+          // If no restaurant ID provided, use the user's associated restaurant
+          const restaurantManager = await prisma.restaurantManager.findUnique({
+            where: { userId },
+            select: { restaurantId: true },
+          });
+          
+          if (!restaurantManager) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "User is not associated with any restaurant",
+            });
+          }
+          
+          targetRestaurantId = restaurantManager.restaurantId;
+        }
+        
+        // Prepare filter conditions
+        const whereClause: any = {
+          restaurantId: targetRestaurantId,
+        };
+        
+        // Add name filter if provided
+        if (filters?.name) {
+          whereClause.name = {
+            contains: filters.name,
+            mode: "insensitive", // Case-insensitive search
+          };
+        }
+        
+        // Add category filter if provided
+        if (filters?.category) {
+          whereClause.category = {
+            contains: filters.category,
+            mode: "insensitive", // Case-insensitive search
+          };
+        }
+        
+        // Add availability filter if provided
+        if (filters?.isAvailable !== undefined) {
+          whereClause.isAvailable = filters.isAvailable;
+        }
+        
+        // Get total count for pagination
+        const totalCount = await prisma.menuItem.count({
+          where: whereClause,
+        });
+        
+        // Get menu items with pagination and sorting
+        const menuItems = await prisma.menuItem.findMany({
+          where: whereClause,
+          skip,
+          take: limit,
+          orderBy: {
+            [sortField]: sortOrder,
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            price: true,
+            category: true,
+            imageUrl: true,
+            isAvailable: true,
+            createdAt: true,
+            updatedAt: true,
+            restaurantId: true,
+          },
+        });
+        
+        return {
+          menuItems,
+          pagination: {
+            total: totalCount,
+            page,
+            limit,
+            totalPages: Math.ceil(totalCount / limit),
+          },
+        };
+      } catch (error) {
+        console.error("Error fetching menu items:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch menu items",
+        });
+      }
+    }),
+    
+  /**
+   * Update an existing menu item (restaurant procedure)
+   * Takes menu item ID and updated details and updates the record in the database
+   */
+  updateMenuItem: restaurantProcedure
+    .input(updateMenuItemSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const userId = ctx.session.user.id;
+        
+        // Check if the menu item exists
+        const existingMenuItem = await prisma.menuItem.findUnique({
+          where: { id: input.id },
+          include: { restaurant: true },
+        });
+
+        if (!existingMenuItem) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Menu item not found",
+          });
+        }
+        
+        // Check if user has permission to update this menu item
+        if (ctx.session.user.role !== "ADMIN") {
+          // For non-admin users, verify they are associated with the restaurant
+          const restaurantManager = await prisma.restaurantManager.findUnique({
+            where: { userId },
+            select: { restaurantId: true },
+          });
+          
+          if (!restaurantManager || restaurantManager.restaurantId !== existingMenuItem.restaurantId) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "You don't have permission to update this menu item",
+            });
+          }
+        }
+        
+        // Process the image URL if provided (convert data URLs to S3 URLs)
+        let processedImageUrl = input.imageUrl;
+        if (input.imageUrl && input.imageUrl !== existingMenuItem.imageUrl && input.imageUrl.startsWith("data:")) {
+          processedImageUrl = await processImageUrl(input.imageUrl, 'menu-item');
+        }
+
+        // Update the menu item in the database
+        const updatedMenuItem = await prisma.menuItem.update({
+          where: { id: input.id },
+          data: {
+            name: input.name,
+            description: input.description || existingMenuItem.description,
+            price: input.price,
+            category: input.category,
+            imageUrl: processedImageUrl || existingMenuItem.imageUrl,
+            isAvailable: input.available,
+            updatedAt: new Date(),
+          },
+        });
+
+        return {
+          status: "success",
+          message: "Menu item updated successfully",
+          data: updatedMenuItem,
+        };
+      } catch (error) {
+        // Handle any database errors
+        console.error("Error updating menu item:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update menu item",
+        });
+      }
+    }),
+    
+  /**
+   * Delete a menu item (restaurant procedure)
+   * Performs either a soft delete by setting deletedAt field and making the item unavailable
+   * or a hard delete if the item has not been used in any orders
+   */
+  deleteMenuItem: restaurantProcedure
+    .input(deleteMenuItemSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const userId = ctx.session.user.id;
+        
+        // Check if the menu item exists
+        const existingMenuItem = await prisma.menuItem.findUnique({
+          where: { id: input.id },
+          include: { restaurant: true },
+        });
+
+        if (!existingMenuItem) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Menu item not found",
+          });
+        }
+        
+        // Check if user has permission to delete this menu item
+        if (ctx.session.user.role !== "ADMIN") {
+          // For non-admin users, verify they are associated with the restaurant
+          const restaurantManager = await prisma.restaurantManager.findUnique({
+            where: { userId },
+            select: { restaurantId: true },
+          });
+          
+          if (!restaurantManager || restaurantManager.restaurantId !== existingMenuItem.restaurantId) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "You don't have permission to delete this menu item",
+            });
+          }
+        }
+        
+        // Check if menu item has been used in any orders
+        const orderItemCount = await prisma.orderItem.count({
+          where: {
+            menuItemId: input.id,
+          },
+        });
+        
+        if (orderItemCount > 0) {
+          // Soft delete - update isAvailable and deletedAt if the menu item has been used in orders
+          const deletedMenuItem = await prisma.menuItem.update({
+            where: { id: input.id },
+            data: {
+              isAvailable: false,
+              deletedAt: new Date(),
+            },
+          });
+          
+          return {
+            status: "success",
+            message: "Menu item has been deactivated",
+            data: deletedMenuItem,
+          };
+        } else {
+          // Hard delete if no order items exist for this menu item
+          await prisma.menuItem.delete({
+            where: { id: input.id },
+          });
+          
+          return {
+            status: "success",
+            message: "Menu item has been permanently deleted",
+            data: null,
+          };
+        }
+      } catch (error) {
+        console.error("Error deleting menu item:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to delete menu item",
         });
       }
     }),
