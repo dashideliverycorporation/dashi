@@ -22,6 +22,28 @@ export const createMenuItemSchema = z.object({
 });
 
 /**
+ * Schema for updating an existing menu item
+ * Extends the create schema to include the menu item ID
+ */
+export const updateMenuItemSchema = z.object({
+  id: z.string().cuid("Invalid menu item ID"),
+  name: z.string().min(1, "Name is required"),
+  description: z.string().optional(),
+  price: z.number().positive("Price must be positive"),
+  category: z.string().min(1, "Category is required"),
+  imageUrl: z
+    .string()
+    .url("Must be a valid URL")
+    .min(1, "Image URL is required"),
+  available: z.boolean(),
+});
+
+/**
  * Type representing the input for creating a menu item
  */
 export type CreateMenuItemInput = z.infer<typeof createMenuItemSchema>;
+
+/**
+ * Type representing the input for updating a menu item
+ */
+export type UpdateMenuItemInput = z.infer<typeof updateMenuItemSchema>;
