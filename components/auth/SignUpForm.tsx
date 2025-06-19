@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useTranslation } from "@/hooks/useTranslation";
 import { JSX } from "react/jsx-runtime";
+import { trpc } from "@/lib/trpc/client";
 
 /**
  * Schema for sign up form validation
@@ -53,7 +54,6 @@ type SignUpFormValues = z.infer<typeof signUpSchema>;
 export function SignUpForm(): JSX.Element {
   const { t } = useTranslation();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
@@ -77,37 +77,37 @@ export function SignUpForm(): JSX.Element {
   };
 
   /**
+   * Register customer mutation for creating a new customer account
+   */
+  const registerCustomer = trpc.user.registerCustomer.useMutation({
+    onSuccess: () => {
+      setSuccess(true);
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        router.push("/signin");
+      }, 2000);
+    },
+    onError: (error) => {
+      setError(error.message);
+    }
+  });
+
+  /**
    * Handle form submission - registers the user
    *
    * @param {SignUpFormValues} values - The form values
    */
   const onSubmit = async (values: SignUpFormValues): Promise<void> => {
-    try {
-      setIsLoading(true);
-      setError(null);
+    setError(null);
 
-      // This is a placeholder for the actual registration logic
-      // In a real implementation, we would call a tRPC procedure here
-      console.log("Registration values:", values);
-      
-      // Simulate successful registration
-      setSuccess(true);
-      
-      // Redirect to login page after a short delay
-      setTimeout(() => {
-        router.push("/signin");
-      }, 2000);
-      
-    } catch (err) {
-      console.error("Registration error:", err);
-      setError(
-        err instanceof Error
-          ? err.message
-          : "An unexpected error occurred. Please try again."
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    // Call the tRPC procedure to register the customer
+    registerCustomer.mutate({
+      email: values.email,
+      name: values.name,
+      password: values.password,
+      phoneNumber: values.phoneNumber,
+      address: values.address
+    });
   };
 
   return (
@@ -140,7 +140,7 @@ export function SignUpForm(): JSX.Element {
                   <FormControl>
                     <Input
                       placeholder="John Doe"
-                      disabled={isLoading || success}
+                      disabled={registerCustomer.isPending || success}
                       className="rounded-md border border-gray-300 px-4 py-3 text-base focus:border-primary focus:ring-primary h-12"
                       {...field}
                     />
@@ -162,7 +162,7 @@ export function SignUpForm(): JSX.Element {
                     <Input
                       type="email"
                       placeholder="you@example.com"
-                      disabled={isLoading || success}
+                      disabled={registerCustomer.isPending || success}
                       className="rounded-md border border-gray-300 px-4 py-3 text-base focus:border-primary focus:ring-primary h-12"
                       {...field}
                     />
@@ -185,7 +185,7 @@ export function SignUpForm(): JSX.Element {
                       <Input
                         placeholder="••••••••"
                         type={showPassword ? "text" : "password"}
-                        disabled={isLoading || success}
+                        disabled={registerCustomer.isPending || success}
                         className="rounded-md border border-gray-300 px-4 py-3 text-base focus:border-primary focus:ring-primary h-12"
                         {...field}
                       />
@@ -225,7 +225,7 @@ export function SignUpForm(): JSX.Element {
                   <FormControl>
                     <Input
                       placeholder="+243 XXXXXXXXX"
-                      disabled={isLoading || success}
+                      disabled={registerCustomer.isPending || success}
                       className="rounded-md border border-gray-300 px-4 py-3 text-base focus:border-primary focus:ring-primary h-12"
                       {...field}
                     />
@@ -246,7 +246,7 @@ export function SignUpForm(): JSX.Element {
                   <FormControl>
                     <Input
                       placeholder="123 Main St, Goma, DRC"
-                      disabled={isLoading || success}
+                      disabled={registerCustomer.isPending || success}
                       className="rounded-md border border-gray-300 px-4 py-3 text-base focus:border-primary focus:ring-primary h-12"
                       {...field}
                     />
@@ -260,9 +260,9 @@ export function SignUpForm(): JSX.Element {
           <Button
             type="submit"
             className="w-full rounded-md bg-primary py-3 font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 text-base h-12 cursor-pointer"
-            disabled={isLoading || success}
+            disabled={registerCustomer.isPending || success}
           >
-            {isLoading ? (
+            {registerCustomer.isPending ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 {t("signUp.signingUp", "Signing up...")}
@@ -288,7 +288,11 @@ export function SignUpForm(): JSX.Element {
               type="button"
               variant="outline"
               className="flex w-full items-center justify-center gap-3 cursor-pointer text-foreground h-12 text-base"
-              onClick={() => signIn("google", { callbackUrl: "/" })}
+              onClick={() => {
+                setError(null);
+                signIn("google", { callbackUrl: "/" });
+              }}
+              disabled={registerCustomer.isPending || success}
             >
               <svg className="h-6 w-6" aria-hidden="true" viewBox="0 0 24 24">
                 <path
