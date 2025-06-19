@@ -22,6 +22,7 @@ export type RestaurantWithUsers = {
   preparationTime: string;
   // Decimal values may be serialized as strings when coming from the API
   deliveryFee: number | string;
+  discountTag: string | null;
   rating: number | string;
   ratingCount: number;
   isActive: boolean;

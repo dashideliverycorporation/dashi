@@ -5,10 +5,10 @@
 import NextAuth, { type DefaultSession, type NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs"; // Changed from bcrypt to bcryptjs
 import { UserRole } from "@/prisma/app/generated/prisma/client";
 import { db } from "../lib/db";
-import type { Adapter } from "next-auth/adapters";
 
 /**
  * Module augmentation for next-auth to add custom properties to the session
@@ -123,15 +123,69 @@ export const authOptions: NextAuthOptions = {
         };
       },
     }),
-    // Additional providers can be added here later (Google, etc.)
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          role: UserRole.CUSTOMER, // Default role for Google auth users
+        };
+      },
+    }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account, profile }) {
+      // If this is a Google sign-in, ensure we create a customer profile if needed
+      if (account?.provider === "google") {
+        try {
+          // First, check if the user already exists in our database
+          const existingUser = await db.user.findUnique({
+            where: { email: user.email! },
+            include: { customer: true }
+          });
+          
+          // If user exists but doesn't have a customer profile, create one
+          if (existingUser && !existingUser.customer) {
+            await db.customer.create({
+              data: {
+                userId: existingUser.id,
+                phoneNumber: "", // Default empty phone number that can be updated later
+              }
+            });
+          }
+          
+          return true;
+        } catch (error) {
+          console.error("Error in Google sign-in callback:", error);
+          return true; // Still allow sign-in even if profile creation fails
+        }
+      }
+      
+      return true;
+    },
+    async jwt({ token, user, account, trigger }) {
       // Include user role in JWT token when user signs in
       if (user) {
         token.role = user.role;
         token.id = user.id;
       }
+      
+      // If this is an update session trigger, check for updated user data
+      if (trigger === "update") {
+        // Get latest user data to update the token
+        const latestUser = await db.user.findUnique({
+          where: { id: token.id as string },
+        });
+        
+        if (latestUser) {
+          token.role = latestUser.role;
+        }
+      }
+      
       return token;
     },
     async session({ session, token }) {

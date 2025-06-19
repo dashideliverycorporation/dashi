@@ -68,6 +68,9 @@ export function RestaurantForm({
       category: restaurant?.category || "",
       preparationTime: restaurant?.preparationTime || "",
       deliveryFee: restaurant?.deliveryFee ? String(restaurant.deliveryFee) : "",
+      discountTag: restaurant?.discountTag || "",
+      rating: restaurant?.rating ? String(restaurant.rating) : "",
+      ratingCount: restaurant?.ratingCount ? String(restaurant.ratingCount) : "",
       isActive: restaurant?.isActive ?? true,
     },
   });
@@ -400,6 +403,23 @@ export function RestaurantForm({
 
           <FormField
             control={form.control}
+            name="discountTag"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Discount Tag</FormLabel>
+                <FormControl>
+                  <Input placeholder="E.g. 20% OFF, Free Delivery" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Promotional tag to display with the restaurant listing.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="serviceArea"
             render={({ field }) => (
               <FormItem>
@@ -456,6 +476,61 @@ export function RestaurantForm({
                   </FormControl>
                   <FormDescription>
                     Fee charged for delivery service.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="rating"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rating</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="0.0" 
+                      type="number" 
+                      step="0.1"
+                      min="0"
+                      max="5"
+                      {...field} 
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Restaurant rating (0-5).
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="ratingCount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rating Count</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="0" 
+                      type="number" 
+                      min="0"
+                      step="1"
+                      {...field} 
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Number of ratings submitted.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

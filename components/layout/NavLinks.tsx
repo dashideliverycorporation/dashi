@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ShoppingCart } from "lucide-react";
-import { Button } from "../ui/button";
 import CartSheet from "@/components/cart/CartSheet";
 import { useCart } from "@/components/cart/use-cart";
 import { Badge } from "../ui/badge";
@@ -81,31 +80,6 @@ export function NavLinks({ className, mobile = false }: NavLinksProps) {
         {mobile && <span className="ml-2">{t("nav.cart", "Cart")}</span>}
       </div>
       <CartSheet open={isCartOpen} onOpenChange={setIsCartOpen} />
-      <Link
-        href="/signin"
-        className={cn(
-          linkClass("/signin"),
-          mobile ? "w-full px-6 py-2 hover:bg-gray-100" : ""
-        )}
-      >
-        {t("auth.signIn", "Sign In")}
-      </Link>
-      {/* Sign Up Link */}
-      <Link
-        href="/signup"
-        className={cn(
-          linkClass("/signup"),
-          mobile ? "w-full px-6 py-2 hover:bg-gray-100" : ""
-        )}
-      >
-        {!mobile ? (
-          <Button className="bg-orange-500 hover:bg-orange-600 text-white">
-            {t("auth.signUp", "Sign Up")}
-          </Button>
-        ) : (
-          t("auth.signUp", "Sign Up")
-        )}
-      </Link>
     </nav>
   );
 }

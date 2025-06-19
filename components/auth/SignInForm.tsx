@@ -257,7 +257,11 @@ export function SignInForm(): JSX.Element {
               type="button"
               variant="outline"
               className="flex w-full items-center justify-center gap-3 cursor-pointer text-foreground h-12 text-base"
-              onClick={() => signIn("google", { callbackUrl: "/" })}
+              onClick={() => {
+                setError(null);
+                signIn("google", { callbackUrl: "/" });
+              }}
+              disabled={isLoading}
             >
               <svg className="h-6 w-6" aria-hidden="true" viewBox="0 0 24 24">
                 <path

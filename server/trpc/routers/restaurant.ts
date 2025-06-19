@@ -7,11 +7,11 @@
  * - Updating restaurant details
  * - Managing menu items
  */
-import { adminProcedure, restaurantProcedure, router } from "../trpc";
+import { adminProcedure, restaurantProcedure, router, publicProcedure } from "../trpc";
 import { prisma } from "@/lib/db";
 import { S3Service } from "@/lib/aws";
 import { TRPCError } from "@trpc/server";
-import { createRestaurantSchema, updateRestaurantSchema } from "@/server/schemas/restaurant.schema";
+import { createRestaurantSchema, updateRestaurantSchema, getRestaurantBySlugSchema } from "@/server/schemas/restaurant.schema";
 import { createMenuItemSchema, updateMenuItemSchema } from "@/server/schemas/menu-item.schema";
 import { z } from "zod";
 
@@ -68,6 +68,155 @@ async function processImageUrl(imageUrl: string, prefix: string = 'image'): Prom
  * Restaurant router with procedures for restaurant management
  */
 export const restaurantRouter = router({
+  /**
+   * Get all active restaurants for public display
+   * Returns a list of all public-facing active restaurants
+   */
+  getPublicRestaurants: publicProcedure.query(async () => {
+    try {
+      const restaurants = await prisma.restaurant.findMany({
+        where: {
+          isActive: true,
+          deletedAt: null,
+        },
+        orderBy: {
+          name: "asc",
+        },
+        select: {
+          id: true,
+          name: true,
+          // slug: true,
+          description: true,
+          imageUrl: true,
+          category: true,
+          preparationTime: true,
+          deliveryFee: true,
+          discountTag: true,
+          rating: true,
+          ratingCount: true,
+        },
+      });
+
+      // Transform the data to match the expected format in the frontend
+      const formattedRestaurants = restaurants.map(restaurant => ({
+        id: restaurant.id,
+        name: restaurant.name,
+        slug: restaurant.id.toLowerCase(), // Fallback to id if no slug
+        description: restaurant.description || "",
+        imageUrl: restaurant.imageUrl,
+        cuisine: restaurant.category,
+        discount: restaurant.discountTag || "", // Map discountTag to discount for frontend
+        rating: restaurant.rating || 0,
+        reviews: restaurant.ratingCount || 0,
+        deliveryTime: restaurant.preparationTime || "30-45 min",
+        deliveryFee: restaurant.deliveryFee ? restaurant.deliveryFee.toString() : "0",
+      }));
+
+      return formattedRestaurants;
+    } catch (error) {
+      console.error("Error fetching public restaurants:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to fetch restaurants",
+      });
+    }
+  }),
+
+  /**
+   * Get a single restaurant by slug with its menu items
+   * Returns detailed information about a restaurant and its menu for the public restaurant page
+   */
+  getRestaurantBySlug: publicProcedure
+    .input(getRestaurantBySlugSchema)
+    .query(async ({ input }) => {
+      try {
+        const { slug } = input;
+        
+        // Find restaurant by ID (slug is actually the id.toLowerCase() in our implementation)
+        const restaurant = await prisma.restaurant.findFirst({
+          where: {
+            id: slug,
+            isActive: true,
+            deletedAt: null,
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            imageUrl: true,
+            address: true,
+            phoneNumber: true,
+            category: true,
+            preparationTime: true,
+            deliveryFee: true,
+            discountTag: true,
+            rating: true,
+            ratingCount: true,
+            menuItems: {
+              where: {
+                isAvailable: true,
+                deletedAt: null,
+              },
+              select: {
+                id: true,
+                name: true,
+                description: true,
+                price: true,
+                category: true,
+                imageUrl: true,
+              },
+              orderBy: {
+                category: "asc",
+              },
+            },
+          },
+        });
+
+        if (!restaurant) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Restaurant not found",
+          });
+        }
+
+        // Transform the data to match the expected format in the frontend
+        const formattedRestaurant = {
+          id: restaurant.id,
+          name: restaurant.name,
+          slug: restaurant.id.toLowerCase(),
+          description: restaurant.description || "",
+          imageUrl: restaurant.imageUrl,
+          address: restaurant.address || "",
+          phoneNumber: restaurant.phoneNumber,
+          cuisine: restaurant.category,
+          rating: restaurant.rating || 0,
+          reviews: restaurant.ratingCount || 0,
+          deliveryTime: restaurant.preparationTime || "30-45 min",
+          deliveryFee: restaurant.deliveryFee ? restaurant.deliveryFee.toString() : "0",
+          discountTag: restaurant.discountTag || "",
+          menuItems: restaurant.menuItems.map((item) => ({
+            id: item.id,
+            name: item.name,
+            description: item.description || "",
+            price: parseFloat(item.price.toString()),
+            imageUrl: item.imageUrl,
+            category: item.category,
+          })),
+        };
+
+        return formattedRestaurant;
+      } catch (error) {
+        console.error("Error fetching restaurant by slug:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch restaurant details",
+        });
+      }
+    }),
+
   /**
    * Get all active restaurants (admin-only procedure)
    * Returns a list of all active restaurants for selection in forms
@@ -159,6 +308,7 @@ export const restaurantRouter = router({
             category: true,
             preparationTime: true,
             deliveryFee: true,
+            discountTag: true,
             rating: true,
             ratingCount: true,
             isActive: true,
@@ -224,6 +374,9 @@ export const restaurantRouter = router({
             category: input.category || "",
             preparationTime: input.preparationTime || "",
             deliveryFee: input.deliveryFee ? parseFloat(input.deliveryFee) : 0,
+            discountTag: input.discountTag || null,
+            rating: input.rating ? parseFloat(input.rating) : 0,
+            ratingCount: input.ratingCount ? parseInt(input.ratingCount) : 0,
           },
         });
 
@@ -282,6 +435,9 @@ export const restaurantRouter = router({
             category: input.category || "",
             preparationTime: input.preparationTime || "",
             deliveryFee: input.deliveryFee ? parseFloat(input.deliveryFee) : existingRestaurant.deliveryFee,
+            discountTag: input.discountTag || existingRestaurant.discountTag,
+            rating: input.rating ? parseFloat(input.rating) : existingRestaurant.rating,
+            ratingCount: input.ratingCount ? parseInt(input.ratingCount) : existingRestaurant.ratingCount,
             isActive: input.isActive !== undefined ? input.isActive : existingRestaurant.isActive,
             updatedAt: new Date(),
           },
