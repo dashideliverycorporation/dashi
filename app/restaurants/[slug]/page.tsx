@@ -15,37 +15,10 @@ import CartSheet from "@/components/cart/CartSheet";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { trpc } from "@/lib/trpc/client";
 
-// Restaurant type definition
-interface Restaurant {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  imageUrl: string;
-  address: string;
-  phoneNumber: string;
-  cuisine: string;
-  rating: number;
-  reviews: number;
-  deliveryTime: string;
-  deliveryFee: string;
-  discountTag?: string;
-  menuItems: MenuItem[];
-}
-
 // Menu category and item type definitions
 interface MenuCategory {
   id: string;
   name: string;
-}
-
-interface MenuItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-  category: string;
 }
 
 // Menu categories for filtering
