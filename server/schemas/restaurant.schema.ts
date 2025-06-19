@@ -6,6 +6,14 @@
 import { z } from "zod";
 
 /**
+ * Schema for fetching a restaurant by slug
+ * Validates the slug parameter for the getRestaurantBySlug procedure
+ */
+export const getRestaurantBySlugSchema = z.object({
+  slug: z.string().min(1, "Restaurant slug is required"),
+});
+
+/**
  * Schema for creating a new restaurant
  * Validates restaurant data before saving to database
  */
@@ -32,6 +40,9 @@ export const createRestaurantSchema = z.object({
   category: z.string().max(100, "Category must be at most 100 characters").optional(),
   preparationTime: z.string().max(50, "Preparation time must be at most 50 characters").optional(),
   deliveryFee: z.string().regex(/^\d+(\.\d{1,2})?$/, "Please enter a valid delivery fee").optional(),
+  discountTag: z.string().max(50, "Discount tag must be at most 50 characters").optional(),
+  rating: z.string().regex(/^\d+(\.\d{1,2})?$/, "Please enter a valid rating between 0-5").optional(),
+  ratingCount: z.string().regex(/^\d+$/, "Please enter a valid count").optional(),
 });
 
 /**
@@ -62,6 +73,9 @@ export const updateRestaurantSchema = z.object({
   category: z.string().max(100, "Category must be at most 100 characters").optional(),
   preparationTime: z.string().max(50, "Preparation time must be at most 50 characters").optional(),
   deliveryFee: z.string().regex(/^\d+(\.\d{1,2})?$/, "Please enter a valid delivery fee").optional(),
+  discountTag: z.string().max(50, "Discount tag must be at most 50 characters").optional(),
+  rating: z.string().regex(/^\d+(\.\d{1,2})?$/, "Please enter a valid rating between 0-5").optional(),
+  ratingCount: z.string().regex(/^\d+$/, "Please enter a valid count").optional(),
   isActive: z.boolean().optional(),
 });
 

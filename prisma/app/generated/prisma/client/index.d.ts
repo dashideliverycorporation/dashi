@@ -8511,6 +8511,7 @@ export namespace Prisma {
     category: string | null
     preparationTime: string | null
     deliveryFee: Decimal | null
+    discountTag: string | null
     rating: number | null
     ratingCount: number | null
     isActive: boolean | null
@@ -8531,6 +8532,7 @@ export namespace Prisma {
     category: string | null
     preparationTime: string | null
     deliveryFee: Decimal | null
+    discountTag: string | null
     rating: number | null
     ratingCount: number | null
     isActive: boolean | null
@@ -8551,6 +8553,7 @@ export namespace Prisma {
     category: number
     preparationTime: number
     deliveryFee: number
+    discountTag: number
     rating: number
     ratingCount: number
     isActive: number
@@ -8585,6 +8588,7 @@ export namespace Prisma {
     category?: true
     preparationTime?: true
     deliveryFee?: true
+    discountTag?: true
     rating?: true
     ratingCount?: true
     isActive?: true
@@ -8605,6 +8609,7 @@ export namespace Prisma {
     category?: true
     preparationTime?: true
     deliveryFee?: true
+    discountTag?: true
     rating?: true
     ratingCount?: true
     isActive?: true
@@ -8625,6 +8630,7 @@ export namespace Prisma {
     category?: true
     preparationTime?: true
     deliveryFee?: true
+    discountTag?: true
     rating?: true
     ratingCount?: true
     isActive?: true
@@ -8732,6 +8738,7 @@ export namespace Prisma {
     category: string
     preparationTime: string
     deliveryFee: Decimal
+    discountTag: string | null
     rating: number
     ratingCount: number
     isActive: boolean
@@ -8771,6 +8778,7 @@ export namespace Prisma {
     category?: boolean
     preparationTime?: boolean
     deliveryFee?: boolean
+    discountTag?: boolean
     rating?: boolean
     ratingCount?: boolean
     isActive?: boolean
@@ -8795,6 +8803,7 @@ export namespace Prisma {
     category?: boolean
     preparationTime?: boolean
     deliveryFee?: boolean
+    discountTag?: boolean
     rating?: boolean
     ratingCount?: boolean
     isActive?: boolean
@@ -8815,6 +8824,7 @@ export namespace Prisma {
     category?: boolean
     preparationTime?: boolean
     deliveryFee?: boolean
+    discountTag?: boolean
     rating?: boolean
     ratingCount?: boolean
     isActive?: boolean
@@ -8835,6 +8845,7 @@ export namespace Prisma {
     category?: boolean
     preparationTime?: boolean
     deliveryFee?: boolean
+    discountTag?: boolean
     rating?: boolean
     ratingCount?: boolean
     isActive?: boolean
@@ -8843,7 +8854,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type RestaurantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "email" | "phoneNumber" | "address" | "serviceArea" | "imageUrl" | "category" | "preparationTime" | "deliveryFee" | "rating" | "ratingCount" | "isActive" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurant"]>
+  export type RestaurantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "email" | "phoneNumber" | "address" | "serviceArea" | "imageUrl" | "category" | "preparationTime" | "deliveryFee" | "discountTag" | "rating" | "ratingCount" | "isActive" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurant"]>
   export type RestaurantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     menuItems?: boolean | Restaurant$menuItemsArgs<ExtArgs>
     orders?: boolean | Restaurant$ordersArgs<ExtArgs>
@@ -8872,6 +8883,7 @@ export namespace Prisma {
       category: string
       preparationTime: string
       deliveryFee: Prisma.Decimal
+      discountTag: string | null
       rating: number
       ratingCount: number
       isActive: boolean
@@ -9315,6 +9327,7 @@ export namespace Prisma {
     readonly category: FieldRef<"Restaurant", 'String'>
     readonly preparationTime: FieldRef<"Restaurant", 'String'>
     readonly deliveryFee: FieldRef<"Restaurant", 'Decimal'>
+    readonly discountTag: FieldRef<"Restaurant", 'String'>
     readonly rating: FieldRef<"Restaurant", 'Float'>
     readonly ratingCount: FieldRef<"Restaurant", 'Int'>
     readonly isActive: FieldRef<"Restaurant", 'Boolean'>
@@ -13413,6 +13426,7 @@ export namespace Prisma {
     category: 'category',
     preparationTime: 'preparationTime',
     deliveryFee: 'deliveryFee',
+    discountTag: 'discountTag',
     rating: 'rating',
     ratingCount: 'ratingCount',
     isActive: 'isActive',
@@ -14017,6 +14031,7 @@ export namespace Prisma {
     category?: StringFilter<"Restaurant"> | string
     preparationTime?: StringFilter<"Restaurant"> | string
     deliveryFee?: DecimalFilter<"Restaurant"> | Decimal | DecimalJsLike | number | string
+    discountTag?: StringNullableFilter<"Restaurant"> | string | null
     rating?: FloatFilter<"Restaurant"> | number
     ratingCount?: IntFilter<"Restaurant"> | number
     isActive?: BoolFilter<"Restaurant"> | boolean
@@ -14040,6 +14055,7 @@ export namespace Prisma {
     category?: SortOrder
     preparationTime?: SortOrder
     deliveryFee?: SortOrder
+    discountTag?: SortOrderInput | SortOrder
     rating?: SortOrder
     ratingCount?: SortOrder
     isActive?: SortOrder
@@ -14066,6 +14082,7 @@ export namespace Prisma {
     category?: StringFilter<"Restaurant"> | string
     preparationTime?: StringFilter<"Restaurant"> | string
     deliveryFee?: DecimalFilter<"Restaurant"> | Decimal | DecimalJsLike | number | string
+    discountTag?: StringNullableFilter<"Restaurant"> | string | null
     rating?: FloatFilter<"Restaurant"> | number
     ratingCount?: IntFilter<"Restaurant"> | number
     isActive?: BoolFilter<"Restaurant"> | boolean
@@ -14089,6 +14106,7 @@ export namespace Prisma {
     category?: SortOrder
     preparationTime?: SortOrder
     deliveryFee?: SortOrder
+    discountTag?: SortOrderInput | SortOrder
     rating?: SortOrder
     ratingCount?: SortOrder
     isActive?: SortOrder
@@ -14117,6 +14135,7 @@ export namespace Prisma {
     category?: StringWithAggregatesFilter<"Restaurant"> | string
     preparationTime?: StringWithAggregatesFilter<"Restaurant"> | string
     deliveryFee?: DecimalWithAggregatesFilter<"Restaurant"> | Decimal | DecimalJsLike | number | string
+    discountTag?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
     rating?: FloatWithAggregatesFilter<"Restaurant"> | number
     ratingCount?: IntWithAggregatesFilter<"Restaurant"> | number
     isActive?: BoolWithAggregatesFilter<"Restaurant"> | boolean
@@ -14801,6 +14820,7 @@ export namespace Prisma {
     category: string
     preparationTime: string
     deliveryFee?: Decimal | DecimalJsLike | number | string
+    discountTag?: string | null
     rating?: number
     ratingCount?: number
     isActive?: boolean
@@ -14824,6 +14844,7 @@ export namespace Prisma {
     category: string
     preparationTime: string
     deliveryFee?: Decimal | DecimalJsLike | number | string
+    discountTag?: string | null
     rating?: number
     ratingCount?: number
     isActive?: boolean
@@ -14847,6 +14868,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     preparationTime?: StringFieldUpdateOperationsInput | string
     deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountTag?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -14870,6 +14892,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     preparationTime?: StringFieldUpdateOperationsInput | string
     deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountTag?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -14893,6 +14916,7 @@ export namespace Prisma {
     category: string
     preparationTime: string
     deliveryFee?: Decimal | DecimalJsLike | number | string
+    discountTag?: string | null
     rating?: number
     ratingCount?: number
     isActive?: boolean
@@ -14913,6 +14937,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     preparationTime?: StringFieldUpdateOperationsInput | string
     deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountTag?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -14933,6 +14958,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     preparationTime?: StringFieldUpdateOperationsInput | string
     deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountTag?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -15673,6 +15699,7 @@ export namespace Prisma {
     category?: SortOrder
     preparationTime?: SortOrder
     deliveryFee?: SortOrder
+    discountTag?: SortOrder
     rating?: SortOrder
     ratingCount?: SortOrder
     isActive?: SortOrder
@@ -15699,6 +15726,7 @@ export namespace Prisma {
     category?: SortOrder
     preparationTime?: SortOrder
     deliveryFee?: SortOrder
+    discountTag?: SortOrder
     rating?: SortOrder
     ratingCount?: SortOrder
     isActive?: SortOrder
@@ -15719,6 +15747,7 @@ export namespace Prisma {
     category?: SortOrder
     preparationTime?: SortOrder
     deliveryFee?: SortOrder
+    discountTag?: SortOrder
     rating?: SortOrder
     ratingCount?: SortOrder
     isActive?: SortOrder
@@ -17403,6 +17432,7 @@ export namespace Prisma {
     category: string
     preparationTime: string
     deliveryFee?: Decimal | DecimalJsLike | number | string
+    discountTag?: string | null
     rating?: number
     ratingCount?: number
     isActive?: boolean
@@ -17425,6 +17455,7 @@ export namespace Prisma {
     category: string
     preparationTime: string
     deliveryFee?: Decimal | DecimalJsLike | number | string
+    discountTag?: string | null
     rating?: number
     ratingCount?: number
     isActive?: boolean
@@ -17504,6 +17535,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     preparationTime?: StringFieldUpdateOperationsInput | string
     deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountTag?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -17526,6 +17558,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     preparationTime?: StringFieldUpdateOperationsInput | string
     deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountTag?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -17723,6 +17756,7 @@ export namespace Prisma {
     category: string
     preparationTime: string
     deliveryFee?: Decimal | DecimalJsLike | number | string
+    discountTag?: string | null
     rating?: number
     ratingCount?: number
     isActive?: boolean
@@ -17745,6 +17779,7 @@ export namespace Prisma {
     category: string
     preparationTime: string
     deliveryFee?: Decimal | DecimalJsLike | number | string
+    discountTag?: string | null
     rating?: number
     ratingCount?: number
     isActive?: boolean
@@ -17811,6 +17846,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     preparationTime?: StringFieldUpdateOperationsInput | string
     deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountTag?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -17833,6 +17869,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     preparationTime?: StringFieldUpdateOperationsInput | string
     deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountTag?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -17907,6 +17944,7 @@ export namespace Prisma {
     category: string
     preparationTime: string
     deliveryFee?: Decimal | DecimalJsLike | number | string
+    discountTag?: string | null
     rating?: number
     ratingCount?: number
     isActive?: boolean
@@ -17929,6 +17967,7 @@ export namespace Prisma {
     category: string
     preparationTime: string
     deliveryFee?: Decimal | DecimalJsLike | number | string
+    discountTag?: string | null
     rating?: number
     ratingCount?: number
     isActive?: boolean
@@ -18024,6 +18063,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     preparationTime?: StringFieldUpdateOperationsInput | string
     deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountTag?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -18046,6 +18086,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     preparationTime?: StringFieldUpdateOperationsInput | string
     deliveryFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountTag?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean

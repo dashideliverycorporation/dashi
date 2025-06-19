@@ -190,6 +190,7 @@ exports.Prisma.RestaurantScalarFieldEnum = {
   category: 'category',
   preparationTime: 'preparationTime',
   deliveryFee: 'deliveryFee',
+  discountTag: 'discountTag',
   rating: 'rating',
   ratingCount: 'ratingCount',
   isActive: 'isActive',

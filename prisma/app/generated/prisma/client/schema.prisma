@@ -124,6 +124,7 @@ model Restaurant {
   category        String // Type of cuisine or restaurant category
   preparationTime String // Average food preparation time (e.g., "30-45 minutes")
   deliveryFee     Decimal             @default(0.00) @db.Decimal(10, 2) // Fee charged for delivery service
+  discountTag     String? // Promotional tag (e.g., "20% OFF", "Free Delivery")
   rating          Float               @default(0.0) // Average customer rating (0.0-5.0)
   ratingCount     Int                 @default(0) // Total number of customer ratings
   isActive        Boolean             @default(true)

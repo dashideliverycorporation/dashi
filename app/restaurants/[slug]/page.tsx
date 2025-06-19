@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,38 +13,25 @@ import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/components/cart/use-cart";
 import CartSheet from "@/components/cart/CartSheet";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
+import { trpc } from "@/lib/trpc/client";
 
 // Restaurant type definition
 interface Restaurant {
   id: string;
   name: string;
+  slug: string;
   description: string;
   imageUrl: string;
+  address: string;
+  phoneNumber: string;
   cuisine: string;
   rating: number;
   reviews: number;
   deliveryTime: string;
   deliveryFee: string;
-  address: string;
+  discountTag?: string;
+  menuItems: MenuItem[];
 }
-
-// Mock restaurant data
-const mockRestaurants: Record<string, Restaurant> = {
-  "pizza-palace": {
-    id: "2",
-    name: "Pizza Palace",
-    description: "Authentic Italian pizzas made with fresh ingredients.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=2070&auto=format&fit=crop",
-    cuisine: "Italian",
-    rating: 4.8,
-    reviews: 234,
-    deliveryTime: "15-25 min",
-    deliveryFee: "1.99",
-    address: "123 Pizza Street, NY",
-  },
-  // Add other restaurants as needed
-};
 
 // Menu category and item type definitions
 interface MenuCategory {
@@ -61,7 +48,7 @@ interface MenuItem {
   category: string;
 }
 
-// Mock menu items
+// Menu categories for filtering
 const menuCategories: MenuCategory[] = [
   {
     id: "popular",
@@ -89,66 +76,6 @@ const menuCategories: MenuCategory[] = [
   },
 ];
 
-const menuItems: Record<string, MenuItem[]> = {
-  "pizza-palace": [
-    {
-      id: "1",
-      name: "Margherita Pizza",
-      description: "Fresh tomatoes, mozzarella, basil, olive oil",
-      price: 14.99,
-      imageUrl:
-        "https://images.unsplash.com/photo-1604382355076-af4b0eb60143?q=80&w=1974&auto=format&fit=crop",
-      category: "popular",
-    },
-    {
-      id: "2",
-      name: "Pepperoni Pizza",
-      description: "Pepperoni, mozzarella, tomato sauce",
-      price: 16.99,
-      imageUrl:
-        "https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=1780&auto=format&fit=crop",
-      category: "popular",
-    },
-    {
-      id: "3",
-      name: "Vegetarian Pizza",
-      description: "Bell peppers, onions, mushrooms, olives, tomatoes",
-      price: 15.99,
-      imageUrl:
-        "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?q=80&w=1925&auto=format&fit=crop",
-      category: "pizza",
-    },
-    {
-      id: "4",
-      name: "BBQ Chicken Pizza",
-      description: "Grilled chicken, BBQ sauce, red onions, cilantro",
-      price: 17.99,
-      imageUrl:
-        "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1981&auto=format&fit=crop",
-      category: "pizza",
-    },
-    {
-      id: "5",
-      name: "Spaghetti Bolognese",
-      description: "Classic pasta with meat sauce",
-      price: 13.99,
-      imageUrl:
-        "https://images.unsplash.com/photo-1598866594230-a7c12756260f?q=80&w=1992&auto=format&fit=crop",
-      category: "pasta",
-    },
-    {
-      id: "6",
-      name: "Caesar Salad",
-      description: "Romaine lettuce, croutons, parmesan, Caesar dressing",
-      price: 9.99,
-      imageUrl:
-        "https://images.unsplash.com/photo-1551248429-40975aa4de74?q=80&w=1990&auto=format&fit=crop",
-      category: "salads",
-    },
-  ],
-  // Add menu items for other restaurants as needed
-};
-
 /**
  * Restaurant menu page component
  *
@@ -157,23 +84,17 @@ const menuItems: Record<string, MenuItem[]> = {
 export default function RestaurantMenuPage() {
   const { slug } = useParams() as { slug: string };
   const [activeCategory, setActiveCategory] = useState("popular");
-  const [isLoading, setIsLoading] = useState(true);
-  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-  const [items, setItems] = useState<MenuItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { itemCount } = useCart();
-
-  // Simulate loading restaurant data
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const foundRestaurant = mockRestaurants[slug] || null;
-      setRestaurant(foundRestaurant);
-      setItems(menuItems[slug] || []);
-      setIsLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [slug]);
+  
+  // Fetch restaurant data using tRPC
+  const { data: restaurant, isLoading, error } = trpc.restaurant.getRestaurantBySlug.useQuery(
+    { slug },
+    {
+      enabled: !!slug,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    }
+  );
   // Handle category change
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
@@ -187,10 +108,25 @@ export default function RestaurantMenuPage() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <h1 className="text-2xl">Error loading restaurant</h1>
+        <p className="text-muted-foreground">{error.message}</p>
+        <Button asChild>
+          <Link href="/">Return to Home</Link>
+        </Button>
+      </div>
+    );
+  }
+
   if (!restaurant) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
         <h1 className="text-2xl">Restaurant not found</h1>
+        <Button asChild>
+          <Link href="/">Return to Home</Link>
+        </Button>
       </div>
     );
   }
@@ -233,6 +169,12 @@ export default function RestaurantMenuPage() {
               <span className="mx-1">({restaurant.reviews})</span>
               <span className="mx-1">•</span>
               <span>{restaurant.cuisine}</span>
+              {restaurant.discountTag && (
+                <>
+                  <span className="mx-1">•</span>
+                  <span className="text-orange-500 font-medium">{restaurant.discountTag}</span>
+                </>
+              )}
             </div>
             <div className="text-sm text-muted-foreground flex items-center">
               <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5 mr-1" />
@@ -279,7 +221,7 @@ export default function RestaurantMenuPage() {
         <div className="py-6">
           <h2 className="text-xl font-bold mb-4">Popular Items</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {items
+            {restaurant.menuItems
               .filter(
                 (item) =>
                   item.category === activeCategory ||
@@ -303,7 +245,7 @@ export default function RestaurantMenuPage() {
                     <div className="flex items-center justify-between">
                       <span className="font-medium">
                         ${item.price.toFixed(2)}
-                      </span>{" "}
+                      </span>
                       <AddToCartButton
                         item={{
                           id: item.id,

@@ -10,92 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-// Mock data for demonstration purposes - this would be replaced with actual API call
-const mockRestaurants = [
-  {
-    id: "1",
-    name: "Burger Joint",
-    slug: "burger-joint",
-    description:
-      "The best burgers in town with a variety of options for everyone.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=2069&auto=format&fit=crop",
-    cuisine: "American",
-    rating: 4.5,
-    reviews: 158,
-    deliveryTime: "20-30 min",
-    deliveryFee: "2.99",
-  },
-  {
-    id: "2",
-    name: "Pizza Palace",
-    slug: "pizza-palace",
-    description: "Authentic Italian pizzas made with fresh ingredients.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=2070&auto=format&fit=crop",
-    cuisine: "Italian",
-    rating: 4.8,
-    reviews: 234,
-    deliveryTime: "15-25 min",
-    deliveryFee: "1.99",
-    discount: "20% OFF",
-  },
-  {
-    id: "3",
-    name: "Sushi Express",
-    slug: "sushi-express",
-    description: "Fresh sushi and Japanese cuisine delivered to your door.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=2070&auto=format&fit=crop",
-    cuisine: "Japanese",
-    rating: 4.9,
-    reviews: 312,
-    deliveryTime: "25-40 min",
-    deliveryFee: "3.99",
-    specialTag: "FREE DELIVERY",
-  },
-  {
-    id: "4",
-    name: "Taco Corner",
-    slug: "taco-corner",
-    description: "Authentic Mexican street food and tacos.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?q=80&w=2080&auto=format&fit=crop",
-    cuisine: "Mexican",
-    rating: 4.6,
-    reviews: 178,
-    deliveryTime: "15-30 min",
-    deliveryFee: "2.49",
-  },
-  {
-    id: "5",
-    name: "Green Bowl",
-    slug: "green-bowl",
-    description: "Healthy salads and bowls for the health-conscious customer.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop",
-    cuisine: "Healthy",
-    rating: 4.7,
-    reviews: 142,
-    deliveryTime: "20-35 min",
-    deliveryFee: "1.99",
-    discount: "10% OFF",
-  },
-  {
-    id: "6",
-    name: "Pasta House",
-    slug: "pasta-house",
-    description: "Homemade Italian pasta and sauces.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?q=80&w=2070&auto=format&fit=crop",
-    cuisine: "Italian",
-    rating: 4.4,
-    reviews: 198,
-    deliveryTime: "25-40 min",
-    deliveryFee: "2.99",
-  },
-];
+import { trpc } from "@/lib/trpc/client";
 
 /**
  * HomePage component displaying the list of restaurants
@@ -104,19 +19,18 @@ const mockRestaurants = [
  */
 export default function Home() {
   const { t } = useTranslation();
-  const [isLoading, setIsLoading] = useState(true);
-  const [restaurants, setRestaurants] = useState<typeof mockRestaurants>([]);
   const [activeFilter, setActiveFilter] = useState("all");
 
-  // Simulate API loading - would be replaced with real data fetching
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setRestaurants(mockRestaurants);
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  // Fetch restaurants from the API
+  const { data: restaurants, isLoading } = trpc.restaurant.getPublicRestaurants.useQuery(
+    undefined, 
+    {
+      // Stale data will be refetched in the background if older than 5 minutes
+      staleTime: 1000 * 60 * 5,
+      // Don't refetch on window focus
+      refetchOnWindowFocus: false,
+    }
+  );
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -403,7 +317,7 @@ export default function Home() {
                 {t("home.filterPromotions", "Promotions")}
               </Badge>
             </div>
-            <RestaurantGrid restaurants={restaurants} isLoading={isLoading} />
+            <RestaurantGrid restaurants={restaurants || []} isLoading={isLoading} />
           </div>
         </Container>
       </main>
