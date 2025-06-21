@@ -155,19 +155,66 @@ model MenuItem {
 }
 
 model Order {
-  id              String      @id @default(cuid())
-  status          OrderStatus @default(NEW)
-  totalAmount     Decimal     @db.Decimal(10, 2)
-  deliveryAddress String?
-  customerNotes   String?
-  customerId      String
-  customer        Customer    @relation(fields: [customerId], references: [id])
-  restaurantId    String
-  restaurant      Restaurant  @relation(fields: [restaurantId], references: [id])
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id                  String              @id @default(cuid())
+  orderNumber         Int?                // We'll generate this randomly in code
+  displayOrderNumber  String              @unique
+  status              OrderStatus         @default(NEW)
+  totalAmount         Decimal             @db.Decimal(10, 2)
+  deliveryAddress     String?
+  customerNotes       String?
+  customerId          String
+  customer            Customer            @relation(fields: [customerId], references: [id])
+  restaurantId        String
+  restaurant          Restaurant          @relation(fields: [restaurantId], references: [id])
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
   // Relations
-  orderItems      OrderItem[]
+  orderItems          OrderItem[]
+  paymentTransaction  PaymentTransaction?
+
+  @@index([displayOrderNumber])
+}
+
+// Payment models
+enum PaymentMethod {
+  MOBILE_MONEY
+  CARD
+  CASH
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model PaymentTransaction {
+  id              String        @id @default(cuid())
+  orderId         String        @unique
+  order           Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amount          Decimal       @db.Decimal(10, 2)
+  paymentMethod   PaymentMethod
+  status          PaymentStatus @default(PENDING)
+  
+  // Mobile money specific fields
+  transactionId   String?       // Mobile money transaction reference
+  mobileNumber    String?       // Phone number used for mobile money payment
+  providerName    String?       // Name of the mobile money provider (if applicable)
+  
+  // Future payment method fields can be added here
+  
+  notes           String?       // Admin or system notes about this transaction
+  customerId      String        // Reference to who made the payment
+  restaurantId    String        // Reference to which restaurant receives the payment
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([orderId])
+  @@index([status])
+  @@index([customerId])
+  @@index([restaurantId])
 }
 
 model OrderItem {

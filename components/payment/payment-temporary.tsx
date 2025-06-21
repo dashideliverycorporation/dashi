@@ -30,7 +30,6 @@ import {
 import {
   AlertCircle,
   CheckCircle,
-  CreditCard,
   Phone,
   Smartphone,
 } from "lucide-react";
@@ -48,6 +47,9 @@ const mobileMoneySchema = z.object({
     .string()
     .min(6, { message: "Transaction ID must be at least 6 characters" })
     .max(20, { message: "Transaction ID cannot exceed 20 characters" }),
+  providerName: z
+    .string()
+    .min(2, { message: "Provider name is required" }),
 });
 
 /**
@@ -107,6 +109,7 @@ export function TemporaryPaymentForm({
     defaultValues: {
       mobileNumber: "",
       transactionId: "",
+      providerName: "Mobile Money",
     },
   });
 
@@ -282,6 +285,35 @@ export function TemporaryPaymentForm({
                       {t(
                         "payment.transactionIdDescription",
                         "The reference or ID provided after completing your mobile money payment"
+                      )}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="providerName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-medium">
+                      {t("payment.providerName", "Mobile Money Provider")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t(
+                          "payment.enterProviderName",
+                          "Enter your mobile money provider name"
+                        )}
+                        className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t(
+                        "payment.providerNameDescription",
+                        "The mobile money provider you used (e.g., MTN, Orange, Airtel)"
                       )}
                     </FormDescription>
                     <FormMessage />

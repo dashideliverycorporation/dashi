@@ -36,6 +36,7 @@ interface OrderItem {
 // Mock order data structure
 interface Order {
   id: string;
+  orderNumber: string;  // Display order number like #5822
   createdAt: Date;
   status: OrderStatus;
   total: number;
@@ -52,6 +53,7 @@ interface Order {
 const mockOrders: Order[] = [
   {
     id: "ord_123456",
+    orderNumber: "#5822",
     createdAt: new Date(2025, 4, 25, 14, 30), // May 25, 2025, 2:30 PM
     status: OrderStatus.COMPLETED,
     total: 42.99,
@@ -69,6 +71,7 @@ const mockOrders: Order[] = [
   },
   {
     id: "ord_789012",
+    orderNumber: "#5823",
     createdAt: new Date(2025, 4, 27, 18, 15), // May 27, 2025, 6:15 PM
     status: OrderStatus.PREPARING,
     total: 36.5,
@@ -85,6 +88,7 @@ const mockOrders: Order[] = [
   },
   {
     id: "ord_345678",
+    orderNumber: "#5824",
     createdAt: new Date(2025, 4, 28, 20, 45), // May 28, 2025, 8:45 PM
     status: OrderStatus.NEW,
     total: 54.25,
@@ -270,7 +274,7 @@ export default function OrderHistoryPage() {
                               Order number
                             </p>
                             <p className="font-medium">
-                              #{order.id.replace("ord_", "")}
+                              {order.orderNumber}
                             </p>
                           </div>
                           <div>
@@ -544,9 +548,14 @@ export default function OrderHistoryPage() {
                         />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-medium text-base mb-1">
-                          {order.restaurant.name}
-                        </h3>
+                        <div className="flex justify-between items-center">
+                          <h3 className="font-medium text-base mb-1">
+                            {order.restaurant.name}
+                          </h3>
+                          <div className="text-sm font-medium text-orange-600">
+                            {order.orderNumber}
+                          </div>
+                        </div>
                         <p className="text-sm text-gray-500">
                           {order.items.length > 1
                             ? `${order.items[0].name} & ${
