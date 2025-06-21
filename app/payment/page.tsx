@@ -16,11 +16,8 @@ import {
   CreditCard,
   CheckCircle,
 } from "lucide-react";
-import {
-  PaymentForm,
-  type PaymentFormValues,
-} from "@/components/payment/payment-form";
 import OrderSummary from "@/components/checkout/order-summary";
+import TemporaryPaymentForm, { type MobileMoneyFormValues } from "@/components/payment/payment-temporary";
 
 /**
  * Payment page component
@@ -54,20 +51,24 @@ export default function PaymentPage() {
   }, []);
 
   // Handle form submission
-  const handleSubmit = async (data: PaymentFormValues) => {
+  const handleSubmit = async (data: MobileMoneyFormValues) => {
     setIsSubmitting(true);
 
     try {
       // Get delivery details from state
       const deliveryDetails = deliveryInfo || {};
 
-      // Combine order data
+      // Combine order data - format as mobile payment
       const orderData = {
         delivery: deliveryDetails,
-        payment: data,
+        payment: {
+          paymentMethod: "mobile_money" as const,
+          mobileNumber: data.mobileNumber,
+          transactionId: data.transactionId
+        },
         items: state.items,
         restaurantId: state.restaurantId,
-        total: state.subtotal,
+        total: state.subtotal + state.deliveryFee,
       };
 
       // Placeholder for future API call to create order
@@ -217,7 +218,8 @@ export default function PaymentPage() {
       <div className="flex gap-6 overflow-hidden">
         {/* Payment Form */}
         <div className="p-4 lg:p-8 bg-white rounded-lg mb-8 w-full lg:flex-1">
-          <PaymentForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+          {/* <PaymentForm onSubmit={handleSubmit} isSubmitting={isSubmitting} /> */}
+          <TemporaryPaymentForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
         </div>
 
         {/* Order Summary */}

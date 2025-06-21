@@ -19,6 +19,7 @@ const initialCartState: CartState = {
   restaurantName: null,
   items: [],
   subtotal: 0,
+  deliveryFee: 0,
 };
 
 /**
@@ -112,7 +113,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     (
       restaurantId: string,
       restaurantName: string,
-      item: Omit<CartItem, "quantity">
+      item: Omit<CartItem, "quantity">,
+      deliveryFee: number = 0
     ) => {
 
       setState((prevState) => {
@@ -140,6 +142,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           restaurantName,
           items: updatedItems,
           subtotal: calculateSubtotal(updatedItems),
+          deliveryFee: prevState.restaurantId === restaurantId ? prevState.deliveryFee : deliveryFee,
         };
 
         // Show toast notification

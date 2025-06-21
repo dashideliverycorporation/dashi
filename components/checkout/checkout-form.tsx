@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useEffect } from "react";
 
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,8 @@ import {
   checkoutSchema,
   type CheckoutFormValues,
 } from "@/server/schemas/order.schema";
+import { useSession } from "next-auth/react";
+import { trpc } from "@/lib/trpc/client";
 
 /**
  * Props for the CheckoutForm component
@@ -45,6 +48,16 @@ export function CheckoutForm({
   isSubmitting = false,
 }: CheckoutFormProps) {
   const { t } = useTranslation();
+  const { data: session } = useSession();
+  const isAuthenticated = !!session?.user;
+
+  // Fetch current customer data if the user is authenticated
+  const { data: customerData, isLoading: isLoadingCustomer } = trpc.user.getCurrentCustomer.useQuery(
+    undefined,
+    {
+      enabled: isAuthenticated,
+    }
+  );
 
   // Initialize form with zod resolver
   const form = useForm<CheckoutFormValues>({
@@ -58,6 +71,26 @@ export function CheckoutForm({
       notes: "",
     },
   });
+
+  // Update form values when customer data is loaded
+  useEffect(() => {
+    if (customerData?.data && !isLoadingCustomer) {
+      // Split the name into first and last name if possible
+      const nameParts = customerData.data.name?.split(' ') || ['', ''];
+      const firstName = nameParts[0] || '';
+      // Join all remaining parts as the last name or use an empty string
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+      
+      form.reset({
+        firstName,
+        lastName,
+        email: customerData.data.email || '',
+        phoneNumber: customerData.data.phoneNumber || '',
+        deliveryAddress: customerData.data.address || '',
+        notes: '',
+      });
+    }
+  }, [customerData, isLoadingCustomer, form]);
 
   /**
    * Handle form submission with validation
@@ -74,7 +107,7 @@ export function CheckoutForm({
       >
         {/* DeliveryAddress Title */}
         <h1 className="text-xl md:text-2xl font-bold mb-6">
-          {t("checkout.deliveryAddress", "Delivery Address")}
+          {t("checkout.deliveryAddress", "Delivery Information")}
         </h1>
 
         <div className="space-y-6">

@@ -228,6 +228,8 @@ export default function RestaurantMenuPage() {
                         }}
                         restaurantId={restaurant.id}
                         restaurantName={restaurant.name}
+                        deliveryFee={parseFloat(restaurant.deliveryFee as string)}
+                        
                       />
                     </div>
                   </div>

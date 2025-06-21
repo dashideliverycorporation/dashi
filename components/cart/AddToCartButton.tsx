@@ -16,11 +16,12 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   item,
   restaurantId,
   restaurantName,
+  deliveryFee = 0,
 }) => {
   const { addItem } = useCart();
 
   const handleAddToCart = () => {
-    addItem(restaurantId, restaurantName, item);
+    addItem(restaurantId, restaurantName, item, deliveryFee);
   };
 
   return (
