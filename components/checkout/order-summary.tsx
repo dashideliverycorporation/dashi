@@ -154,6 +154,7 @@ interface OrderItemProps {
  * @component
  */
 function OrderItem({ item }: OrderItemProps) {
+  const { t } = useTranslation();
   const { name, price, quantity, imageUrl } = item;
   const itemTotal = price * quantity;
 
@@ -183,7 +184,7 @@ function OrderItem({ item }: OrderItemProps) {
           </div>
 
           <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <p>Quantity: {quantity}</p>
+            <p>{t("cart.quantity", "Quantity")}: {quantity}</p>
           </div>
         </div>
       </div>

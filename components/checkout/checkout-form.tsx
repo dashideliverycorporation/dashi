@@ -107,7 +107,7 @@ export function CheckoutForm({
       >
         {/* DeliveryAddress Title */}
         <h1 className="text-xl md:text-2xl font-bold mb-6">
-          {t("checkout.deliveryAddress", "Delivery Information")}
+          {t("checkout.deliveryDetails", "Delivery Details")}
         </h1>
 
         <div className="space-y-6">

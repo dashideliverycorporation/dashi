@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { JSX } from "react/jsx-runtime";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface RestaurantCardProps {
   id: string;
@@ -43,6 +44,27 @@ export function RestaurantCard({
   discount,
   specialTag,
 }: RestaurantCardProps): JSX.Element {
+  const { t, exists } = useTranslation();
+  
+  /**
+   * Translates discount tag based on a key
+   */
+  const translateTag = (tag: string): string => {
+    // Convert tag to uppercase and replace spaces with underscores for consistency in keys
+    const tagKey = tag.toUpperCase().replace(/\s+/g, '_');
+    
+    // Check if we have a translation for this tag
+    const translationKey = `discountTags.${tagKey}`;
+    
+    // If the translation exists, use it
+    if (exists && exists(translationKey)) {
+      return t(translationKey);
+    }
+    
+    // If no translation exists, return the original tag
+    return tag;
+  };
+  
   return (
     <Link href={`/restaurants/${slug || id}`} className="block h-full">
       <Card
@@ -55,7 +77,7 @@ export function RestaurantCard({
           {/* Discount or special tag display */}
           {(discount || specialTag) && (
             <div className="absolute top-2 left-2 z-10 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded">
-              {discount || specialTag}
+              {discount ? translateTag(discount) : specialTag ? translateTag(specialTag) : ""}
             </div>
           )}
 
@@ -131,7 +153,7 @@ export function RestaurantCard({
 
               {deliveryFee && (
                 <div className="text-sm text-right">
-                  ${deliveryFee} delivery
+                  ${deliveryFee} {t("restaurant.delivery", "delivery")}
                 </div>
               )}
             </div>

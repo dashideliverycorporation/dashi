@@ -64,7 +64,16 @@
     "phone": "Téléphone",
     "closed": "Fermé",
     "open": "Ouvert",
-    "viewMenu": "Voir le menu"
+    "viewMenu": "Voir le menu",
+    "delivery": "livraison",
+    "deliveryFee": "Frais de livraison:",
+    "popularItems": "Articles les plus populaires"
+  },
+  "discountTags": {
+    "FREE_DELIVERY": "LIVRAISON GRATUITE",
+    "NEW": "NOUVEAU",
+    "SPECIAL": "SPÉCIAL",
+    "PROMO": "PROMO"
   },
   "menu": {
     "items": "Plats au menu",
@@ -84,10 +93,12 @@
     "checkout": "Commander",
     "continueShopping": "Continuer les achats",
     "clearCart": "Vider le panier",
+    "viewCart": "Voir le panier",
     "itemCount": "{{count}} article",
     "itemCount_plural": "{{count}} articles",
     "quantity": "Quantité",
-    "remove": "Retirer"
+    "remove": "Retirer",
+    "deliveryFee": "Frais de livraison"
   },
   "order": {
     "title": "Commande",
@@ -106,7 +117,20 @@
     "placed": "Commande passée",
     "trackOrder": "Suivre la commande",
     "reorder": "Commander à nouveau",
-    "viewDetails": "Voir les détails"
+    "viewDetails": "Voir les détails",
+    "confirmation": "Confirmation de commande",
+    "thankYou": "Merci pour votre commande !",
+    "number": "Commande ",
+    "stillProcessing": "Votre commande est toujours en cours de traitement. Veuillez consulter l'historique de vos commandes.",
+    "received": "Commande reçue",
+    "from": "De",
+    "onTheWay": "En route",
+    "delivered": "Livrée",
+    "estimatedArrival": "Heure d'arrivée estimée",
+    "timeRangeWithValue": "{{range}} minutes à partir de",
+    "notFound": "Détails de la commande introuvables",
+    "track": "Suivre votre commande",
+    "orderMore": "Commander plus de nourriture"
   },
   "auth": {
     "login": "Connexion",
@@ -167,6 +191,8 @@
     "title": "Paiement",
     "orderSummary": "Résumé de la commande",
     "deliveryAddress": "Adresse de livraison",
+    "deliveryDetails": "Détails de livraison",
+    "paymentMethod": "Mode de paiement",
     "enterDeliveryAddress": "Entrez votre adresse de livraison complète",
     "deliveryAddressDescription": "Veuillez fournir une adresse complète où votre commande doit être livrée",
     "additionalNotes": "Notes supplémentaires",
@@ -180,6 +206,43 @@
     "loginRequired": "Veuillez vous connecter pour passer à la caisse",
     "orderTotal": "Total de la commande",
     "subtotal": "Sous-total",
-    "items": "Articles"
+    "items": "Articles",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "phoneNumber": "Numéro de téléphone",
+    "enterFirstName": "Entrez votre prénom",
+    "enterLastName": "Entrez votre nom",
+    "enterEmail": "Entrez votre adresse email",
+    "enterPhoneNumber": "Entrez votre numéro de téléphone",
+    "processing": "En cours de traitement...",
+    "continueToPayment": "Continuer au Paiement"
+  },
+  "payment": {
+    "title": "Paiement",
+    "mobileMoneyTitle": "Paiement Mobile Money",
+    "temporaryNotice": "Solution de Paiement Temporaire",
+    "temporaryDescription": "Ceci est une solution de paiement temporaire. Veuillez suivre les instructions ci-dessous pour effectuer votre paiement.",
+    "restaurantPaymentDetails": "Détails de Paiement du Restaurant",
+    "transferInstructions": "Transférez le montant total à ce numéro mobile",
+    "amountToSend": "Montant à Envoyer",
+    "instructions": "Instructions de Paiement",
+    "step1": "Ouvrez votre application de mobile money",
+    "step2": "Envoyez le montant exact indiqué ci-dessus au numéro du restaurant",
+    "step3": "Notez l'ID de transaction/référence de votre confirmation mobile money",
+    "step4": "Saisissez l'ID de transaction ci-dessous pour finaliser votre commande",
+    "confirmPayment": "Confirmez Votre Paiement",
+    "enterDetails": "Saisissez vos coordonnées et l'ID de transaction pour finaliser la commande",
+    "yourMobileNumber": "Votre Numéro Mobile",
+    "enterMobileNumber": "Entrez le numéro que vous avez utilisé pour le paiement",
+    "mobileNumberDescription": "Le numéro mobile que vous avez utilisé pour effectuer le paiement",
+    "transactionId": "ID de Transaction/Référence",
+    "enterTransactionId": "Entrez l'ID de transaction de votre paiement",
+    "transactionIdDescription": "La référence ou l'ID fourni après avoir effectué votre paiement mobile money",
+    "providerName": "Fournisseur de Mobile Money",
+    "enterProviderName": "Entrez le nom de votre fournisseur de mobile money",
+    "providerNameDescription": "Le fournisseur de mobile money que vous avez utilisé (par exemple, Vodacom, Orange, Airtel)",
+    "processing": "Traitement en cours...",
+    "completeOrder": "Finaliser la Commande"
   }
 }

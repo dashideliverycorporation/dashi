@@ -109,7 +109,7 @@ export function TemporaryPaymentForm({
     defaultValues: {
       mobileNumber: "",
       transactionId: "",
-      providerName: "Mobile Money",
+      providerName: "",
     },
   });
 
@@ -144,8 +144,8 @@ export function TemporaryPaymentForm({
             </AlertDescription>
           </Alert>
 
-          <Card className="border border-orange-200">
-            <CardHeader className="bg-orange-50 border-b border-orange-100">
+          <Card className="border-none shadow-none">
+            <CardHeader className="bg-orange-50 border-b border-orange-100 p-4 rounded-md">
               <CardTitle className="text-lg text-orange-900 flex items-center gap-2">
                 <Phone className="h-5 w-5" />
                 {t("payment.restaurantPaymentDetails", "Restaurant Payment Details")}
@@ -154,21 +154,21 @@ export function TemporaryPaymentForm({
                 {t("payment.transferInstructions", "Transfer the total amount to this mobile number")}
               </CardDescription>
             </CardHeader>
-            <CardContent className="pt-6">
+            <CardContent className="p-0">
               {isLoading ? (
                 <div className="flex items-center justify-center h-10 animate-pulse">
                   <p>{t("common.loading", "Loading...")}</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  <div>
+                <div className="space-y-4 w-full">
+                  <div className="flex gap-4 flex-wrap">
                     <h3 className="font-medium text-gray-700">
                       {t("restaurant.name", "Restaurant")}:
                     </h3>
                     <p className="text-lg font-semibold">{state.restaurantName}</p>
                   </div>
                   
-                  <div>
+                  <div className="flex gap-4 flex-wrap">
                     <h3 className="font-medium text-gray-700">
                       {t("restaurant.phoneNumber", "Mobile Money Number")}:
                     </h3>
@@ -178,7 +178,7 @@ export function TemporaryPaymentForm({
                     </p>
                   </div>
                   
-                  <div>
+                  <div className="flex gap-4 flex-wrap">
                     <h3 className="font-medium text-gray-700">
                       {t("payment.amountToSend", "Amount to Send")}:
                     </h3>
@@ -189,7 +189,7 @@ export function TemporaryPaymentForm({
                   
                   <div className="h-px w-full bg-gray-200 my-4"></div>
                   
-                  <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200">
+                  <div className="bg-yellow-50 p-4 rounded-md ">
                     <h3 className="font-medium text-yellow-800">
                       {t("payment.instructions", "Payment Instructions")}:
                     </h3>
@@ -220,8 +220,8 @@ export function TemporaryPaymentForm({
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
+          <Card className="p-0 md:p-6 border-none shadow-none md:shadow-sm">
+            <CardHeader className="p-0">
               <CardTitle className="text-lg">
                 {t("payment.confirmPayment", "Confirm Your Payment")}
               </CardTitle>
@@ -232,7 +232,7 @@ export function TemporaryPaymentForm({
                 )}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 p-0">
               <FormField
                 control={form.control}
                 name="mobileNumber"
@@ -313,7 +313,7 @@ export function TemporaryPaymentForm({
                     <FormDescription>
                       {t(
                         "payment.providerNameDescription",
-                        "The mobile money provider you used (e.g., MTN, Orange, Airtel)"
+                        "The mobile money provider you used (e.g., Vodacom, Orange, Airtel)"
                       )}
                     </FormDescription>
                     <FormMessage />

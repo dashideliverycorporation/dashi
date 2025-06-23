@@ -9,45 +9,32 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
 import Header from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/components/cart/use-cart";
 import CartSheet from "@/components/cart/CartSheet";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { trpc } from "@/lib/trpc/client";
+import { useTranslation } from "@/hooks/useTranslation";
 
-// Menu category and item type definitions
-interface MenuCategory {
-  id: string;
-  name: string;
+/**
+ * Helper function to translate discount tags
+ * 
+ * @param tag The discount tag to translate
+ * @returns Translated discount tag
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function translateDiscountTag(tag: string, exists: (key: string) => boolean, t: (key: string, options?: any) => string): string {
+  if (!tag) return tag;
+  
+  // Convert tag to uppercase and replace spaces with underscores for consistency in keys
+  const tagKey = tag.toUpperCase().replace(/\s+/g, '_');
+  const translationKey = `discountTags.${tagKey}`;
+  
+  // If translation exists, use it; otherwise, return the original tag
+  if (exists && exists(translationKey)) {
+    return t(translationKey);
+  }
+  return tag;
 }
-
-// Menu categories for filtering
-const menuCategories: MenuCategory[] = [
-  {
-    id: "popular",
-    name: "Popular",
-  },
-  {
-    id: "pizza",
-    name: "Pizza",
-  },
-  {
-    id: "pasta",
-    name: "Pasta",
-  },
-  {
-    id: "salads",
-    name: "Salads",
-  },
-  {
-    id: "drinks",
-    name: "Drinks",
-  },
-  {
-    id: "desserts",
-    name: "Desserts",
-  },
-];
 
 /**
  * Restaurant menu page component
@@ -57,6 +44,7 @@ const menuCategories: MenuCategory[] = [
 export default function RestaurantMenuPage() {
   const { slug } = useParams() as { slug: string };
   const [activeCategory, setActiveCategory] = useState("popular");
+  const { t, exists } = useTranslation();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { itemCount } = useCart();
   
@@ -69,6 +57,7 @@ export default function RestaurantMenuPage() {
     }
   );
   // Handle category change
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
   };
@@ -115,6 +104,7 @@ export default function RestaurantMenuPage() {
         >
           <ChevronLeft className="w-5 h-5 lg:w-6 lg:h-6" />
         </Link>
+
         <Image
           src={restaurant.imageUrl}
           alt={restaurant.name}
@@ -145,7 +135,9 @@ export default function RestaurantMenuPage() {
               {restaurant.discountTag && (
                 <>
                   <span className="mx-1">•</span>
-                  <span className="text-orange-500 font-medium">{restaurant.discountTag}</span>
+                  <span className="text-orange-500 font-medium">
+                    {translateDiscountTag(restaurant.discountTag, exists, t)}
+                  </span>
                 </>
               )}
             </div>
@@ -162,13 +154,13 @@ export default function RestaurantMenuPage() {
               <span>{restaurant.deliveryTime}</span>
             </div>
             <div className="text-sm text-muted-foreground">
-              <span>Delivery fee: ${restaurant.deliveryFee}</span>
+              <span>{t("restaurant.deliveryFee", "Delivery fee:")} ${restaurant.deliveryFee}</span>
             </div>
           </div>
         </div>
 
         {/* Category Navigation */}
-        <div className="border-t py-4 border-gray-200">
+        {/* <div className="border-t py-4 border-gray-200">
           <div className="flex overflow-x-auto gap-4 pb-3">
             {menuCategories.map((category) => (
               <Badge
@@ -188,11 +180,11 @@ export default function RestaurantMenuPage() {
               </Badge>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Menu Items */}
         <div className="py-6">
-          <h2 className="text-xl font-bold mb-4">Popular Items</h2>
+          <h2 className="text-xl font-bold mb-4">{t("restaurant.popularItems", "Popular Items")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {restaurant.menuItems
               .filter(
@@ -247,7 +239,7 @@ export default function RestaurantMenuPage() {
             onClick={() => setIsCartOpen(true)}
           >
             <ShoppingCart className="mr-2 h-5 w-5" />
-            <span className="font-medium">View Cart ({itemCount})</span>
+            <span className="font-medium">{t("cart.viewCart", "View Cart")} ({t("cart.itemCount", { count: itemCount })})</span>
           </Button>
         </div>
       )}{" "}

@@ -64,7 +64,16 @@
     "phone": "Phone",
     "closed": "Closed",
     "open": "Open",
-    "viewMenu": "View Menu"
+    "viewMenu": "View Menu",
+    "delivery": "delivery",
+    "deliveryFee": "Delivery fee:",
+    "popularItems": "Popular Items"
+  },
+  "discountTags": {
+    "FREE_DELIVERY": "FREE DELIVERY",
+    "NEW": "NEW",
+    "SPECIAL": "SPECIAL",
+    "PROMO": "PROMO"
   },
   "menu": {
     "items": "Menu Items",
@@ -84,10 +93,12 @@
     "checkout": "Checkout",
     "continueShopping": "Continue Shopping",
     "clearCart": "Clear Cart",
+    "viewCart": "View Cart",
     "itemCount": "{{count}} item",
     "itemCount_plural": "{{count}} items",
     "quantity": "Quantity",
-    "remove": "Remove"
+    "remove": "Remove",
+    "deliveryFee": "Delivery fee"
   },
   "order": {
     "title": "Order",
@@ -106,7 +117,20 @@
     "placed": "Order Placed",
     "trackOrder": "Track Order",
     "reorder": "Reorder",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "confirmation": "Order Confirmation",
+    "thankYou": "Thank you for your order!",
+    "number": "Order ",
+    "stillProcessing": "Your order is still being processed. Please check your order history.",
+    "received": "Order Received",
+    "from": "From",
+    "onTheWay": "On the way",
+    "delivered": "Delivered",
+    "estimatedArrival": "Estimated arrival time",
+    "timeRangeWithValue": "{{range}} minutes from",
+    "notFound": "Order details not found",
+    "track": "Track your order",
+    "orderMore": "Order more food"
   },
   "auth": {
     "login": "Login",
@@ -194,5 +218,32 @@
     "enterLastName": "Enter your last name",
     "enterEmail": "Enter your email address",
     "enterPhoneNumber": "Enter your phone number"
+  },
+  "payment": {
+    "title": "Payment",
+    "mobileMoneyTitle": "Mobile Money Payment",
+    "temporaryNotice": "Temporary Payment Solution",
+    "temporaryDescription": "This is a temporary payment solution. Please follow the instructions below to complete your payment.",
+    "restaurantPaymentDetails": "Restaurant Payment Details",
+    "transferInstructions": "Transfer the total amount to this mobile number",
+    "amountToSend": "Amount to Send",
+    "instructions": "Payment Instructions",
+    "step1": "Open your mobile money app",
+    "step2": "Send the exact amount shown above to the restaurant's number",
+    "step3": "Note the transaction ID/reference from your mobile money confirmation",
+    "step4": "Enter the transaction ID below to complete your order",
+    "confirmPayment": "Confirm Your Payment",
+    "enterDetails": "Enter your details and the transaction ID to complete the order",
+    "yourMobileNumber": "Your Mobile Number",
+    "enterMobileNumber": "Enter the number you used for payment",
+    "mobileNumberDescription": "The mobile number you used to make the payment",
+    "transactionId": "Transaction ID/Reference",
+    "enterTransactionId": "Enter the transaction ID from your payment",
+    "transactionIdDescription": "The reference or ID provided after completing your mobile money payment",
+    "providerName": "Mobile Money Provider",
+    "enterProviderName": "Enter your mobile money provider name",
+    "providerNameDescription": "The mobile money provider you used (e.g., Vodacom, Orange, Airtel)",
+    "processing": "Processing...",
+    "completeOrder": "Complete Order"
   }
 }

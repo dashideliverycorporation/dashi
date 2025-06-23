@@ -483,4 +483,137 @@ export const orderRouter = router({
         });
       }
     }),
+
+  /**
+   * Get orders for the current authenticated customer
+   * Returns a list of orders with restaurant and order item details
+   */
+  getCustomerOrders: protectedProcedure
+    .input(
+      z.object({
+        status: z.enum(["pending", "delivered", "failed"]).optional().default("pending"),
+        limit: z.number().min(1).max(100).optional().default(50),
+        cursor: z.string().optional(), // for pagination
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { status, limit, cursor } = input;
+      const userId = ctx.session?.user?.id;
+
+      if (!userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You must be logged in to view your orders",
+        });
+      }
+
+      try {
+        // Get customer ID from user
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+          include: { customer: true },
+        });
+
+        if (!user || !user.customer) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Only customers can view their orders",
+          });
+        }
+
+        // Determine the order statuses to filter by
+        let orderStatuses;
+        switch (status) {
+          case "pending":
+            orderStatuses = ["NEW", "PREPARING", "READY_FOR_PICKUP_DELIVERY"];
+            break;
+          case "delivered":
+            orderStatuses = ["COMPLETED"];
+            break;
+          case "failed":
+            orderStatuses = ["CANCELLED"];
+            break;
+          default:
+            orderStatuses = ["NEW", "PREPARING", "READY_FOR_PICKUP_DELIVERY", "COMPLETED", "CANCELLED"];
+        }
+
+        // Build the query
+        const orders = await prisma.order.findMany({
+          where: {
+            customerId: user.customer.id,
+            status: { in: orderStatuses as any[] },
+          },
+          include: {
+            restaurant: {
+              select: {
+                id: true,
+                name: true,
+                imageUrl: true,
+              },
+            },
+            orderItems: {
+              include: {
+                menuItem: {
+                  select: {
+                    id: true,
+                    name: true,
+                    imageUrl: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: limit + 1, // +1 to check if there are more items
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}), // Skip the cursor if provided
+        });
+
+        // Check if there are more items
+        let nextCursor: string | undefined = undefined;
+        if (orders.length > limit) {
+          const nextItem = orders.pop(); // Remove the extra item
+          nextCursor = nextItem!.id; // Set the new cursor
+        }
+
+        // Format the orders to match the frontend model
+        const formattedOrders = orders.map(order => ({
+          id: order.id,
+          orderNumber: order.displayOrderNumber,
+          createdAt: order.createdAt,
+          status: order.status,
+          total: order.totalAmount,
+          deliveryAddress: order.deliveryAddress || "",
+          notes: order.customerNotes,
+          restaurant: {
+            id: order.restaurant.id,
+            name: order.restaurant.name,
+            imageUrl: order.restaurant.imageUrl,
+          },
+          items: order.orderItems.map(item => ({
+            id: item.id,
+            name: item.menuItem.name,
+            price: item.price,
+            quantity: item.quantity,
+            imageUrl: item.menuItem.imageUrl,
+          })),
+        }));
+
+        return {
+          orders: formattedOrders,
+          nextCursor,
+        };
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        
+        console.error("Error fetching customer orders:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to load orders",
+        });
+      }
+    }),
 });

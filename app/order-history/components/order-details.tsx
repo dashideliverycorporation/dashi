@@ -16,38 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-
-// Order status enum to match what we have in the Prisma schema
-enum OrderStatus {
-  NEW = "NEW",
-  PREPARING = "PREPARING",
-  READY_FOR_PICKUP_DELIVERY = "READY_FOR_PICKUP_DELIVERY",
-  COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED",
-}
-
-// Order item type
-interface OrderItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-// Order data structure
-interface Order {
-  id: string;
-  createdAt: Date;
-  status: OrderStatus;
-  total: number;
-  deliveryAddress: string;
-  notes: string | null;
-  restaurant: {
-    id: string;
-    name: string;
-  };
-  items: OrderItem[];
-}
+import { OrderStatus } from "@/prisma/app/generated/prisma/client";
+import { Order} from "@/types/order";
 
 interface OrderDetailsProps {
   order: Order | null;
@@ -59,11 +29,32 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
   if (!order) return null;
 
   // Format price as currency
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(price);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const formatPrice = (price: any) => {
+    try {
+      if (!price && price !== 0) return '$0.00';
+      
+      let numericValue = 0;
+      
+      if (typeof price === 'object' && price !== null) {
+        // Handle Prisma.Decimal or similar objects
+        numericValue = parseFloat(String(price));
+      } else if (typeof price === 'number') {
+        numericValue = price;
+      } else {
+        // Try to parse it as a number if it's a string
+        numericValue = parseFloat(String(price));
+        if (isNaN(numericValue)) numericValue = 0;
+      }
+      
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(numericValue);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      return '$0.00'; // Fallback if any errors occur
+    }
   };
 
   // Format date according to user's locale
@@ -131,17 +122,16 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                     {/* Dividing the progress line into 4 segments */}
                     <div
                       className={`w-1/4 ${
-                        order.status !== OrderStatus.CANCELLED
+                        order.status !== "CANCELLED"
                           ? "bg-orange-500"
                           : "bg-gray-300"
                       }`}
                     ></div>
                     <div
                       className={`w-1/4 ${
-                        order.status === OrderStatus.PREPARING ||
-                        order.status ===
-                          OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                        order.status === OrderStatus.COMPLETED
+                        order.status === "PREPARING" ||
+                        order.status === "READY_FOR_PICKUP_DELIVERY" ||
+                        order.status === "COMPLETED"
                           ? "bg-orange-500"
                           : "bg-gray-300"
                       }`}

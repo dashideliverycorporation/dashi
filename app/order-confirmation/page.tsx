@@ -108,7 +108,7 @@ export default function OrderConfirmationPage() {
 
         {isLoading || isLoadingLocal ? (
           <div className="py-10 text-center">
-            <p>{t("loading", "Loading order details...")}</p>
+            <p>{t("common.loading", "Loading order details...")}</p>
           </div>
         ) : error || errorLocal ? (
           <div className="py-10 text-center">
@@ -177,12 +177,20 @@ export default function OrderConfirmationPage() {
                   data.order.createdAt, 
                   data.order.restaurant.preparationTime
                 );
+                
+                // Get the translation template
+                const timeTemplate = t("order.timeRangeWithValue", "{{range}} minutes from");
+                
+                // Replace the placeholder with the actual range
+                const formattedTimeRange = timeTemplate.replace('{{range}}', estimatedRange);
+                
                 return (
                   <p className="text-gray-600">
-                    {t("order.timeRangeWithValue", `${estimatedRange} minutes from`)} {formattedOrderTime}
+                    {formattedTimeRange} {formattedOrderTime}
                   </p>
                 );
               })()}
+              
             </div>
           </div>
         ) : (
@@ -201,7 +209,7 @@ export default function OrderConfirmationPage() {
           </Button>
 
           <Button
-            onClick={() => router.push("/restaurants")}
+            onClick={() => router.push("/")}
             className="w-full bg-white border border-orange-500 hover:bg-orange-50 text-orange-500 py-4 font-medium"
           >
             {t("order.orderMore", "Order more food")}
