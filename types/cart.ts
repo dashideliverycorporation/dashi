@@ -23,6 +23,7 @@ export interface CartState {
   restaurantName: string | null;
   items: CartItem[];
   subtotal: number;
+  deliveryFee: number;
 }
 
 /**
@@ -33,7 +34,8 @@ export interface ICartContext {
   addItem: (
     restaurantId: string,
     restaurantName: string,
-    item: Omit<CartItem, "quantity">
+    item: Omit<CartItem, "quantity">,
+    deliveryFee?: number
   ) => void;
   decreaseItemQuantity: (itemId: string) => void;
   removeItem: (itemId: string) => void;
@@ -54,4 +56,5 @@ export interface AddToCartButtonProps {
   };
   restaurantId: string;
   restaurantName: string;
+  deliveryFee?: number;
 }

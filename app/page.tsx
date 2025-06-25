@@ -7,9 +7,6 @@ import { Container } from "@/components/layout/Container";
 import { RestaurantGrid } from "@/components/restaurant/RestaurantGrid";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Badge } from "@/components/ui/badge";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc/client";
 
 /**
@@ -52,7 +49,7 @@ export default function Home() {
               </p>
 
               {/* Search Bar */}
-              <div className="flex flex-col md:flex-row justify-center">
+              {/* <div className="flex flex-col md:flex-row justify-center">
                 {" "}
                 <div className="relative w-full md:w-[280px] md:mr-2">
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 ">
@@ -69,7 +66,7 @@ export default function Home() {
                 <Button className="mt-2 md:mt-0 bg-orange-600 hover:bg-orange-700 transition-colors text-white font-medium py-3 px-6 rounded-md">
                   {t("home.searchButton", "Search")}
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </Container>

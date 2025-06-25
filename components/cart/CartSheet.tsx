@@ -172,12 +172,12 @@ export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
                   <span className="text-gray-600">
                     {t("cart.deliveryFee", "Delivery fee")}
                   </span>
-                  <span className="font-medium">$ 0.00</span>
+                  <span className="font-medium">$ {state.deliveryFee.toFixed(2)}</span>
                 </div>
 
                 <div className="flex justify-between items-center font-bold mt-3 pt-3 border-t">
                   <span>{t("cart.total", "Total")}</span>
-                  <span>$ {state.subtotal.toFixed(2)}</span>
+                  <span>$ {(state.subtotal + state.deliveryFee).toFixed(2)}</span>
                 </div>
               </div>{" "}
               <Button

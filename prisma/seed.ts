@@ -286,6 +286,10 @@ async function createSampleOrders() {
         };
       });
 
+      // Generate a random 4-digit order number for display
+      const randomNumber = Math.floor(1000 + Math.random() * 9000);
+      const displayOrderNumber = `#${randomNumber}`;
+      
       // Create the order
       await prisma.order.create({
         data: {
@@ -295,6 +299,8 @@ async function createSampleOrders() {
           restaurantId: restaurant.id,
           customerNotes: "Please deliver ASAP. Thank you!",
           deliveryAddress: customer.address || "Default Address",
+          orderNumber: randomNumber, // Store the numeric value
+          displayOrderNumber: displayOrderNumber, // Store the formatted string
           orderItems: {
             create: orderItems,
           },

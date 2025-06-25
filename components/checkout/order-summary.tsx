@@ -42,7 +42,7 @@ export function OrderSummary({
   const { t } = useTranslation();
   const { data: session } = useSession();
   const { state } = useCart();
-  const { items, subtotal } = state;
+  const { items, subtotal, deliveryFee } = state;
 
   return (
     <Card className={`overflow-hidden ${className} shadow-sm p-4`}>
@@ -80,14 +80,16 @@ export function OrderSummary({
                   <span className="text-gray-600">
                     {t("cart.deliveryFee", "Delivery fee")}
                   </span>
-                  <span className="text-gray-600">FREE</span>
+                  <span className="text-gray-600">
+                    {deliveryFee > 0 ? `$${deliveryFee.toFixed(2)}` : t("cart.free", "FREE")}
+                  </span>
                 </div>
 
                 <div className="pt-3 mt-2 border-t border-gray-200">
                   <div className="flex justify-between font-bold text-base">
                     <span>{t("checkout.total", "Total")}</span>
                     <span className="text-orange-600">
-                      ${subtotal.toFixed(2)}
+                      ${(subtotal + deliveryFee).toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -152,6 +154,7 @@ interface OrderItemProps {
  * @component
  */
 function OrderItem({ item }: OrderItemProps) {
+  const { t } = useTranslation();
   const { name, price, quantity, imageUrl } = item;
   const itemTotal = price * quantity;
 
@@ -181,7 +184,7 @@ function OrderItem({ item }: OrderItemProps) {
           </div>
 
           <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <p>Quantity: {quantity}</p>
+            <p>{t("cart.quantity", "Quantity")}: {quantity}</p>
           </div>
         </div>
       </div>

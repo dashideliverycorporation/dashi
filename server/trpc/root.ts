@@ -6,6 +6,7 @@ import { router } from "./trpc";
 import { exampleRouter } from "./routers/example";
 import { restaurantRouter } from "./routers/restaurant";
 import { userRouter } from "./routers/user";
+import { orderRouter } from "./routers/order";
 
 /**
  * Main application router
@@ -20,9 +21,9 @@ export const appRouter = router({
   example: exampleRouter,
   restaurant: restaurantRouter,
   user: userRouter,
+  order: orderRouter,
   // Add additional sub-routers as the application grows
   // menu: menuRouter,
-  // order: orderRouter,
 });
 
 /**

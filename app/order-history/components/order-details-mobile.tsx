@@ -11,38 +11,41 @@ import {
   House,
   Store,
 } from "lucide-react";
+import { OrderStatus } from "@/prisma/app/generated/prisma/client";
+import { Order } from "@/types/order";
 
-// Order status enum to match what we have in the Prisma schema
-enum OrderStatus {
-  NEW = "NEW",
-  PREPARING = "PREPARING",
-  READY_FOR_PICKUP_DELIVERY = "READY_FOR_PICKUP_DELIVERY",
-  COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED",
-}
-
-// Order item type
-interface OrderItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-// Order data structure
-interface Order {
-  id: string;
-  createdAt: Date;
-  status: OrderStatus;
-  total: number;
-  deliveryAddress: string;
-  notes: string | null;
-  restaurant: {
-    id: string;
-    name: string;
-  };
-  items: OrderItem[];
-}
+/**
+ * Format price safely, handling different types
+ * @param price - The price to format (can be number, Decimal, etc.)
+ * @param quantity - Optional quantity multiplier (default: 1)
+ * @param adjustment - Optional adjustment to add/subtract from price (default: 0)
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const formatPrice = (price: any, quantity: number = 1, adjustment: number = 0): string => {
+  try {
+    if (!price && price !== 0) return '0.00';
+    
+    let numericValue = 0;
+    
+    if (typeof price === 'object' && price !== null) {
+      // It's a Prisma.Decimal or similar
+      numericValue = parseFloat(String(price));
+    } else if (typeof price === 'number') {
+      numericValue = price;
+    } else {
+      // Try to parse it as a number if it's a string
+      numericValue = parseFloat(String(price));
+      if (isNaN(numericValue)) numericValue = 0;
+    }
+    
+    // Apply quantity multiplier and adjustment
+    const finalValue = (numericValue * quantity) + adjustment;
+    return finalValue.toFixed(2);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
+    return '0.00'; // Fallback if any errors occur
+  }
+};
 
 interface OrderDetailsMobileProps {
   order: Order | null;
@@ -114,7 +117,11 @@ export default function OrderDetailsMobile({
         </div>
 
         <div className="text-sm text-gray-700 mt-1">
-          Order #{order.id.replace("ord_", "")}
+          {t("orderHistory.orderNumberWithPrefix", { 
+            defaultValue: "Order {{number}}", 
+            number: order.orderNumber 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any)}
         </div>
 
         {/* Order progress bar based on status - simplified version */}
@@ -168,7 +175,7 @@ export default function OrderDetailsMobile({
                 >
                   <Store className="w-4 h-4" />
                 </div>
-                <span className="text-xs text-gray-600">Received</span>
+                <span className="text-xs text-gray-600">{t("orderHistory.status.received", "Received")}</span>
               </div>
 
               <div className="flex flex-col items-center">
@@ -182,14 +189,11 @@ export default function OrderDetailsMobile({
                   } flex items-center justify-center mb-1 shadow-sm`}
                 >
                   <span className="text-sm">
-                    {order.status === OrderStatus.PREPARING ||
-                    order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                    order.status === OrderStatus.COMPLETED
-                      ? "✓"
-                      : ""}
+                    {"✓"
+                     }
                   </span>
                 </div>
-                <span className="text-xs text-gray-600">Accepted</span>
+                <span className="text-xs text-gray-600">{t("orderHistory.status.accepted", "Accepted")}</span>
               </div>
 
               <div className="flex flex-col items-center">
@@ -204,7 +208,7 @@ export default function OrderDetailsMobile({
                 >
                   <ChefHat className="w-4 h-4" />
                 </div>
-                <span className="text-xs text-gray-600">Preparing</span>
+                <span className="text-xs text-gray-600">{t("orderHistory.status.preparing", "Preparing")}</span>
               </div>
 
               <div className="flex flex-col items-center">
@@ -217,7 +221,7 @@ export default function OrderDetailsMobile({
                 >
                   <Bike className="w-4 h-4" />
                 </div>
-                <span className="text-xs text-gray-600">Dispatched</span>
+                <span className="text-xs text-gray-600">{t("orderHistory.status.dispatched", "Dispatched")}</span>
               </div>
 
               <div className="flex flex-col items-center">
@@ -230,7 +234,7 @@ export default function OrderDetailsMobile({
                 >
                   <House className="w-4 h-4" />
                 </div>
-                <span className="text-xs text-gray-600">Delivered</span>
+                <span className="text-xs text-gray-600">{t("orderHistory.status.delivered", "Delivered")}</span>
               </div>
             </div>
           </div>
@@ -262,10 +266,10 @@ export default function OrderDetailsMobile({
                   <p className="font-medium">{item.name}</p>
                   <div className="flex justify-between items-center">
                     <p className="text-sm text-gray-500">
-                      ${item.price.toFixed(2)} × {item.quantity}
+                      ${formatPrice(item.price)} × {item.quantity}
                     </p>
                     <p className="font-medium">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ${formatPrice(item.price, item.quantity)}
                     </p>
                   </div>
                 </div>
@@ -295,16 +299,16 @@ export default function OrderDetailsMobile({
         {/* Order Total */}
         <div className="border-t pt-4 p-4">
           <div className="flex justify-between items-center">
-            <span className="font-medium text-sm text-gray-500">Subtotal</span>
-            <span className="text-sm">${(order.total - 5).toFixed(2)}</span>
+            <span className="font-medium text-sm text-gray-500">{t("orderHistory.subtotal", "Subtotal")}</span>
+            <span className="text-sm">${formatPrice(order.total, 1, -5)}</span>
           </div>
           <div className="flex justify-between items-center mt-1">
-            <span className="font-medium text-sm text-gray-500">Delivery fee</span>
-            <span className="text-sm">${(5).toFixed(2)}</span>
+            <span className="font-medium text-sm text-gray-500">{t("orderHistory.deliveryFee", "Delivery fee")}</span>
+            <span className="text-sm">${formatPrice(5)}</span>
           </div>
           <div className="flex justify-between items-center font-semibold text-medium mt-3">
             <span>{t("orderHistory.total", "Total")}</span>
-            <span>${order.total.toFixed(2)}</span>
+            <span>${formatPrice(order.total)}</span>
           </div>
         </div>
 

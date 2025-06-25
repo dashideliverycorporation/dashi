@@ -9,117 +9,78 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { ChevronRight, Package } from "lucide-react";
+import { ChevronRight, Package, AlertCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import OrderDetails from "./components/order-details";
 import OrderDetailsMobile from "./components/order-details-mobile";
 import Image from "next/image";
 import Link from "next/link";
+import { trpc } from "@/lib/trpc/client";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Order, OrderItem } from "@/types/order";
+import { OrderStatus } from "@/prisma/app/generated/prisma/client";
 
-// Order status enum to match what we have in the Prisma schema
-enum OrderStatus {
-  NEW = "NEW",
-  PREPARING = "PREPARING",
-  READY_FOR_PICKUP_DELIVERY = "READY_FOR_PICKUP_DELIVERY",
-  COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED",
-}
+/**
+ * Safely formats any price value to a string with 2 decimal places
+ * Handles different input types (number, string, Prisma.Decimal, etc.)
+ *
+ * @param price - The price value to format
+ * @param quantity - Optional quantity multiplier (default: 1)
+ * @returns A string representation of the price with 2 decimal places
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const formatPrice = (price: any, quantity: number = 1): string => {
+  try {
+    if (!price && price !== 0) return "0.00";
 
-// Mock order item type
-interface OrderItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
+    let numericValue = 0;
 
-// Mock order data structure
-interface Order {
-  id: string;
-  createdAt: Date;
-  status: OrderStatus;
-  total: number;
-  deliveryAddress: string;
-  notes: string | null;
-  restaurant: {
-    id: string;
-    name: string;
-  };
-  items: OrderItem[];
-}
+    if (typeof price === "object" && price !== null) {
+      // Handle Prisma.Decimal or similar objects
+      numericValue = parseFloat(String(price));
+    } else if (typeof price === "number") {
+      numericValue = price;
+    } else {
+      // Try to parse as number if it's a string
+      numericValue = parseFloat(String(price));
+      if (isNaN(numericValue)) numericValue = 0;
+    }
 
-// Mock orders for display
-const mockOrders: Order[] = [
-  {
-    id: "ord_123456",
-    createdAt: new Date(2025, 4, 25, 14, 30), // May 25, 2025, 2:30 PM
-    status: OrderStatus.COMPLETED,
-    total: 42.99,
-    deliveryAddress: "123 Main St, Goma",
-    notes: "Please deliver to back door",
-    restaurant: {
-      id: "rest_1",
-      name: "Pizza Palace",
-    },
-    items: [
-      { id: "item_1", name: "Margherita Pizza", price: 12.99, quantity: 2 },
-      { id: "item_2", name: "Garlic Bread", price: 4.99, quantity: 1 },
-      { id: "item_3", name: "Coke", price: 2.99, quantity: 4 },
-    ],
-  },
-  {
-    id: "ord_789012",
-    createdAt: new Date(2025, 4, 27, 18, 15), // May 27, 2025, 6:15 PM
-    status: OrderStatus.PREPARING,
-    total: 36.5,
-    deliveryAddress: "456 Park Ave, Goma",
-    notes: null,
-    restaurant: {
-      id: "rest_2",
-      name: "Burger Joint",
-    },
-    items: [
-      { id: "item_4", name: "Double Cheeseburger", price: 14.5, quantity: 2 },
-      { id: "item_5", name: "French Fries", price: 3.5, quantity: 2 },
-    ],
-  },
-  {
-    id: "ord_345678",
-    createdAt: new Date(2025, 4, 28, 20, 45), // May 28, 2025, 8:45 PM
-    status: OrderStatus.NEW,
-    total: 54.25,
-    deliveryAddress: "789 Beach Road, Goma",
-    notes: "Call when you arrive",
-    restaurant: {
-      id: "rest_3",
-      name: "Sushi Express",
-    },
-    items: [
-      { id: "item_6", name: "California Roll", price: 16.99, quantity: 2 },
-      { id: "item_7", name: "Salmon Sashimi", price: 19.99, quantity: 1 },
-    ],
-  },
-];
+    // Apply quantity multiplier
+    const finalValue = numericValue * quantity;
+    return finalValue.toFixed(2);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
+    return "0.00"; // Fallback if any errors occur
+  }
+};
 
-// Status badge component with appropriate colors
+// Using shared Order and OrderItem types from /types/order.ts
+
+/**
+ * Status badge component with appropriate colors
+ * Uses translation for status text and applies appropriate styling
+ */
 const StatusBadge = ({ status }: { status: OrderStatus }) => {
+  const { t } = useTranslation();
   // Update variant type to match what Badge component accepts
   let variant: "default" | "secondary" | "outline" | "destructive" = "default";
 
   switch (status) {
-    case OrderStatus.NEW:
+    case "NEW":
       variant = "default"; // Primary color (orange)
       break;
-    case OrderStatus.PREPARING:
+    case "PREPARING":
       variant = "secondary"; // Gray
       break;
-    case OrderStatus.READY_FOR_PICKUP_DELIVERY:
+    case "READY_FOR_PICKUP_DELIVERY":
       variant = "outline"; // Using outline instead of success
       break;
-    case OrderStatus.COMPLETED:
+    case "COMPLETED":
       variant = "outline"; // Using outline instead of success
       break;
-    case OrderStatus.CANCELLED:
+    case "CANCELLED":
       variant = "destructive"; // Red
       break;
   }
@@ -127,8 +88,16 @@ const StatusBadge = ({ status }: { status: OrderStatus }) => {
   // Display appropriate status text
   const getStatusText = (status: OrderStatus) => {
     switch (status) {
-      case OrderStatus.READY_FOR_PICKUP_DELIVERY:
-        return "READY";
+      case "READY_FOR_PICKUP_DELIVERY":
+        return t("orderHistory.status.ready", "READY");
+      case "NEW":
+        return t("orderHistory.status.new", "NEW");
+      case "PREPARING":
+        return t("orderHistory.status.preparing", "PREPARING");
+      case "COMPLETED":
+        return t("orderHistory.status.completed", "COMPLETED");
+      case "CANCELLED":
+        return t("orderHistory.status.cancelled", "CANCELLED");
       default:
         return status;
     }
@@ -138,11 +107,18 @@ const StatusBadge = ({ status }: { status: OrderStatus }) => {
 };
 
 // Define filter types
-type OrderFilter = "pending" | "delivered" | "failed";
+type OrderFilter = "pending" | "delivered" | "failed"; // Function to get restaurant image or fallback based on name
+const getRestaurantImageUrl = (restaurant: {
+  imageUrl?: string;
+  name: string;
+}) => {
+  // If restaurant has an image URL from the database, use it
+  if (restaurant.imageUrl) {
+    return restaurant.imageUrl;
+  }
 
-// Function to get restaurant image based on name
-const getRestaurantImageUrl = (restaurantName: string) => {
-  const name = restaurantName.toLowerCase();
+  // Otherwise fall back to pattern matching based on restaurant name
+  const name = restaurant.name.toLowerCase();
 
   // Return specific images based on restaurant name patterns
   if (name.includes("pizza") || name.includes("palace")) {
@@ -183,28 +159,21 @@ export default function OrderHistoryPage() {
   );
   const [activeFilter, setActiveFilter] = useState<OrderFilter>("pending");
 
+  // Query orders using tRPC
+  const orderQuery = trpc.order.getCustomerOrders.useQuery({
+    status: activeFilter,
+  });
+
+  const { data, isLoading, isError, error } = orderQuery;
+
+  // No need for manual refetch as the query key (activeFilter) change will trigger a refetch
+
+  const orders = data?.orders || [];
+
   // Format date according to user's locale
   const formatDate = (date: Date) => {
     return format(date, "do MMM yyyy, hh:mm a");
   };
-
-  // Filter orders based on selected filter
-  const filteredOrders = mockOrders.filter((order) => {
-    if (activeFilter === "pending") {
-      return [
-        OrderStatus.NEW,
-        OrderStatus.PREPARING,
-        OrderStatus.READY_FOR_PICKUP_DELIVERY,
-      ].includes(order.status);
-    } else if (activeFilter === "delivered") {
-      return [OrderStatus.COMPLETED].includes(order.status);
-    } else if (activeFilter === "failed") {
-      return [OrderStatus.CANCELLED].includes(order.status);
-    } else {
-      // Default case
-      return true;
-    }
-  });
 
   return (
     <div className="flex flex-col h-screen">
@@ -254,9 +223,46 @@ export default function OrderHistoryPage() {
                 </nav>
               </div>
 
-              {filteredOrders.length > 0 ? (
+              {isLoading ? (
                 <div className="grid gap-6">
-                  {filteredOrders.map((order) => (
+                  {/* Loading skeletons - show 3 skeleton orders */}
+                  {[...Array(3)].map((_, i) => (
+                    <Card key={`skeleton-${i}`} className="overflow-hidden border-none p-0">
+                      <div className="bg-orange-100 p-4">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                          {[...Array(4)].map((_, j) => (
+                            <div key={`skeleton-field-${j}`}>
+                              <Skeleton className="h-3 w-20 mb-2" />
+                              <Skeleton className="h-4 w-28" />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="p-4 space-y-3">
+                        {[...Array(2)].map((_, j) => (
+                          <div key={`skeleton-item-${j}`} className="flex items-center gap-4 py-3 border-b last:border-0">
+                            <Skeleton className="w-24 h-20 rounded" />
+                            <div className="flex-1">
+                              <Skeleton className="h-4 w-40 mb-2" />
+                              <Skeleton className="h-3 w-24" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              ) : isError ? (
+                <Alert variant="destructive" className="mb-6">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>{t("common.error", "Error")}</AlertTitle>
+                  <AlertDescription>
+                    {error?.message || t("orderHistory.errorLoading", "Failed to load orders. Please try again later.")}
+                  </AlertDescription>
+                </Alert>
+              ) : orders.length > 0 ? (
+                <div className="grid gap-6">
+                  {orders.map((order) => (
                     <Card
                       key={order.id}
                       className="overflow-hidden hover:shadow-md border-none transition-shadow p-0 cursor-pointer"
@@ -267,15 +273,15 @@ export default function OrderHistoryPage() {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                           <div>
                             <p className="text-sm font-medium text-gray-600">
-                              Order number
+                              {t("orderHistory.orderNumber", "Order number")}
                             </p>
                             <p className="font-medium">
-                              #{order.id.replace("ord_", "")}
+                              {order.orderNumber}
                             </p>
                           </div>
                           <div>
                             <p className="text-sm font-medium text-gray-600">
-                              Restaurant
+                              {t("orderHistory.restaurant", "Restaurant")}
                             </p>
                             <p className="font-medium">
                               {order.restaurant.name}
@@ -283,13 +289,13 @@ export default function OrderHistoryPage() {
                           </div>
                           <div>
                             <p className="text-sm font-medium text-gray-600">
-                              Status
+                              {t("orderHistory.statusLabel", "Status")}
                             </p>
                             <StatusBadge status={order.status} />
                           </div>
                           <div>
                             <p className="text-sm font-medium text-gray-600">
-                              Scheduled for
+                              {t("orderHistory.scheduledFor", "Scheduled for")}
                             </p>
                             <p className="font-medium">
                               {formatDate(order.createdAt)}
@@ -310,36 +316,38 @@ export default function OrderHistoryPage() {
                       {/* Order items with images */}
                       <div className="p-4">
                         {order.items.map((item) => {
-                          // Get realistic food images from Unsplash based on the item name
-                          const getImageUrl = (itemName: string) => {
-                            if (itemName.toLowerCase().includes("pizza")) {
+                          // Get realistic food images from item or fallback to Unsplash based on the item name
+                          const getImageUrl = (item: OrderItem) => {
+                            // If item has an image URL from the database, use it
+                            if (item.imageUrl) {
+                              return item.imageUrl;
+                            }
+
+                            // Otherwise fall back to pattern matching based on item name
+                            const itemName = item.name.toLowerCase();
+
+                            if (itemName.includes("pizza")) {
                               return "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
-                            } else if (
-                              itemName.toLowerCase().includes("bread")
-                            ) {
+                            } else if (itemName.includes("bread")) {
                               return "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
                             } else if (
-                              itemName.toLowerCase().includes("coke") ||
-                              itemName.toLowerCase().includes("soda")
+                              itemName.includes("coke") ||
+                              itemName.includes("soda")
                             ) {
                               return "https://images.unsplash.com/photo-1581636625402-29b2a704ef13?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
                             } else if (
-                              itemName.toLowerCase().includes("burger") ||
-                              itemName.toLowerCase().includes("cheese")
+                              itemName.includes("burger") ||
+                              itemName.includes("cheese")
                             ) {
                               return "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
-                            } else if (
-                              itemName.toLowerCase().includes("fries")
-                            ) {
+                            } else if (itemName.includes("fries")) {
                               return "https://images.unsplash.com/photo-1576107232684-1279f390859f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
-                            } else if (
-                              itemName.toLowerCase().includes("roll")
-                            ) {
+                            } else if (itemName.includes("roll")) {
                               return "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
                             } else if (
-                              itemName.toLowerCase().includes("salmon") ||
-                              itemName.toLowerCase().includes("sushi") ||
-                              itemName.toLowerCase().includes("sashimi")
+                              itemName.includes("salmon") ||
+                              itemName.includes("sushi") ||
+                              itemName.includes("sashimi")
                             ) {
                               return "https://images.unsplash.com/photo-1583623025817-d180a2221d0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
                             } else {
@@ -354,7 +362,7 @@ export default function OrderHistoryPage() {
                             >
                               <div className="w-24 h-20 rounded overflow-hidden flex-shrink-0">
                                 <Image
-                                  src={getImageUrl(item.name)}
+                                  src={getImageUrl(item)}
                                   alt={item.name}
                                   width={64}
                                   height={64}
@@ -368,7 +376,7 @@ export default function OrderHistoryPage() {
                                   <p className="font-medium">{item.name}</p>
                                 </div>
                                 <p className="text-gray-500 text-sm">
-                                  ${item.price.toFixed(2)} per item
+                                  ${formatPrice(item.price)} {t("orderHistory.perItem", "per item")}
                                 </p>
                               </div>
                               <div className="text-right">
@@ -376,7 +384,7 @@ export default function OrderHistoryPage() {
                               </div>
                               <div className="text-right min-w-[60px]">
                                 <p className="font-medium">
-                                  ${(item.price * item.quantity).toFixed(2)}
+                                  ${formatPrice(item.price, item.quantity)}
                                 </p>
                               </div>
                             </div>
@@ -391,19 +399,19 @@ export default function OrderHistoryPage() {
                             variant="outline"
                             className={`
                           ${
-                            order.status === OrderStatus.COMPLETED
+                            order.status === "COMPLETED"
                               ? "bg-green-50 text-green-700 border-green-200"
-                              : order.status === OrderStatus.CANCELLED
+                              : order.status === "CANCELLED"
                               ? "bg-red-50 text-red-700 border-red-200"
                               : "bg-yellow-50 text-yellow-700 border-yellow-200"
                           }
                         `}
                           >
-                            {order.status === OrderStatus.COMPLETED
-                              ? "Delivered"
-                              : order.status === OrderStatus.CANCELLED
-                              ? "Cancelled"
-                              : "Pending"}
+                            {order.status === "COMPLETED"
+                              ? t("orderHistory.status.delivered", "Delivered")
+                              : order.status === "CANCELLED"
+                              ? t("orderHistory.status.cancelled", "Cancelled")
+                              : t("orderHistory.status.pending", "Pending")}
                           </Badge>
                           <Button
                             variant="ghost"
@@ -415,9 +423,9 @@ export default function OrderHistoryPage() {
                           </Button>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">Total</span>
+                          <span className="text-sm font-medium">{t("orderHistory.total", "Total")}</span>
                           <span className="font-bold text-lg">
-                            ${order.total.toFixed(2)}
+                            ${formatPrice(order.total)}
                           </span>
                         </div>
                       </div>
@@ -498,7 +506,7 @@ export default function OrderHistoryPage() {
                         : "text-gray-600 hover:bg-gray-200"
                     }`}
                   >
-                    {t("orderHistory.filter.pending", "Pending")}
+                    {t("orderHistory.filter.mobile.pending", "Pending")}
                   </button>
                   <button
                     onClick={() => setActiveFilter("delivered")}
@@ -508,7 +516,7 @@ export default function OrderHistoryPage() {
                         : "text-gray-600 hover:bg-gray-200"
                     }`}
                   >
-                    {t("orderHistory.filter.delivered", "Delivered")}
+                    {t("orderHistory.filter.mobile.delivered", "Delivered")}
                   </button>
                   <button
                     onClick={() => setActiveFilter("failed")}
@@ -518,15 +526,43 @@ export default function OrderHistoryPage() {
                         : "text-gray-600 hover:bg-gray-200"
                     }`}
                   >
-                    {t("orderHistory.filter.failed", "Failed")}
+                    {t("orderHistory.filter.mobile.failed", "Failed")}
                   </button>
                 </nav>
               </div>
 
               {/* Mobile Order Cards */}
-              {filteredOrders.length > 0 ? (
+              {isLoading ? (
                 <div className="mt-6">
-                  {filteredOrders.map((order) => (
+                  {/* Loading skeletons - show 3 skeleton orders */}
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={`mobile-skeleton-${i}`}
+                      className="flex items-center gap-3 p-2 bg-white rounded-md my-4 shadow-sm"
+                    >
+                      <Skeleton className="w-20 h-20 rounded-md flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center">
+                          <Skeleton className="h-4 w-24 mb-1" />
+                          <Skeleton className="h-4 w-16 mr-1" />
+                        </div>
+                        <Skeleton className="h-3 w-32 mb-1" />
+                        <Skeleton className="h-3 w-24 mt-1" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : isError ? (
+                <Alert variant="destructive" className="mt-6">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>{t("common.error", "Error")}</AlertTitle>
+                  <AlertDescription>
+                    {error?.message || t("orderHistory.errorLoading", "Failed to load orders. Please try again later.")}
+                  </AlertDescription>
+                </Alert>
+              ) : orders.length > 0 ? (
+                <div className="mt-6">
+                  {orders.map((order) => (
                     <div
                       key={order.id}
                       className="flex items-center gap-3 p-2 bg-white rounded-md my-4 shadow-sm active:bg-gray-50 cursor-pointer"
@@ -534,7 +570,7 @@ export default function OrderHistoryPage() {
                     >
                       <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0">
                         <Image
-                          src={getRestaurantImageUrl(order.restaurant.name)}
+                          src={getRestaurantImageUrl(order.restaurant)}
                           alt={order.restaurant.name}
                           width={64}
                           height={64}
@@ -544,14 +580,25 @@ export default function OrderHistoryPage() {
                         />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-medium text-base mb-1">
-                          {order.restaurant.name}
-                        </h3>
+                        <div className="flex justify-between items-center">
+                          <h3 className="font-medium text-base mb-1">
+                            {order.restaurant.name}
+                          </h3>
+                          <div className="text-sm font-medium text-orange-600">
+                            {order.orderNumber}
+                          </div>
+                        </div>
                         <p className="text-sm text-gray-500">
                           {order.items.length > 1
-                            ? `${order.items[0].name} & ${
-                                order.items.length - 1
-                              } more items`
+                            ? t(
+                                "orderHistory.itemsWithCount", 
+                                {
+                                  defaultValue: "{{firstItem}} & {{count}} more items",
+                                  firstItem: order.items[0].name,
+                                  count: order.items.length - 1
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                } as any
+                              )
                             : order.items[0].name}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">

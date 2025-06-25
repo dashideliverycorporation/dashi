@@ -6,6 +6,8 @@ import { useSession } from "next-auth/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useCart } from "@/components/cart/use-cart";
 import { toastNotification } from "@/components/custom/toast-notification";
+import { trpc } from "@/lib/trpc/client";
+import type { CheckoutFormValues } from "@/server/schemas/order.schema";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,11 +18,8 @@ import {
   CreditCard,
   CheckCircle,
 } from "lucide-react";
-import {
-  PaymentForm,
-  type PaymentFormValues,
-} from "@/components/payment/payment-form";
 import OrderSummary from "@/components/checkout/order-summary";
+import TemporaryPaymentForm, { type MobileMoneyFormValues } from "@/components/payment/payment-temporary";
 
 /**
  * Payment page component
@@ -34,8 +33,7 @@ export default function PaymentPage() {
   const { status } = useSession();
   const { state, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [deliveryInfo, setDeliveryInfo] = useState<any>(null);
+  const [deliveryInfo, setDeliveryInfo] = useState<CheckoutFormValues | null>(null);
 
   // Retrieve delivery details from session storage (without auth checks)
   useEffect(() => {
@@ -53,38 +51,68 @@ export default function PaymentPage() {
     }
   }, []);
 
+  // Create order mutation
+  const createOrderMutation = trpc.order.createOrder.useMutation({
+    onSuccess: (data) => {
+      // Clean up session storage
+      sessionStorage.removeItem("deliveryDetails");
+      
+      // Save order number for display on confirmation page
+      if (typeof window !== 'undefined' && data?.data?.orderNumber) {
+        localStorage.setItem('lastOrderNumber', data.data.orderNumber);
+      }
+      
+      // Redirect to confirmation page
+      router.push("/order-confirmation");
+      // Clear the cart
+      clearCart();
+      // Show success notification
+      toastNotification.success(
+        t("order.success.title", "Order Placed"),
+        t("order.success.message", "Your order has been successfully placed!")
+      );
+    },
+    onError: (error) => {
+      console.error("Error placing order:", error);
+      toastNotification.error(
+        t("order.error.title", "Order Failed"),
+        error.message || t("order.error.message", "Failed to place your order. Please try again.")
+      );
+    },
+  });
+
   // Handle form submission
-  const handleSubmit = async (data: PaymentFormValues) => {
+  const handleSubmit = async (data: MobileMoneyFormValues) => {
     setIsSubmitting(true);
 
     try {
       // Get delivery details from state
-      const deliveryDetails = deliveryInfo || {};
+      if (!deliveryInfo) {
+        throw new Error(t("order.error.noDelivery", "Missing delivery information"));
+      }
+      
+      if (!state.restaurantId) {
+        throw new Error(t("order.error.noRestaurant", "No restaurant selected"));
+      }
 
-      // Combine order data
+      // Combine order data for API call
       const orderData = {
-        delivery: deliveryDetails,
-        payment: data,
+        delivery: deliveryInfo,
+        payment: {
+          paymentMethod: "mobile_money" as const,
+          mobileNumber: data.mobileNumber,
+          transactionId: data.transactionId,
+          providerName: data.providerName
+        },
         items: state.items,
         restaurantId: state.restaurantId,
-        total: state.subtotal,
+        total: state.subtotal + state.deliveryFee,
       };
 
-      // Placeholder for future API call to create order
-      console.log("Complete order data:", orderData);
-
-      // Simulate successful order placement
-      setTimeout(() => {
-        setIsSubmitting(false);
-        // Clean up session storage
-        sessionStorage.removeItem("deliveryDetails");
-        // Redirect to confirmation page
-        router.push("/order-confirmation");
-        // Clear the cart
-        clearCart();
-      }, 1500);
+      // Call the createOrder mutation
+      await createOrderMutation.mutateAsync(orderData);
     } catch (error) {
-      console.error("Error processing payment:", error);
+      console.error("Error processing order:", error);
       setIsSubmitting(false);
       toastNotification.error(
         t("payment.error", "Payment Error"),
@@ -217,7 +245,8 @@ export default function PaymentPage() {
       <div className="flex gap-6 overflow-hidden">
         {/* Payment Form */}
         <div className="p-4 lg:p-8 bg-white rounded-lg mb-8 w-full lg:flex-1">
-          <PaymentForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+          {/* <PaymentForm onSubmit={handleSubmit} isSubmitting={isSubmitting} /> */}
+          <TemporaryPaymentForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
         </div>
 
         {/* Order Summary */}

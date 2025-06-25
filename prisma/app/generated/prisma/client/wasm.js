@@ -215,10 +215,28 @@ exports.Prisma.MenuItemScalarFieldEnum = {
 
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
+  orderNumber: 'orderNumber',
+  displayOrderNumber: 'displayOrderNumber',
   status: 'status',
   totalAmount: 'totalAmount',
   deliveryAddress: 'deliveryAddress',
   customerNotes: 'customerNotes',
+  customerId: 'customerId',
+  restaurantId: 'restaurantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PaymentTransactionScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  status: 'status',
+  transactionId: 'transactionId',
+  mobileNumber: 'mobileNumber',
+  providerName: 'providerName',
+  notes: 'notes',
   customerId: 'customerId',
   restaurantId: 'restaurantId',
   createdAt: 'createdAt',
@@ -263,6 +281,19 @@ exports.OrderStatus = exports.$Enums.OrderStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.PaymentMethod = exports.$Enums.PaymentMethod = {
+  MOBILE_MONEY: 'MOBILE_MONEY',
+  CARD: 'CARD',
+  CASH: 'CASH'
+};
+
+exports.PaymentStatus = exports.$Enums.PaymentStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
+};
+
 exports.Prisma.ModelName = {
   Account: 'Account',
   Session: 'Session',
@@ -273,6 +304,7 @@ exports.Prisma.ModelName = {
   Restaurant: 'Restaurant',
   MenuItem: 'MenuItem',
   Order: 'Order',
+  PaymentTransaction: 'PaymentTransaction',
   OrderItem: 'OrderItem'
 };
 

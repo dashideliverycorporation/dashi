@@ -16,54 +16,51 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { OrderStatus } from "@/prisma/app/generated/prisma/client";
+import { Order} from "@/types/order";
+import { TranslationOptions } from "@/lib/i18n";
 
-// Order status enum to match what we have in the Prisma schema
-enum OrderStatus {
-  NEW = "NEW",
-  PREPARING = "PREPARING",
-  READY_FOR_PICKUP_DELIVERY = "READY_FOR_PICKUP_DELIVERY",
-  COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED",
-}
-
-// Order item type
-interface OrderItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-// Order data structure
-interface Order {
-  id: string;
-  createdAt: Date;
-  status: OrderStatus;
-  total: number;
-  deliveryAddress: string;
-  notes: string | null;
-  restaurant: {
-    id: string;
-    name: string;
-  };
-  items: OrderItem[];
+// Extended TranslationOptions to include dynamic values
+interface ExtendedTranslationOptions extends TranslationOptions {
+  [key: string]: string | number | undefined;
 }
 
 interface OrderDetailsProps {
   order: Order | null;
   onClose: () => void;
-  t: (key: string, fallback: string) => string; // Translation function
+  t: (key: string | string[], options?: ExtendedTranslationOptions | string) => string;
 }
 
 export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
   if (!order) return null;
 
   // Format price as currency
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(price);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const formatPrice = (price: any) => {
+    try {
+      if (!price && price !== 0) return '$0.00';
+      
+      let numericValue = 0;
+      
+      if (typeof price === 'object' && price !== null) {
+        // Handle Prisma.Decimal or similar objects
+        numericValue = parseFloat(String(price));
+      } else if (typeof price === 'number') {
+        numericValue = price;
+      } else {
+        // Try to parse it as a number if it's a string
+        numericValue = parseFloat(String(price));
+        if (isNaN(numericValue)) numericValue = 0;
+      }
+      
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(numericValue);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      return '$0.00'; // Fallback if any errors occur
+    }
   };
 
   // Format date according to user's locale
@@ -120,7 +117,10 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                 <span>{formatDate(order.createdAt)}</span>
               </div>
               <p className="text-sm mt-2 mb-4 text-gray-700">
-                Order #{order.id.replace("ord_", "")}
+                {t("orderHistory.orderNumberWithPrefix", { 
+                  defaultValue: "Order {{number}}", 
+                  number: order.orderNumber 
+                })}
               </p>
 
               {/* Order Progress Steps */}
@@ -131,17 +131,16 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                     {/* Dividing the progress line into 4 segments */}
                     <div
                       className={`w-1/4 ${
-                        order.status !== OrderStatus.CANCELLED
+                        order.status !== "CANCELLED"
                           ? "bg-orange-500"
                           : "bg-gray-300"
                       }`}
                     ></div>
                     <div
                       className={`w-1/4 ${
-                        order.status === OrderStatus.PREPARING ||
-                        order.status ===
-                          OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                        order.status === OrderStatus.COMPLETED
+                        order.status === "PREPARING" ||
+                        order.status === "READY_FOR_PICKUP_DELIVERY" ||
+                        order.status === "COMPLETED"
                           ? "bg-orange-500"
                           : "bg-gray-300"
                       }`}
@@ -176,7 +175,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                       >
                         <Store className="w-4 h-4" />
                       </div>
-                      <span className="text-xs text-gray-600">Received</span>
+                      <span className="text-xs text-gray-600">{t("orderHistory.status.received", "Received")}</span>
                     </div>
 
                     <div className="flex flex-col items-center">
@@ -191,15 +190,11 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                         } flex items-center justify-center mb-1 shadow-sm`}
                       >
                         <span className="text-sm">
-                          {order.status === OrderStatus.PREPARING ||
-                          order.status ===
-                            OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                          order.status === OrderStatus.COMPLETED
-                            ? "✓"
-                            : ""}
+                          {"✓"
+                            }
                         </span>
                       </div>
-                      <span className="text-xs text-gray-600">Accepted</span>
+                      <span className="text-xs text-gray-600">{t("orderHistory.status.accepted", "Accepted")}</span>
                     </div>
 
                     <div className="flex flex-col items-center">
@@ -215,7 +210,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                       >
                         <ChefHat className="w-4 h-4" />
                       </div>
-                      <span className="text-xs text-gray-600">Preparing</span>
+                      <span className="text-xs text-gray-600">{t("orderHistory.status.preparing", "Preparing")}</span>
                     </div>
 
                     <div className="flex flex-col items-center">
@@ -228,7 +223,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                       >
                         <Bike className="w-4 h-4" />
                       </div>
-                      <span className="text-xs text-gray-600">Dispatched</span>
+                      <span className="text-xs text-gray-600">{t("orderHistory.status.dispatched", "Dispatched")}</span>
                     </div>
 
                     <div className="flex flex-col items-center">
@@ -241,7 +236,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                       >
                         <House className="w-4 h-4" />
                       </div>
-                      <span className="text-xs text-gray-600">Delivered</span>
+                      <span className="text-xs text-gray-600">{t("orderHistory.status.delivered", "Delivered")}</span>
                     </div>
                   </div>
                 </div>
@@ -308,12 +303,12 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
               {/* Order Total */}
               <div className="border-t pt-4">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="font-medium text-gray-500">Subtotal</span>
+                  <span className="font-medium text-gray-500">{t("orderHistory.subtotal", "Subtotal")}</span>
                   <span>{formatPrice(order.total - 5)}</span>
                 </div>
                 <div className="flex justify-between items-center mt-1 text-sm">
                   <span className="font-medium text-gray-500 ">
-                    Delivery fee
+                    {t("orderHistory.deliveryFee", "Delivery fee")}
                   </span>
                   <span>{formatPrice(5)}</span>
                 </div>
