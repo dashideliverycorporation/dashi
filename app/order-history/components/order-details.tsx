@@ -18,11 +18,17 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { OrderStatus } from "@/prisma/app/generated/prisma/client";
 import { Order} from "@/types/order";
+import { TranslationOptions } from "@/lib/i18n";
+
+// Extended TranslationOptions to include dynamic values
+interface ExtendedTranslationOptions extends TranslationOptions {
+  [key: string]: string | number | undefined;
+}
 
 interface OrderDetailsProps {
   order: Order | null;
   onClose: () => void;
-  t: (key: string, fallback: string) => string; // Translation function
+  t: (key: string | string[], options?: ExtendedTranslationOptions | string) => string;
 }
 
 export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
@@ -111,7 +117,10 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                 <span>{formatDate(order.createdAt)}</span>
               </div>
               <p className="text-sm mt-2 mb-4 text-gray-700">
-                Order #{order.id.replace("ord_", "")}
+                {t("orderHistory.orderNumberWithPrefix", { 
+                  defaultValue: "Order {{number}}", 
+                  number: order.orderNumber 
+                })}
               </p>
 
               {/* Order Progress Steps */}
@@ -166,7 +175,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                       >
                         <Store className="w-4 h-4" />
                       </div>
-                      <span className="text-xs text-gray-600">Received</span>
+                      <span className="text-xs text-gray-600">{t("orderHistory.status.received", "Received")}</span>
                     </div>
 
                     <div className="flex flex-col items-center">
@@ -181,15 +190,11 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                         } flex items-center justify-center mb-1 shadow-sm`}
                       >
                         <span className="text-sm">
-                          {order.status === OrderStatus.PREPARING ||
-                          order.status ===
-                            OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                          order.status === OrderStatus.COMPLETED
-                            ? "✓"
-                            : ""}
+                          {"✓"
+                            }
                         </span>
                       </div>
-                      <span className="text-xs text-gray-600">Accepted</span>
+                      <span className="text-xs text-gray-600">{t("orderHistory.status.accepted", "Accepted")}</span>
                     </div>
 
                     <div className="flex flex-col items-center">
@@ -205,7 +210,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                       >
                         <ChefHat className="w-4 h-4" />
                       </div>
-                      <span className="text-xs text-gray-600">Preparing</span>
+                      <span className="text-xs text-gray-600">{t("orderHistory.status.preparing", "Preparing")}</span>
                     </div>
 
                     <div className="flex flex-col items-center">
@@ -218,7 +223,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                       >
                         <Bike className="w-4 h-4" />
                       </div>
-                      <span className="text-xs text-gray-600">Dispatched</span>
+                      <span className="text-xs text-gray-600">{t("orderHistory.status.dispatched", "Dispatched")}</span>
                     </div>
 
                     <div className="flex flex-col items-center">
@@ -231,7 +236,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                       >
                         <House className="w-4 h-4" />
                       </div>
-                      <span className="text-xs text-gray-600">Delivered</span>
+                      <span className="text-xs text-gray-600">{t("orderHistory.status.delivered", "Delivered")}</span>
                     </div>
                   </div>
                 </div>
@@ -298,12 +303,12 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
               {/* Order Total */}
               <div className="border-t pt-4">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="font-medium text-gray-500">Subtotal</span>
+                  <span className="font-medium text-gray-500">{t("orderHistory.subtotal", "Subtotal")}</span>
                   <span>{formatPrice(order.total - 5)}</span>
                 </div>
                 <div className="flex justify-between items-center mt-1 text-sm">
                   <span className="font-medium text-gray-500 ">
-                    Delivery fee
+                    {t("orderHistory.deliveryFee", "Delivery fee")}
                   </span>
                   <span>{formatPrice(5)}</span>
                 </div>

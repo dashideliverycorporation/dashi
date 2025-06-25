@@ -58,8 +58,12 @@ const formatPrice = (price: any, quantity: number = 1): string => {
 
 // Using shared Order and OrderItem types from /types/order.ts
 
-// Status badge component with appropriate colors
+/**
+ * Status badge component with appropriate colors
+ * Uses translation for status text and applies appropriate styling
+ */
 const StatusBadge = ({ status }: { status: OrderStatus }) => {
+  const { t } = useTranslation();
   // Update variant type to match what Badge component accepts
   let variant: "default" | "secondary" | "outline" | "destructive" = "default";
 
@@ -85,7 +89,15 @@ const StatusBadge = ({ status }: { status: OrderStatus }) => {
   const getStatusText = (status: OrderStatus) => {
     switch (status) {
       case "READY_FOR_PICKUP_DELIVERY":
-        return "READY";
+        return t("orderHistory.status.ready", "READY");
+      case "NEW":
+        return t("orderHistory.status.new", "NEW");
+      case "PREPARING":
+        return t("orderHistory.status.preparing", "PREPARING");
+      case "COMPLETED":
+        return t("orderHistory.status.completed", "COMPLETED");
+      case "CANCELLED":
+        return t("orderHistory.status.cancelled", "CANCELLED");
       default:
         return status;
     }
@@ -261,7 +273,7 @@ export default function OrderHistoryPage() {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                           <div>
                             <p className="text-sm font-medium text-gray-600">
-                              Order number
+                              {t("orderHistory.orderNumber", "Order number")}
                             </p>
                             <p className="font-medium">
                               {order.orderNumber}
@@ -269,7 +281,7 @@ export default function OrderHistoryPage() {
                           </div>
                           <div>
                             <p className="text-sm font-medium text-gray-600">
-                              Restaurant
+                              {t("orderHistory.restaurant", "Restaurant")}
                             </p>
                             <p className="font-medium">
                               {order.restaurant.name}
@@ -277,13 +289,13 @@ export default function OrderHistoryPage() {
                           </div>
                           <div>
                             <p className="text-sm font-medium text-gray-600">
-                              Status
+                              {t("orderHistory.statusLabel", "Status")}
                             </p>
                             <StatusBadge status={order.status} />
                           </div>
                           <div>
                             <p className="text-sm font-medium text-gray-600">
-                              Scheduled for
+                              {t("orderHistory.scheduledFor", "Scheduled for")}
                             </p>
                             <p className="font-medium">
                               {formatDate(order.createdAt)}
@@ -364,7 +376,7 @@ export default function OrderHistoryPage() {
                                   <p className="font-medium">{item.name}</p>
                                 </div>
                                 <p className="text-gray-500 text-sm">
-                                  ${formatPrice(item.price)} per item
+                                  ${formatPrice(item.price)} {t("orderHistory.perItem", "per item")}
                                 </p>
                               </div>
                               <div className="text-right">
@@ -396,10 +408,10 @@ export default function OrderHistoryPage() {
                         `}
                           >
                             {order.status === "COMPLETED"
-                              ? "Delivered"
+                              ? t("orderHistory.status.delivered", "Delivered")
                               : order.status === "CANCELLED"
-                              ? "Cancelled"
-                              : "Pending"}
+                              ? t("orderHistory.status.cancelled", "Cancelled")
+                              : t("orderHistory.status.pending", "Pending")}
                           </Badge>
                           <Button
                             variant="ghost"
@@ -411,7 +423,7 @@ export default function OrderHistoryPage() {
                           </Button>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">Total</span>
+                          <span className="text-sm font-medium">{t("orderHistory.total", "Total")}</span>
                           <span className="font-bold text-lg">
                             ${formatPrice(order.total)}
                           </span>
@@ -494,7 +506,7 @@ export default function OrderHistoryPage() {
                         : "text-gray-600 hover:bg-gray-200"
                     }`}
                   >
-                    {t("orderHistory.filter.pending", "Pending")}
+                    {t("orderHistory.filter.mobile.pending", "Pending")}
                   </button>
                   <button
                     onClick={() => setActiveFilter("delivered")}
@@ -504,7 +516,7 @@ export default function OrderHistoryPage() {
                         : "text-gray-600 hover:bg-gray-200"
                     }`}
                   >
-                    {t("orderHistory.filter.delivered", "Delivered")}
+                    {t("orderHistory.filter.mobile.delivered", "Delivered")}
                   </button>
                   <button
                     onClick={() => setActiveFilter("failed")}
@@ -514,7 +526,7 @@ export default function OrderHistoryPage() {
                         : "text-gray-600 hover:bg-gray-200"
                     }`}
                   >
-                    {t("orderHistory.filter.failed", "Failed")}
+                    {t("orderHistory.filter.mobile.failed", "Failed")}
                   </button>
                 </nav>
               </div>
@@ -578,9 +590,15 @@ export default function OrderHistoryPage() {
                         </div>
                         <p className="text-sm text-gray-500">
                           {order.items.length > 1
-                            ? `${order.items[0].name} & ${
-                                order.items.length - 1
-                              } more items`
+                            ? t(
+                                "orderHistory.itemsWithCount", 
+                                {
+                                  defaultValue: "{{firstItem}} & {{count}} more items",
+                                  firstItem: order.items[0].name,
+                                  count: order.items.length - 1
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                } as any
+                              )
                             : order.items[0].name}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">

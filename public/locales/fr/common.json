@@ -244,5 +244,61 @@
     "providerNameDescription": "Le fournisseur de mobile money que vous avez utilisé (par exemple, Vodacom, Orange, Airtel)",
     "processing": "Traitement en cours...",
     "completeOrder": "Finaliser la Commande"
+  },
+  "orderHistory": {
+    "title": "Commandes",
+    "filter": {
+      "pending": "Commandes en cours",
+      "delivered": "Commandes livrées",
+      "failed": "Commandes échouées",
+      "mobile": {
+        "pending": "En cours",
+        "delivered": "Livrées",
+        "failed": "Échouées"
+      }
+    },
+    "viewDetails": "Voir les détails",
+    "orderNumber": "Numéro de commande",
+    "restaurant": "Restaurant",
+    "statusLabel": "Statut",
+    "scheduledFor": "Prévu pour",
+    "perItem": "par article",
+    "total": "Total",
+    "subtotal": "Sous-total",
+    "deliveryFee": "Frais de livraison",
+    "browseRestaurants": "Parcourir les restaurants",
+    "status": {
+      "new": "Nouvelle",
+      "preparing": "En Préparation",
+      "ready": "PRÊTE",
+      "completed": "Terminée",
+      "cancelled": "Annulée",
+      "delivered": "Livrée",
+      "pending": "En attente",
+      "failed": "Échouée",
+      "received": "Reçue",
+      "accepted": "Acceptée",
+      "dispatched": "Expédiée"
+    },
+    "orderItems": "Articles commandés",
+    "deliveryInfo": "Informations de livraison",
+    "notes": "Notes",
+    "close": "Fermer",
+    "reorder": "Commander à nouveau",
+    "itemsWithCount": "{{firstItem}} et {{count}} articles de plus",
+    "orderNumberWithPrefix": "Commande {{number}}",
+    "noPendingOrders": {
+      "title": "Aucune commande en cours",
+      "description": "Vous n'avez pas de commandes en cours. Passez une commande pour la voir ici."
+    },
+    "noDeliveredOrders": {
+      "title": "Aucune commande livrée",
+      "description": "Vous n'avez pas encore de commandes livrées. Les commandes apparaîtront ici une fois terminées."
+    },
+    "noFailedOrders": {
+      "title": "Aucune commande échouée",
+      "description": "Vous n'avez pas de commandes échouées ou annulées."
+    },
+    "errorLoading": "Échec du chargement des commandes. Veuillez réessayer plus tard."
   }
 }

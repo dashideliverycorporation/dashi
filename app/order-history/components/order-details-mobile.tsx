@@ -117,7 +117,11 @@ export default function OrderDetailsMobile({
         </div>
 
         <div className="text-sm text-gray-700 mt-1">
-          Order #{order.id.replace("ord_", "")}
+          {t("orderHistory.orderNumberWithPrefix", { 
+            defaultValue: "Order {{number}}", 
+            number: order.orderNumber 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any)}
         </div>
 
         {/* Order progress bar based on status - simplified version */}
@@ -171,7 +175,7 @@ export default function OrderDetailsMobile({
                 >
                   <Store className="w-4 h-4" />
                 </div>
-                <span className="text-xs text-gray-600">Received</span>
+                <span className="text-xs text-gray-600">{t("orderHistory.status.received", "Received")}</span>
               </div>
 
               <div className="flex flex-col items-center">
@@ -185,14 +189,11 @@ export default function OrderDetailsMobile({
                   } flex items-center justify-center mb-1 shadow-sm`}
                 >
                   <span className="text-sm">
-                    {order.status === OrderStatus.PREPARING ||
-                    order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                    order.status === OrderStatus.COMPLETED
-                      ? "✓"
-                      : ""}
+                    {"✓"
+                     }
                   </span>
                 </div>
-                <span className="text-xs text-gray-600">Accepted</span>
+                <span className="text-xs text-gray-600">{t("orderHistory.status.accepted", "Accepted")}</span>
               </div>
 
               <div className="flex flex-col items-center">
@@ -207,7 +208,7 @@ export default function OrderDetailsMobile({
                 >
                   <ChefHat className="w-4 h-4" />
                 </div>
-                <span className="text-xs text-gray-600">Preparing</span>
+                <span className="text-xs text-gray-600">{t("orderHistory.status.preparing", "Preparing")}</span>
               </div>
 
               <div className="flex flex-col items-center">
@@ -220,7 +221,7 @@ export default function OrderDetailsMobile({
                 >
                   <Bike className="w-4 h-4" />
                 </div>
-                <span className="text-xs text-gray-600">Dispatched</span>
+                <span className="text-xs text-gray-600">{t("orderHistory.status.dispatched", "Dispatched")}</span>
               </div>
 
               <div className="flex flex-col items-center">
@@ -233,7 +234,7 @@ export default function OrderDetailsMobile({
                 >
                   <House className="w-4 h-4" />
                 </div>
-                <span className="text-xs text-gray-600">Delivered</span>
+                <span className="text-xs text-gray-600">{t("orderHistory.status.delivered", "Delivered")}</span>
               </div>
             </div>
           </div>
@@ -298,11 +299,11 @@ export default function OrderDetailsMobile({
         {/* Order Total */}
         <div className="border-t pt-4 p-4">
           <div className="flex justify-between items-center">
-            <span className="font-medium text-sm text-gray-500">Subtotal</span>
+            <span className="font-medium text-sm text-gray-500">{t("orderHistory.subtotal", "Subtotal")}</span>
             <span className="text-sm">${formatPrice(order.total, 1, -5)}</span>
           </div>
           <div className="flex justify-between items-center mt-1">
-            <span className="font-medium text-sm text-gray-500">Delivery fee</span>
+            <span className="font-medium text-sm text-gray-500">{t("orderHistory.deliveryFee", "Delivery fee")}</span>
             <span className="text-sm">${formatPrice(5)}</span>
           </div>
           <div className="flex justify-between items-center font-semibold text-medium mt-3">

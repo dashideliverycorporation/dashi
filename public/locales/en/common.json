@@ -245,5 +245,61 @@
     "providerNameDescription": "The mobile money provider you used (e.g., Vodacom, Orange, Airtel)",
     "processing": "Processing...",
     "completeOrder": "Complete Order"
+  },
+  "orderHistory": {
+    "title": "Orders",
+    "filter": {
+      "pending": "Pending Orders",
+      "delivered": "Delivered Orders",
+      "failed": "Failed Orders",
+      "mobile": {
+        "pending": "Pending",
+        "delivered": "Delivered",
+        "failed": "Failed"
+      }
+    },
+    "viewDetails": "View Details",
+    "orderNumber": "Order number",
+    "restaurant": "Restaurant", 
+    "statusLabel": "Status",
+    "scheduledFor": "Scheduled for",
+    "perItem": "per item",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "deliveryFee": "Delivery fee",
+    "browseRestaurants": "Browse Restaurants",
+    "status": {
+      "new": "New",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "completed": "Completed",
+      "cancelled": "Canceled",
+      "delivered": "Delivered",
+      "pending": "Pending",
+      "failed": "Failed",
+      "received": "Received",
+      "accepted": "Accepted",
+      "dispatched": "Dispatched"
+    },
+    "orderItems": "Order Items",
+    "deliveryInfo": "Delivery Information",
+    "notes": "Notes",
+    "close": "Close",
+    "reorder": "Order Again",
+    "itemsWithCount": "{{firstItem}} & {{count}} more items",
+    "orderNumberWithPrefix": "Order {{number}}",
+    "noPendingOrders": {
+      "title": "No pending orders",
+      "description": "You don't have any orders in progress. Place an order to see it here."
+    },
+    "noDeliveredOrders": {
+      "title": "No delivered orders",
+      "description": "You don't have any delivered orders yet. Orders will appear here once they are completed."
+    },
+    "noFailedOrders": {
+      "title": "No failed orders",
+      "description": "You don't have any failed or cancelled orders."
+    },
+    "errorLoading": "Failed to load orders. Please try again later."
   }
 }
