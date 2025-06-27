@@ -19,6 +19,7 @@ import Image from "next/image";
 import { OrderStatus } from "@/prisma/app/generated/prisma/client";
 import { Order} from "@/types/order";
 import { TranslationOptions } from "@/lib/i18n";
+import { ORDER_STATUS } from "@/lib/constants/order-status";
 
 // Extended TranslationOptions to include dynamic values
 interface ExtendedTranslationOptions extends TranslationOptions {
@@ -131,16 +132,16 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                     {/* Dividing the progress line into 4 segments */}
                     <div
                       className={`w-1/4 ${
-                        order.status !== "CANCELLED"
+                        order.status !== ORDER_STATUS.CANCELLED
                           ? "bg-orange-500"
                           : "bg-gray-300"
                       }`}
                     ></div>
                     <div
                       className={`w-1/4 ${
-                        order.status === "PREPARING" ||
-                        order.status === "READY_FOR_PICKUP_DELIVERY" ||
-                        order.status === "COMPLETED"
+                        order.status === ORDER_STATUS.PREPARING ||
+                        order.status === ORDER_STATUS.DISPATCHED ||
+                        order.status === ORDER_STATUS.DELIVERED
                           ? "bg-orange-500"
                           : "bg-gray-300"
                       }`}
@@ -148,15 +149,15 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                     <div
                       className={`w-1/4 ${
                         order.status ===
-                          OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                        order.status === OrderStatus.COMPLETED
+                          ORDER_STATUS.DISPATCHED ||
+                        order.status === ORDER_STATUS.DELIVERED
                           ? "bg-orange-500"
                           : "bg-gray-300"
                       }`}
                     ></div>
                     <div
                       className={`w-1/4 ${
-                        order.status === OrderStatus.COMPLETED
+                        order.status === ORDER_STATUS.DELIVERED
                           ? "bg-orange-500"
                           : "bg-gray-300"
                       }`}
@@ -168,7 +169,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                     <div className="flex flex-col items-center">
                       <div
                         className={`w-8 h-8 rounded-full ${
-                          order.status !== OrderStatus.CANCELLED
+                          order.status !== ORDER_STATUS.CANCELLED
                             ? "bg-orange-500 text-white"
                             : "bg-gray-200 text-gray-500"
                         } flex items-center justify-center mb-1 shadow-sm`}
@@ -183,8 +184,8 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                         className={`w-8 h-8 rounded-full ${
                           order.status === OrderStatus.PREPARING ||
                           order.status ===
-                            OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                          order.status === OrderStatus.COMPLETED
+                            OrderStatus.DISPATCHED ||
+                          order.status === OrderStatus.DELIVERED
                             ? "bg-orange-500 text-white"
                             : "bg-white text-gray-500"
                         } flex items-center justify-center mb-1 shadow-sm`}
@@ -201,9 +202,9 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                       <div
                         className={`w-8 h-8 rounded-full ${
                           order.status ===
-                            OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                          order.status === OrderStatus.COMPLETED ||
-                          order.status === OrderStatus.PREPARING
+                            ORDER_STATUS.DISPATCHED ||
+                          order.status === ORDER_STATUS.DELIVERED ||
+                          order.status === ORDER_STATUS.PREPARING
                             ? "bg-orange-500 text-white"
                             : "bg-white text-gray-500"
                         } flex items-center justify-center mb-1 shadow-sm`}
@@ -216,7 +217,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                     <div className="flex flex-col items-center">
                       <div
                         className={`w-8 h-8 rounded-full ${
-                          order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY
+                          order.status === ORDER_STATUS.DISPATCHED
                             ? "bg-orange-500 text-white"
                             : "bg-white text-gray-500"
                         } border border-gray-300 flex items-center justify-center mb-1 shadow-sm`}
@@ -229,7 +230,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                     <div className="flex flex-col items-center">
                       <div
                         className={`w-8 h-8 rounded-full ${
-                          order.status === OrderStatus.COMPLETED
+                          order.status === OrderStatus.DELIVERED
                             ? "bg-orange-500 text-white"
                             : "bg-white text-gray-500"
                         } border border-gray-300 flex items-center justify-center mb-1 shadow-sm`}
@@ -304,7 +305,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
               <div className="border-t pt-4">
                 <div className="flex justify-between items-center text-sm">
                   <span className="font-medium text-gray-500">{t("orderHistory.subtotal", "Subtotal")}</span>
-                  <span>{formatPrice(order.total - 5)}</span>
+                  <span>{formatPrice((order.total || order.totalAmount) - 5)}</span>
                 </div>
                 <div className="flex justify-between items-center mt-1 text-sm">
                   <span className="font-medium text-gray-500 ">
@@ -314,7 +315,7 @@ export default function OrderDetails({ order, onClose, t }: OrderDetailsProps) {
                 </div>
                 <div className="flex justify-between items-center font-semibold text-base mt-3">
                   <span>{t("orderHistory.total", "Total")}</span>
-                  <span>{formatPrice(order.total)}</span>
+                  <span>{formatPrice(order.total || order.totalAmount)}</span>
                 </div>
               </div>
 

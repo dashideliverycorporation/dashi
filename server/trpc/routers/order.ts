@@ -6,7 +6,7 @@
  * - Retrieving order information
  * - Updating order status
  */
-import { protectedProcedure, router } from "../trpc";
+import { protectedProcedure, router, restaurantProcedure } from "../trpc";
 import { prisma } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 import { createOrderSchema } from "@/server/schemas/order.schema";
@@ -525,7 +525,7 @@ export const orderRouter = router({
         let orderStatuses;
         switch (status) {
           case "pending":
-            orderStatuses = ["NEW", "PREPARING", "READY_FOR_PICKUP_DELIVERY"];
+            orderStatuses = ["NEW", "PREPARING", "READY"];
             break;
           case "delivered":
             orderStatuses = ["COMPLETED"];
@@ -534,7 +534,7 @@ export const orderRouter = router({
             orderStatuses = ["CANCELLED"];
             break;
           default:
-            orderStatuses = ["NEW", "PREPARING", "READY_FOR_PICKUP_DELIVERY", "COMPLETED", "CANCELLED"];
+            orderStatuses = ["NEW", "PREPARING", "READY", "COMPLETED", "CANCELLED"];
         }
 
         // Build the query
@@ -613,6 +613,264 @@ export const orderRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to load orders",
+        });
+      }
+    }),
+
+  /**
+   * Get orders for a restaurant with pagination, sorting and filtering
+   * Restaurant users can only access their own restaurant's orders
+   */
+  getRestaurantOrders: restaurantProcedure
+    .input(
+      z.object({
+        restaurantId: z.string().cuid("Invalid restaurant ID"),
+        page: z.number().int().positive().default(1),
+        limit: z.number().int().positive().default(10),
+        sortField: z.string().optional().default("createdAt"),
+        sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
+        filters: z
+          .object({
+            orderId: z.string().optional(),
+            status: z.enum(["ALL", "NEW", "PREPARING", "READY", "COMPLETED", "CANCELLED"]).optional(),
+            startDate: z.string().optional(), // ISO date string
+            endDate: z.string().optional(), // ISO date string
+          })
+          .optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const { page, limit, sortField, sortOrder, filters, restaurantId } = input;
+        const skip = (page - 1) * limit;
+        const userId = ctx.session.user.id;
+        
+        // Verify that the user is associated with this restaurant
+        const restaurantManager = await prisma.restaurantManager.findUnique({
+          where: { userId },
+          select: { restaurantId: true },
+        });
+        
+        if (!restaurantManager || restaurantManager.restaurantId !== restaurantId) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot access orders for other restaurants",
+          });
+        }
+        
+        // Build filter conditions
+        const where: any = {
+          restaurantId,
+        };
+        
+        // Apply filters if provided
+        if (filters) {
+          // Filter by order ID (display number)
+          if (filters.orderId) {
+            where.displayOrderNumber = {
+              contains: filters.orderId,
+              mode: 'insensitive',
+            };
+          }
+          
+          // Filter by order status (if not "ALL")
+          if (filters.status && filters.status !== "ALL") {
+            where.status = filters.status;
+          }
+          
+          // Filter by date range
+          if (filters.startDate || filters.endDate) {
+            where.createdAt = {};
+            
+            if (filters.startDate) {
+              where.createdAt.gte = new Date(filters.startDate);
+            }
+            
+            if (filters.endDate) {
+              // Add 1 day to include the end date fully
+              const endDate = new Date(filters.endDate);
+              endDate.setDate(endDate.getDate() + 1);
+              where.createdAt.lt = endDate;
+            }
+          }
+        }
+        
+        // Count total matching orders for pagination
+        const total = await prisma.order.count({ where });
+        
+        // Get paginated orders with customer, restaurant, and order items
+        const orders = await prisma.order.findMany({
+          skip,
+          take: limit,
+          where,
+          orderBy: {
+            [sortField]: sortOrder,
+          },
+          include: {
+            customer: {
+              select: {
+                id: true,
+                phoneNumber: true,
+                address: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    image: true,
+                  }
+                }
+              },
+            },
+            restaurant: {
+              select: {
+                id: true,
+                name: true,
+                imageUrl: true,
+                deliveryFee: true,  // Explicitly include deliveryFee
+              }
+            },
+            orderItems: {
+              include: {
+                menuItem: {
+                  select: {
+                    id: true,
+                    name: true,
+                    description: true,
+                    imageUrl: true,
+                  },
+                },
+              },
+            },
+            paymentTransaction: true,
+          },
+        });
+        
+        // Calculate pagination metadata
+        const totalPages = Math.ceil(total / limit);
+        
+        return {
+          orders,
+          pagination: {
+            total,
+            pageSize: limit,
+            currentPage: page,
+            totalPages,
+          },
+        };
+      } catch (error) {
+        console.error("Error getting restaurant orders:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch restaurant orders",
+          cause: error,
+        });
+      }
+    }),
+    
+  /**
+   * Update order status
+   * Restaurant users can only update status of orders for their own restaurant
+   */
+  updateOrderStatus: restaurantProcedure
+    .input(
+      z.object({
+        orderId: z.string().cuid("Invalid order ID"),
+        status: z.enum(["PLACED", "PREPARING", "DISPATCHED", "DELIVERED", "CANCELLED"]),
+        cancellationReason: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const { orderId, status, cancellationReason } = input;
+        const userId = ctx.session.user.id;
+        
+        // First, get the order to verify it belongs to the restaurant
+        const order = await prisma.order.findUnique({
+          where: { id: orderId },
+          select: {
+            id: true,
+            restaurantId: true,
+          },
+        });
+        
+        if (!order) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Order not found",
+          });
+        }
+        
+        // Verify that the user is associated with this restaurant
+        const restaurantManager = await prisma.restaurantManager.findUnique({
+          where: { userId },
+          select: { restaurantId: true },
+        });
+        
+        if (!restaurantManager || restaurantManager.restaurantId !== order.restaurantId) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot update orders for other restaurants",
+          });
+        }
+        
+        // Prepare update data including status and optional cancellation reason
+        const updateData: any = { 
+          status,
+          // Include cancellation reason only when status is CANCELLED and reason is provided
+          ...(status === "CANCELLED" && cancellationReason 
+            ? { cancellationReason } 
+            : {})
+        };
+        
+        // If changing to a status other than CANCELLED, clear any existing cancellation reason
+        if (status !== "CANCELLED") {
+          updateData.cancellationReason = null;
+        }
+        
+        // Update the order status
+        const updatedOrder = await prisma.order.update({
+          where: { id: orderId },
+          data: updateData,
+          include: {
+            customer: {
+              select: {
+                id: true,
+                phoneNumber: true,
+                address: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    image: true,
+                  }
+                }
+              },
+            },
+            orderItems: {
+              include: {
+                menuItem: {
+                  select: {
+                    id: true,
+                    name: true,
+                    description: true,
+                    imageUrl: true,
+                  },
+                },
+              },
+            },
+            paymentTransaction: true,
+          },
+        });
+        
+        return { success: true, order: updatedOrder };
+      } catch (error) {
+        console.error("Error updating order status:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update order status",
+          cause: error,
         });
       }
     }),

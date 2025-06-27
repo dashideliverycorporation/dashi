@@ -23,10 +23,10 @@ enum UserRole {
 }
 
 enum OrderStatus {
-  NEW
+  PLACED
   PREPARING
-  READY_FOR_PICKUP_DELIVERY
-  COMPLETED
+  DISPATCHED
+  DELIVERED
   CANCELLED
 }
 
@@ -158,10 +158,11 @@ model Order {
   id                  String              @id @default(cuid())
   orderNumber         Int?                // We'll generate this randomly in code
   displayOrderNumber  String              @unique
-  status              OrderStatus         @default(NEW)
+  status              OrderStatus         @default(PLACED)
   totalAmount         Decimal             @db.Decimal(10, 2)
   deliveryAddress     String?
   customerNotes       String?
+  cancellationReason  String?             // Reason for cancellation when status is CANCELLED
   customerId          String
   customer            Customer            @relation(fields: [customerId], references: [id])
   restaurantId        String

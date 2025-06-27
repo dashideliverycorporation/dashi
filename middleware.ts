@@ -2,9 +2,10 @@
  * Middleware to protect routes based on authentication and roles
  *
  * This middleware:
- * 1. Checks user authentication for protected routes
- * 2. Verifies role-based access for admin and restaurant routes
- * 3. Redirects unauthorized users to appropriate pages
+ * 1. Redirects authenticated users with specific roles to their dashboards when visiting the root path
+ * 2. Checks user authentication for protected routes
+ * 3. Verifies role-based access for admin and restaurant routes
+ * 4. Redirects unauthorized users to appropriate pages
  */
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
@@ -23,6 +24,22 @@ const restaurantRequiredPaths = ["/restaurant"];
  */
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // Handle root path redirection for restaurant and admin users
+  if (pathname === "/") {
+    // Get the user token from the session
+    const token = await getToken({ req });
+    
+    // If user is authenticated and has restaurant role, redirect to restaurant dashboard
+    if (token && token.role === "RESTAURANT") {
+      return NextResponse.redirect(new URL("/restaurant", req.url));
+    }
+    
+    // If user is authenticated and has admin role, redirect to admin dashboard
+    if (token && token.role === "ADMIN") {
+      return NextResponse.redirect(new URL("/admin", req.url));
+    }
+  }
 
   // Check if the route needs authentication, admin, or restaurant permission
   const needsAuth = authRequiredPaths.some((path) => pathname.startsWith(path));
@@ -66,6 +83,8 @@ export async function middleware(req: NextRequest) {
 // Configure which routes the middleware should run on
 export const config = {
   matcher: [
+    // Include the root path
+    "/",
     // Apply to all routes in /admin and /restaurant
     "/admin/:path*",
     "/restaurant/:path*",

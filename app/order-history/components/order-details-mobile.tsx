@@ -140,23 +140,23 @@ export default function OrderDetailsMobile({
               <div
                 className={`w-1/4 ${
                   order.status === OrderStatus.PREPARING ||
-                  order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                  order.status === OrderStatus.COMPLETED
+                  order.status === OrderStatus.DISPATCHED ||
+                  order.status === OrderStatus.DELIVERED
                     ? "bg-orange-500"
                     : "bg-gray-300"
                 }`}
               ></div>
               <div
                 className={`w-1/4 ${
-                  order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                  order.status === OrderStatus.COMPLETED
+                  order.status === OrderStatus.DISPATCHED ||
+                  order.status === OrderStatus.DELIVERED
                     ? "bg-orange-500"
                     : "bg-gray-300"
                 }`}
               ></div>
               <div
                 className={`w-1/4 ${
-                  order.status === OrderStatus.COMPLETED
+                  order.status === OrderStatus.DELIVERED
                     ? "bg-orange-500"
                     : "bg-gray-300"
                 }`}
@@ -182,8 +182,8 @@ export default function OrderDetailsMobile({
                 <div
                   className={`w-8 h-8 rounded-full ${
                     order.status === OrderStatus.PREPARING ||
-                    order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                    order.status === OrderStatus.COMPLETED
+                    order.status === OrderStatus.DISPATCHED ||
+                    order.status === OrderStatus.DELIVERED
                       ? "bg-orange-500 text-white"
                       : "bg-white text-gray-500"
                   } flex items-center justify-center mb-1 shadow-sm`}
@@ -199,8 +199,8 @@ export default function OrderDetailsMobile({
               <div className="flex flex-col items-center">
                 <div
                   className={`w-8 h-8 rounded-full ${
-                    order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY ||
-                    order.status === OrderStatus.COMPLETED ||
+                    order.status === OrderStatus.DISPATCHED ||
+                    order.status === OrderStatus.DELIVERED ||
                     order.status === OrderStatus.PREPARING
                       ? "bg-orange-500 text-white"
                       : "bg-white text-gray-500"
@@ -214,7 +214,7 @@ export default function OrderDetailsMobile({
               <div className="flex flex-col items-center">
                 <div
                   className={`w-8 h-8 rounded-full ${
-                    order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY
+                    order.status === OrderStatus.DISPATCHED
                       ? "bg-orange-500 text-white"
                       : "bg-white text-gray-500"
                   } border border-gray-300 flex items-center justify-center mb-1 shadow-sm`}
@@ -227,7 +227,7 @@ export default function OrderDetailsMobile({
               <div className="flex flex-col items-center">
                 <div
                   className={`w-8 h-8 rounded-full ${
-                    order.status === OrderStatus.COMPLETED
+                    order.status === OrderStatus.DELIVERED
                       ? "bg-orange-500 text-white"
                       : "bg-white text-gray-500"
                   } border border-gray-300 flex items-center justify-center mb-1 shadow-sm`}
@@ -300,7 +300,7 @@ export default function OrderDetailsMobile({
         <div className="border-t pt-4 p-4">
           <div className="flex justify-between items-center">
             <span className="font-medium text-sm text-gray-500">{t("orderHistory.subtotal", "Subtotal")}</span>
-            <span className="text-sm">${formatPrice(order.total, 1, -5)}</span>
+            <span className="text-sm">${formatPrice(order.total || order.totalAmount, 1, -5)}</span>
           </div>
           <div className="flex justify-between items-center mt-1">
             <span className="font-medium text-sm text-gray-500">{t("orderHistory.deliveryFee", "Delivery fee")}</span>
@@ -308,7 +308,7 @@ export default function OrderDetailsMobile({
           </div>
           <div className="flex justify-between items-center font-semibold text-medium mt-3">
             <span>{t("orderHistory.total", "Total")}</span>
-            <span>${formatPrice(order.total)}</span>
+            <span>${formatPrice(order.total || order.totalAmount)}</span>
           </div>
         </div>
 

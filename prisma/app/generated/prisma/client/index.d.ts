@@ -83,10 +83,10 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
 export const OrderStatus: {
-  NEW: 'NEW',
+  PLACED: 'PLACED',
   PREPARING: 'PREPARING',
-  READY_FOR_PICKUP_DELIVERY: 'READY_FOR_PICKUP_DELIVERY',
-  COMPLETED: 'COMPLETED',
+  DISPATCHED: 'DISPATCHED',
+  DELIVERED: 'DELIVERED',
   CANCELLED: 'CANCELLED'
 };
 
@@ -11160,6 +11160,7 @@ export namespace Prisma {
     totalAmount: Decimal | null
     deliveryAddress: string | null
     customerNotes: string | null
+    cancellationReason: string | null
     customerId: string | null
     restaurantId: string | null
     createdAt: Date | null
@@ -11174,6 +11175,7 @@ export namespace Prisma {
     totalAmount: Decimal | null
     deliveryAddress: string | null
     customerNotes: string | null
+    cancellationReason: string | null
     customerId: string | null
     restaurantId: string | null
     createdAt: Date | null
@@ -11188,6 +11190,7 @@ export namespace Prisma {
     totalAmount: number
     deliveryAddress: number
     customerNotes: number
+    cancellationReason: number
     customerId: number
     restaurantId: number
     createdAt: number
@@ -11214,6 +11217,7 @@ export namespace Prisma {
     totalAmount?: true
     deliveryAddress?: true
     customerNotes?: true
+    cancellationReason?: true
     customerId?: true
     restaurantId?: true
     createdAt?: true
@@ -11228,6 +11232,7 @@ export namespace Prisma {
     totalAmount?: true
     deliveryAddress?: true
     customerNotes?: true
+    cancellationReason?: true
     customerId?: true
     restaurantId?: true
     createdAt?: true
@@ -11242,6 +11247,7 @@ export namespace Prisma {
     totalAmount?: true
     deliveryAddress?: true
     customerNotes?: true
+    cancellationReason?: true
     customerId?: true
     restaurantId?: true
     createdAt?: true
@@ -11343,6 +11349,7 @@ export namespace Prisma {
     totalAmount: Decimal
     deliveryAddress: string | null
     customerNotes: string | null
+    cancellationReason: string | null
     customerId: string
     restaurantId: string
     createdAt: Date
@@ -11376,6 +11383,7 @@ export namespace Prisma {
     totalAmount?: boolean
     deliveryAddress?: boolean
     customerNotes?: boolean
+    cancellationReason?: boolean
     customerId?: boolean
     restaurantId?: boolean
     createdAt?: boolean
@@ -11395,6 +11403,7 @@ export namespace Prisma {
     totalAmount?: boolean
     deliveryAddress?: boolean
     customerNotes?: boolean
+    cancellationReason?: boolean
     customerId?: boolean
     restaurantId?: boolean
     createdAt?: boolean
@@ -11411,6 +11420,7 @@ export namespace Prisma {
     totalAmount?: boolean
     deliveryAddress?: boolean
     customerNotes?: boolean
+    cancellationReason?: boolean
     customerId?: boolean
     restaurantId?: boolean
     createdAt?: boolean
@@ -11427,13 +11437,14 @@ export namespace Prisma {
     totalAmount?: boolean
     deliveryAddress?: boolean
     customerNotes?: boolean
+    cancellationReason?: boolean
     customerId?: boolean
     restaurantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "displayOrderNumber" | "status" | "totalAmount" | "deliveryAddress" | "customerNotes" | "customerId" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "displayOrderNumber" | "status" | "totalAmount" | "deliveryAddress" | "customerNotes" | "cancellationReason" | "customerId" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
@@ -11466,6 +11477,7 @@ export namespace Prisma {
       totalAmount: Prisma.Decimal
       deliveryAddress: string | null
       customerNotes: string | null
+      cancellationReason: string | null
       customerId: string
       restaurantId: string
       createdAt: Date
@@ -11904,6 +11916,7 @@ export namespace Prisma {
     readonly totalAmount: FieldRef<"Order", 'Decimal'>
     readonly deliveryAddress: FieldRef<"Order", 'String'>
     readonly customerNotes: FieldRef<"Order", 'String'>
+    readonly cancellationReason: FieldRef<"Order", 'String'>
     readonly customerId: FieldRef<"Order", 'String'>
     readonly restaurantId: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
@@ -14830,6 +14843,7 @@ export namespace Prisma {
     totalAmount: 'totalAmount',
     deliveryAddress: 'deliveryAddress',
     customerNotes: 'customerNotes',
+    cancellationReason: 'cancellationReason',
     customerId: 'customerId',
     restaurantId: 'restaurantId',
     createdAt: 'createdAt',
@@ -15661,6 +15675,7 @@ export namespace Prisma {
     totalAmount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     deliveryAddress?: StringNullableFilter<"Order"> | string | null
     customerNotes?: StringNullableFilter<"Order"> | string | null
+    cancellationReason?: StringNullableFilter<"Order"> | string | null
     customerId?: StringFilter<"Order"> | string
     restaurantId?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -15679,6 +15694,7 @@ export namespace Prisma {
     totalAmount?: SortOrder
     deliveryAddress?: SortOrderInput | SortOrder
     customerNotes?: SortOrderInput | SortOrder
+    cancellationReason?: SortOrderInput | SortOrder
     customerId?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
@@ -15700,6 +15716,7 @@ export namespace Prisma {
     totalAmount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     deliveryAddress?: StringNullableFilter<"Order"> | string | null
     customerNotes?: StringNullableFilter<"Order"> | string | null
+    cancellationReason?: StringNullableFilter<"Order"> | string | null
     customerId?: StringFilter<"Order"> | string
     restaurantId?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -15718,6 +15735,7 @@ export namespace Prisma {
     totalAmount?: SortOrder
     deliveryAddress?: SortOrderInput | SortOrder
     customerNotes?: SortOrderInput | SortOrder
+    cancellationReason?: SortOrderInput | SortOrder
     customerId?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
@@ -15740,6 +15758,7 @@ export namespace Prisma {
     totalAmount?: DecimalWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string
     deliveryAddress?: StringNullableWithAggregatesFilter<"Order"> | string | null
     customerNotes?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    cancellationReason?: StringNullableWithAggregatesFilter<"Order"> | string | null
     customerId?: StringWithAggregatesFilter<"Order"> | string
     restaurantId?: StringWithAggregatesFilter<"Order"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -16602,6 +16621,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
@@ -16618,6 +16638,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     customerId: string
     restaurantId: string
     createdAt?: Date | string
@@ -16634,6 +16655,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
@@ -16650,6 +16672,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16666,6 +16689,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     customerId: string
     restaurantId: string
     createdAt?: Date | string
@@ -16680,6 +16704,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16692,6 +16717,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17558,6 +17584,7 @@ export namespace Prisma {
     totalAmount?: SortOrder
     deliveryAddress?: SortOrder
     customerNotes?: SortOrder
+    cancellationReason?: SortOrder
     customerId?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
@@ -17577,6 +17604,7 @@ export namespace Prisma {
     totalAmount?: SortOrder
     deliveryAddress?: SortOrder
     customerNotes?: SortOrder
+    cancellationReason?: SortOrder
     customerId?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
@@ -17591,6 +17619,7 @@ export namespace Prisma {
     totalAmount?: SortOrder
     deliveryAddress?: SortOrder
     customerNotes?: SortOrder
+    cancellationReason?: SortOrder
     customerId?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
@@ -19133,6 +19162,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     restaurant: RestaurantCreateNestedOneWithoutOrdersInput
@@ -19148,6 +19178,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     restaurantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19233,6 +19264,7 @@ export namespace Prisma {
     totalAmount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     deliveryAddress?: StringNullableFilter<"Order"> | string | null
     customerNotes?: StringNullableFilter<"Order"> | string | null
+    cancellationReason?: StringNullableFilter<"Order"> | string | null
     customerId?: StringFilter<"Order"> | string
     restaurantId?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -19469,6 +19501,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
@@ -19484,6 +19517,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     customerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20057,6 +20091,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
@@ -20072,6 +20107,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     customerId: string
     restaurantId: string
     createdAt?: Date | string
@@ -20103,6 +20139,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
@@ -20118,6 +20155,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20133,6 +20171,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
@@ -20148,6 +20187,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     customerId: string
     restaurantId: string
     createdAt?: Date | string
@@ -20212,6 +20252,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
@@ -20227,6 +20268,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20361,6 +20403,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     restaurantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20374,6 +20417,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restaurant?: RestaurantUpdateOneRequiredWithoutOrdersNestedInput
@@ -20389,6 +20433,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20404,6 +20449,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20430,6 +20476,7 @@ export namespace Prisma {
     totalAmount: Decimal | DecimalJsLike | number | string
     deliveryAddress?: string | null
     customerNotes?: string | null
+    cancellationReason?: string | null
     customerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20492,6 +20539,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
@@ -20507,6 +20555,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20522,6 +20571,7 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -280,7 +280,7 @@ async function createSampleOrders() {
       await prisma.order.create({
         data: {
           totalAmount,
-          status: "NEW",
+          status: "PLACED", // Initial status
           customerId: customer.id,
           restaurantId: restaurant.id,
           customerNotes: "Please deliver ASAP. Thank you!",
