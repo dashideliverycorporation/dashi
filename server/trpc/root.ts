@@ -7,6 +7,7 @@ import { exampleRouter } from "./routers/example";
 import { restaurantRouter } from "./routers/restaurant";
 import { userRouter } from "./routers/user";
 import { orderRouter } from "./routers/order";
+import { salesRouter } from "./routers/sales";
 
 /**
  * Main application router
@@ -22,6 +23,7 @@ export const appRouter = router({
   restaurant: restaurantRouter,
   user: userRouter,
   order: orderRouter,
+  sales: salesRouter,
   // Add additional sub-routers as the application grows
   // menu: menuRouter,
 });

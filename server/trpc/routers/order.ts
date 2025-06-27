@@ -6,11 +6,11 @@
  * - Retrieving order information
  * - Updating order status
  */
-import { protectedProcedure, router, restaurantProcedure } from "../trpc";
+import { protectedProcedure, router, restaurantProcedure, adminProcedure } from "../trpc";
 import { prisma } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 import { createOrderSchema } from "@/server/schemas/order.schema";
-import { UserRole, PaymentMethod, PaymentStatus } from "@/prisma/app/generated/prisma/client";
+import { UserRole, PaymentMethod, PaymentStatus, OrderStatus } from "@/prisma/app/generated/prisma/client";
 import { z } from "zod";
 
 /**
@@ -871,6 +871,144 @@ export const orderRouter = router({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to update order status",
           cause: error,
+        });
+      }
+    }),
+
+  /**
+   * Get all orders for admin dashboard
+   * 
+   * This procedure returns all orders across all restaurants with filters, sorting, and pagination.
+   * Only administrators can access this endpoint.
+   */
+  getAllOrders: adminProcedure
+    .input(
+      z.object({
+        page: z.number().int().positive().default(1),
+        limit: z.number().int().positive().max(100).default(10),
+        sortField: z.string().default("createdAt"),
+        sortOrder: z.enum(["asc", "desc"]).default("desc"),
+        filters: z.object({
+          orderId: z.string().optional(),
+          status: z.enum(["ALL", "PLACED", "PREPARING", "DISPATCHED", "DELIVERED", "CANCELLED"]).optional(),
+          restaurantName: z.string().optional(),
+          startDate: z.string().optional(),
+          endDate: z.string().optional()
+        }).optional()
+      })
+    )
+    .query(async ({ input }) => {
+      try {
+        const { page, limit, sortField, sortOrder, filters } = input;
+        const skip = (page - 1) * limit;
+
+        // Build where clause based on filters
+        let where: any = {};
+        
+        if (filters) {
+          // Filter by order ID (display order number)
+          if (filters.orderId) {
+            where.displayOrderNumber = {
+              contains: filters.orderId,
+              mode: 'insensitive'
+            };
+          }
+          
+          // Filter by order status
+          if (filters.status && filters.status !== "ALL") {
+            where.status = filters.status;
+          }
+          
+          // Filter by restaurant name
+          if (filters.restaurantName) {
+            where.restaurant = {
+              name: {
+                contains: filters.restaurantName,
+                mode: 'insensitive'
+              }
+            };
+          }
+
+          // Filter by date range
+          if (filters.startDate) {
+            where.createdAt = {
+              ...where.createdAt,
+              gte: new Date(filters.startDate)
+            };
+          }
+
+          if (filters.endDate) {
+            const endDate = new Date(filters.endDate);
+            endDate.setDate(endDate.getDate() + 1); // Include the entire end date
+
+            where.createdAt = {
+              ...where.createdAt,
+              lt: endDate
+            };
+          }
+        }
+
+        // Execute query with filters, sorting, and pagination
+        const [orders, total] = await Promise.all([
+          prisma.order.findMany({
+            skip,
+            take: limit,
+            where,
+            orderBy: { [sortField]: sortOrder },
+            include: {
+              restaurant: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageUrl: true,
+                  deliveryFee: true
+                }
+              },
+              customer: {
+                include: {
+                  user: {
+                    select: {
+                      id: true,
+                      name: true,
+                      email: true
+                    }
+                  }
+                }
+              },
+              orderItems: {
+                include: {
+                  menuItem: {
+                    select: {
+                      id: true,
+                      name: true,
+                      imageUrl: true
+                    }
+                  }
+                }
+              },
+              paymentTransaction: true
+            }
+          }),
+          prisma.order.count({ where })
+        ]);
+
+        // Calculate pagination metadata
+        const totalPages = Math.ceil(total / limit);
+
+        return {
+          orders,
+          pagination: {
+            total,
+            page,
+            limit,
+            totalPages
+          }
+        };
+      } catch (error) {
+        console.error("Error fetching all orders:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch orders"
         });
       }
     }),
