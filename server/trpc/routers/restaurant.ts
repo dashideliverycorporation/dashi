@@ -6,6 +6,7 @@
  * - Retrieving restaurant information
  * - Updating restaurant details
  * - Managing menu items
+ * - Retrieving restaurant sales data
  */
 import { adminProcedure, restaurantProcedure, router, publicProcedure } from "../trpc";
 import { prisma } from "@/lib/db";
@@ -14,6 +15,7 @@ import { TRPCError } from "@trpc/server";
 import { createRestaurantSchema, updateRestaurantSchema, getRestaurantBySlugSchema } from "@/server/schemas/restaurant.schema";
 import { createMenuItemSchema, updateMenuItemSchema } from "@/server/schemas/menu-item.schema";
 import { z } from "zod";
+import { startOfDay, startOfWeek, startOfMonth, subDays, startOfYear } from "date-fns";
 
 /**
  * Schema for deleting a restaurant
@@ -65,7 +67,7 @@ async function processImageUrl(imageUrl: string, prefix: string = 'image'): Prom
 }
 
 /**
- * Restaurant router with procedures for restaurant management
+ * Restaurant router with all restaurant-related procedures
  */
 export const restaurantRouter = router({
   /**
@@ -890,4 +892,250 @@ export const restaurantRouter = router({
         });
       }
     }),
+    
+  /**
+   * Get sales data for a specific restaurant (restaurant owner only)
+   * Returns paginated sales data for the restaurant associated with the logged-in user
+   */
+  getSales: restaurantProcedure
+    .input(
+      z.object({
+        restaurantId: z.string(),
+        page: z.number().int().positive().default(1),
+        pageSize: z.number().int().positive().default(10),
+        sortField: z.string().default("orderDate"),
+        sortOrder: z.enum(["asc", "desc"]).default("desc"),
+        filters: z.object({
+          orderId: z.string().optional(),
+          period: z.enum(["ALL", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"]).default("ALL"),
+          startDate: z.string().optional(),
+          endDate: z.string().optional(),
+        }).optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const { restaurantId, page, pageSize, sortField, sortOrder, filters } = input;
+        const userId = ctx.session.user.id;
+        const skip = (page - 1) * pageSize;
+        
+        // Handle case where user ID is provided instead of restaurant ID
+        let targetRestaurantId = restaurantId;
+        
+        // Check if the provided ID matches the user's ID rather than a restaurant ID
+        if (restaurantId === userId) {
+          // Look up the restaurant managed by this user
+          const restaurantManager = await prisma.restaurantManager.findUnique({
+            where: { userId },
+            select: { restaurantId: true },
+          });
+          
+          if (!restaurantManager) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "No restaurant found for this user",
+            });
+          }
+          
+          // Use the actual restaurant ID
+          targetRestaurantId = restaurantManager.restaurantId;
+        }
+        
+        // Verify restaurant exists and user is authorized
+        const restaurant = await prisma.restaurant.findUnique({
+          where: { id: targetRestaurantId },
+          include: {
+            managers: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        });
+        
+        if (!restaurant) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Restaurant not found",
+          });
+        }
+        
+        // Check if user is authorized to access this restaurant's data
+        const isAuthorized = restaurant.managers.some(
+          (manager) => manager.userId === userId
+        );
+        
+        if (!isAuthorized) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "You are not authorized to view this restaurant's sales data",
+          });
+        }
+        
+        // Build query conditions
+        const where: any = {
+          restaurantId: targetRestaurantId,
+          status: "DELIVERED", // Only count delivered orders as sales
+        };
+        
+        // Add order ID filter if provided
+        if (filters?.orderId) {
+          where.id = {
+            contains: filters.orderId,
+          };
+        }
+        
+        // Handle date filtering based on period
+        if (filters?.period && filters.period !== "ALL") {
+          let startDate;
+          const now = new Date();
+          
+          switch (filters.period) {
+            case "DAILY":
+              startDate = startOfDay(now);
+              break;
+            case "WEEKLY":
+              startDate = startOfWeek(now, { weekStartsOn: 1 });
+              break;
+            case "MONTHLY":
+              startDate = startOfMonth(now);
+              break;
+            case "YEARLY":
+              startDate = startOfYear(now);
+              break;
+          }
+          
+          if (startDate) {
+            where.createdAt = {
+              gte: startDate,
+            };
+          }
+        } else if (filters?.startDate && filters?.endDate) {
+          where.createdAt = {
+            gte: new Date(filters.startDate),
+            lte: new Date(filters.endDate),
+          };
+        }
+        
+        // Count total orders for pagination
+        const totalOrders = await prisma.order.count({
+          where,
+        });
+        
+        // Get orders with customer details
+        const orders = await prisma.order.findMany({
+          skip,
+          take: pageSize,
+          where,
+          include: {
+            customer: {
+              include: {
+                user: true,
+              }
+            },
+            orderItems: true,
+          },
+          orderBy: sortField === "orderDate" 
+            ? { createdAt: sortOrder }
+            : sortField === "totalAmount"
+            ? { totalAmount: sortOrder }
+            : { createdAt: "desc" },
+        });
+        
+        // Format the orders for the UI
+        const formattedOrders = orders.map(order => ({
+          id: order.id,
+          orderId: order.orderNumber,
+          orderDate: order.createdAt,
+          customerName: order.customer.user.name || 'Customer',
+          itemCount: order.orderItems.length,
+          totalAmount: order.totalAmount.toNumber(),
+          status: order.status, // All will be "DELIVERED" based on our query filter
+        }));
+        
+        // Sort if needed for fields not directly in the DB query
+        if (sortField === "customerName" || sortField === "itemCount") {
+          formattedOrders.sort((a: any, b: any) => {
+            const aValue = a[sortField];
+            const bValue = b[sortField];
+            
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+              return sortOrder === 'asc' 
+                ? aValue.localeCompare(bValue) 
+                : bValue.localeCompare(aValue);
+            }
+            
+            return sortOrder === 'asc' ? (aValue - bValue) : (bValue - aValue);
+          });
+        }
+        
+        // Calculate pagination values
+        const totalPages = Math.ceil(totalOrders / pageSize);
+        
+        // Calculate total sales amount from delivered orders
+        const totalSalesAmount = orders.reduce((sum, order) => sum + order.totalAmount.toNumber(), 0);
+        
+        return {
+          orders: formattedOrders,
+          pagination: {
+            total: totalOrders,
+            totalPages,
+            currentPage: page,
+            perPage: pageSize,
+          },
+          summary: {
+            totalSales: totalSalesAmount,
+            orderCount: orders.length,
+          }
+        };
+      } catch (error) {
+        console.error("Error retrieving restaurant sales data:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to retrieve restaurant sales data",
+        });
+      }
+    }),
+
+  /**
+   * Get the restaurant name for the authenticated manager
+   * Returns the name of the restaurant associated with the logged-in manager
+   */
+  getMyRestaurant: restaurantProcedure.query(async ({ ctx }) => {
+    try {
+      const userId = ctx.session.user.id;
+      
+      // Get the restaurant for the authenticated user
+      const restaurantManager = await prisma.restaurantManager.findUnique({
+        where: { userId },
+        include: {
+          restaurant: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+
+      if (!restaurantManager) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User is not associated with any restaurant",
+        });
+      }
+
+      return {
+        name: restaurantManager.restaurant.name,
+      };
+    } catch (error) {
+      console.error("Error fetching restaurant name:", error);
+      if (error instanceof TRPCError) {
+        throw error;
+      }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to fetch restaurant name",
+      });
+    }
+  }),
 });
