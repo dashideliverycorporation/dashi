@@ -10,6 +10,7 @@ import {
   Menu,
   ShoppingBag,
   Settings,
+  DollarSign,
   X,
 } from "lucide-react";
 import { useState } from "react";
@@ -39,6 +40,11 @@ const navItems: NavItem[] = [
     icon: ShoppingBag,
     label: "Orders",
     href: "/restaurant/orders",
+  },
+  {
+    icon: DollarSign,
+    label: "Sales",
+    href: "/restaurant/sales",
   },
   {
     icon: Settings,

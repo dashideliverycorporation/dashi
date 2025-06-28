@@ -39,13 +39,13 @@ export default function OrderConfirmationPage() {
   // Calculate progress percentage based on order status
   const getProgressPercentage = (status: OrderStatus) => {
     switch (status) {
-      case OrderStatus.NEW:
+      case OrderStatus.PLACED:
         return 25;
       case OrderStatus.PREPARING:
         return 50;
-      case OrderStatus.READY_FOR_PICKUP_DELIVERY:
+      case OrderStatus.DISPATCHED:
         return 75;
-      case OrderStatus.COMPLETED:
+      case OrderStatus.DELIVERED:
         return 100;
       default:
         return 25;
@@ -135,34 +135,34 @@ export default function OrderConfirmationPage() {
             {/* Progress step indicators */}
             <div className="flex justify-between text-xs text-gray-500 mb-6">
               <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 ${data.order.status === OrderStatus.NEW || data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY || data.order.status === OrderStatus.COMPLETED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
-                  <Store className={`w-4 h-4 ${data.order.status === OrderStatus.NEW || data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY || data.order.status === OrderStatus.COMPLETED ? 'text-orange-500' : 'text-gray-500'}`} />
+                <div className={`w-8 h-8 ${data.order.status === OrderStatus.PLACED || data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
+                  <Store className={`w-4 h-4 ${data.order.status === OrderStatus.PLACED || data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500' : 'text-gray-500'}`} />
                 </div>
-                <span className={`${data.order.status === OrderStatus.NEW || data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY || data.order.status === OrderStatus.COMPLETED ? 'text-orange-500 font-medium' : ''}`}>
+                <span className={`${data.order.status === OrderStatus.PLACED || data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500 font-medium' : ''}`}>
                   {t("order.received", "Received")}
                 </span>
               </div>
               <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 ${data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY || data.order.status === OrderStatus.COMPLETED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
-                  <ChefHat className={`w-4 h-4 ${data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY || data.order.status === OrderStatus.COMPLETED ? 'text-orange-500' : 'text-gray-500'}`} />
+                <div className={`w-8 h-8 ${data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
+                  <ChefHat className={`w-4 h-4 ${data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500' : 'text-gray-500'}`} />
                 </div>
-                <span className={`${data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY || data.order.status === OrderStatus.COMPLETED ? 'text-orange-500 font-medium' : ''}`}>
+                <span className={`${data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500 font-medium' : ''}`}>
                   {t("order.preparing", "Preparing")}
                 </span>
               </div>
               <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 ${data.order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY || data.order.status === OrderStatus.COMPLETED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
-                  <Truck className={`w-4 h-4 ${data.order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY || data.order.status === OrderStatus.COMPLETED ? 'text-orange-500' : 'text-gray-500'}`} />
+                <div className={`w-8 h-8 ${data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
+                  <Truck className={`w-4 h-4 ${data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500' : 'text-gray-500'}`} />
                 </div>
-                <span className={`${data.order.status === OrderStatus.READY_FOR_PICKUP_DELIVERY || data.order.status === OrderStatus.COMPLETED ? 'text-orange-500 font-medium' : ''}`}>
+                <span className={`${data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500 font-medium' : ''}`}>
                   {t("order.onTheWay", "On the way")}
                 </span>
               </div>
               <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 ${data.order.status === OrderStatus.COMPLETED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
-                  <Package className={`w-4 h-4 ${data.order.status === OrderStatus.COMPLETED ? 'text-orange-500' : 'text-gray-500'}`} />
+                <div className={`w-8 h-8 ${data.order.status === OrderStatus.DELIVERED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
+                  <Package className={`w-4 h-4 ${data.order.status === OrderStatus.DELIVERED ? 'text-orange-500' : 'text-gray-500'}`} />
                 </div>
-                <span className={`${data.order.status === OrderStatus.COMPLETED ? 'text-orange-500 font-medium' : ''}`}>
+                <span className={`${data.order.status === OrderStatus.DELIVERED ? 'text-orange-500 font-medium' : ''}`}>
                   {t("order.delivered", "Delivered")}
                 </span>
               </div>

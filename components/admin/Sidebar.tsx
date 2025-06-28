@@ -11,6 +11,7 @@ import {
   Users,
   PieChart,
   X,
+  ShoppingBag,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,11 @@ const navItems: NavItem[] = [
     icon: Building2,
     label: "Restaurants",
     href: "/admin/restaurants",
+  },
+  {
+    icon: ShoppingBag,
+    label: "Orders",
+    href: "/admin/orders",
   },
   {
     icon: Users,

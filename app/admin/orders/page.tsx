@@ -1,8 +1,7 @@
-
 /**
- * Admin Users Page
+ * Admin Orders Page
  *
- * Displays a list of all users with options to add and manage user accounts
+ * Displays a list of all orders across all restaurants
  * This is a protected route that only admin users can access
  */
 "use client";
@@ -11,18 +10,17 @@ import { useEffect, useState, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import OrdersTable from "./components/orders-table";
 import { useTranslation } from "@/hooks/useTranslation";
-import UsersTable from "./components/users-table"
-import { JSX } from "react/jsx-runtime";
 
 /**
- * Admin Users Page Component
+ * Admin Orders Page Component
  *
- * Displays a list of users with options to add and manage user accounts
+ * Displays all orders across all restaurants
  *
- * @returns {JSX.Element} The user management page
+ * @returns {JSX.Element} The admin orders page
  */
-export default function UsersPage(): JSX.Element {
+export default function AdminOrdersPage() {
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
@@ -50,17 +48,17 @@ export default function UsersPage(): JSX.Element {
   }
 
   return (
-    <div className="space-y-6 bg-background p-6 md:p-8 rounded-md min-h-screen">
+    <div className="space-y-6 bg-background p-6 md:p-8 rounded-md min-h-screen">      
       {isLoading ? (
         <div className="w-full space-y-4">
           <div className="rounded-lg border">
             <div className="p-1">
               {/* Table header skeleton */}
               <div className="flex items-center p-4 bg-muted-foreground/5">
-                {[1, 2, 3, 4, 5].map((i) => (
+                {[1, 2, 3, 4, 5, 6, 7].map((i) => (
                   <div
                     key={i}
-                    className={`flex-1 ${i === 5 ? "flex-0 w-16" : ""}`}
+                    className={`flex-1 ${i === 7 ? "flex-0 w-16" : ""}`}
                   >
                     <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
                   </div>
@@ -70,16 +68,17 @@ export default function UsersPage(): JSX.Element {
               {/* Table rows skeleton */}
               {[1, 2, 3, 4, 5].map((row) => (
                 <div key={row} className="flex items-center p-4 border-t">
-                  {[1, 2, 3, 4, 5].map((cell) => (
+                  {[1, 2, 3, 4, 5, 6, 7].map((cell) => (
                     <div
                       key={`${row}-${cell}`}
-                      className={`flex-1 ${cell === 5 ? "flex-0 w-16" : ""}`}
+                      className={`flex-1 ${cell === 7 ? "flex-0 w-16" : ""}`}
                     >
                       <Skeleton
                         className={`h-5 bg-muted-foreground/5 ${
                           cell === 1 ? "w-24" : 
                           cell === 2 ? "w-32" : 
                           cell === 3 ? "w-20" : 
+                          cell === 4 ? "w-28" :
                           "w-16"
                         }`}
                       />
@@ -92,7 +91,7 @@ export default function UsersPage(): JSX.Element {
         </div>
       ) : (
         <Suspense fallback={<div className="py-8 text-center">{t("common.loading", "Loading...")}</div>}>
-          <UsersTable />
+          <OrdersTable />
         </Suspense>
       )}
     </div>

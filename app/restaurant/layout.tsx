@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Header } from "@/components/restaurant/Header";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { trpc } from "@/lib/trpc/client";
 
 export default function RestaurantLayout({
   children,
@@ -27,8 +28,16 @@ export default function RestaurantLayout({
     redirect("/denied");
   }
 
-  // Extract restaurant name from session
-  const restaurantName = session?.user?.name || "Restaurant Dashboard";
+  // Fetch restaurant name using tRPC
+  const { data: restaurantData} = trpc.restaurant.getMyRestaurant.useQuery(
+    undefined,
+    {
+      enabled: !!session?.user && session.user.role === "RESTAURANT",
+    }
+  );
+
+  // Extract restaurant name from tRPC query or fallback
+  const restaurantName = restaurantData?.name || session?.user?.name || "Restaurant Dashboard";
 
   return (
     <div className="flex h-screen">

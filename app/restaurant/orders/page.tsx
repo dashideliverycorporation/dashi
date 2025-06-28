@@ -1,9 +1,8 @@
-
 /**
- * Admin Users Page
+ * Restaurant Orders Page
  *
- * Displays a list of all users with options to add and manage user accounts
- * This is a protected route that only admin users can access
+ * Displays a list of orders for the logged-in restaurant
+ * This is a protected route that only restaurant users can access
  */
 "use client";
 
@@ -11,42 +10,53 @@ import { useEffect, useState, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTranslation } from "@/hooks/useTranslation";
-import UsersTable from "./components/users-table"
-import { JSX } from "react/jsx-runtime";
+import OrdersTable from "./components/orders-table";
 
 /**
- * Admin Users Page Component
+ * Restaurant Orders Page Component
  *
- * Displays a list of users with options to add and manage user accounts
+ * Displays all orders for the logged-in restaurant
  *
- * @returns {JSX.Element} The user management page
+ * @returns {JSX.Element} The restaurant orders page
  */
-export default function UsersPage(): JSX.Element {
+export default function RestaurantOrdersPage() {
   const { data: session, status } = useSession();
+  const [restaurantId, setRestaurantId] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { t } = useTranslation();
   
-  // Check if user is authenticated and has admin role
+  // Check if user is authenticated and get their restaurant ID
   useEffect(() => {
     if (status === "authenticated") {
-      if (session.user.role !== "ADMIN") {
-        redirect("/denied");
+      if (session.user.role !== "RESTAURANT") {
+        redirect("/denied-restaurant");
       }
       
-      // Simulate loading state for initial load
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      // Fetch the restaurant ID for the authenticated restaurant user
+      const fetchRestaurantId = async () => {
+        try {
+          const result = await fetch("/api/auth/restaurant-id");
+          const data = await result.json();
+          if (data.restaurantId) {
+            setRestaurantId(data.restaurantId);
+            // For the placeholder, we'll simulate a loading state
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 1500);
+          }
+        } catch (error) {
+          console.error("Error fetching restaurant ID:", error);
+          setIsLoading(false);
+        }
+      };
       
-      return () => clearTimeout(timer);
+      fetchRestaurantId();
     } else if (status === "unauthenticated") {
       redirect("/signin");
     }
   }, [session, status]);
 
   if (status === "loading") {
-    return <div className="py-8 text-center">{t("common.loading")}</div>;
+    return <div>Loading...</div>;
   }
 
   return (
@@ -57,6 +67,9 @@ export default function UsersPage(): JSX.Element {
             <div className="p-1">
               {/* Table header skeleton */}
               <div className="flex items-center p-4 bg-muted-foreground/5">
+                <div className="flex-0 w-16">
+                  <Skeleton className="h-5 w-10 bg-muted-foreground/5" />
+                </div>
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div
                     key={i}
@@ -70,6 +83,9 @@ export default function UsersPage(): JSX.Element {
               {/* Table rows skeleton */}
               {[1, 2, 3, 4, 5].map((row) => (
                 <div key={row} className="flex items-center p-4 border-t">
+                  <div className="flex-0 w-16">
+                    <Skeleton className="h-5 w-10 bg-muted-foreground/5" />
+                  </div>
                   {[1, 2, 3, 4, 5].map((cell) => (
                     <div
                       key={`${row}-${cell}`}
@@ -80,6 +96,7 @@ export default function UsersPage(): JSX.Element {
                           cell === 1 ? "w-24" : 
                           cell === 2 ? "w-32" : 
                           cell === 3 ? "w-20" : 
+                          cell === 4 ? "w-28" :
                           "w-16"
                         }`}
                       />
@@ -91,8 +108,12 @@ export default function UsersPage(): JSX.Element {
           </div>
         </div>
       ) : (
-        <Suspense fallback={<div className="py-8 text-center">{t("common.loading", "Loading...")}</div>}>
-          <UsersTable />
+        <Suspense
+          fallback={
+            <div className="py-8 text-center">Loading orders...</div>
+          }
+        >
+          <OrdersTable restaurantId={restaurantId} />
         </Suspense>
       )}
     </div>

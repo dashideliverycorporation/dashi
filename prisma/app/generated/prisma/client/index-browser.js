@@ -221,6 +221,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   totalAmount: 'totalAmount',
   deliveryAddress: 'deliveryAddress',
   customerNotes: 'customerNotes',
+  cancellationReason: 'cancellationReason',
   customerId: 'customerId',
   restaurantId: 'restaurantId',
   createdAt: 'createdAt',
@@ -274,10 +275,10 @@ exports.UserRole = exports.$Enums.UserRole = {
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {
-  NEW: 'NEW',
+  PLACED: 'PLACED',
   PREPARING: 'PREPARING',
-  READY_FOR_PICKUP_DELIVERY: 'READY_FOR_PICKUP_DELIVERY',
-  COMPLETED: 'COMPLETED',
+  DISPATCHED: 'DISPATCHED',
+  DELIVERED: 'DELIVERED',
   CANCELLED: 'CANCELLED'
 };
 

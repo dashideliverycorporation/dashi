@@ -62,22 +62,25 @@ const formatPrice = (price: any, quantity: number = 1): string => {
  * Status badge component with appropriate colors
  * Uses translation for status text and applies appropriate styling
  */
-const StatusBadge = ({ status }: { status: OrderStatus }) => {
+const StatusBadge = ({ status }: { status: OrderStatus | string }) => {
   const { t } = useTranslation();
   // Update variant type to match what Badge component accepts
   let variant: "default" | "secondary" | "outline" | "destructive" = "default";
 
-  switch (status) {
-    case "NEW":
+  // Ensure status is treated as a string for the switch statement
+  const statusString = String(status);
+  
+  switch (statusString) {
+    case "PLACED":
       variant = "default"; // Primary color (orange)
       break;
     case "PREPARING":
       variant = "secondary"; // Gray
       break;
-    case "READY_FOR_PICKUP_DELIVERY":
+    case "DISPATCHED":
       variant = "outline"; // Using outline instead of success
       break;
-    case "COMPLETED":
+    case "DELIVERED":
       variant = "outline"; // Using outline instead of success
       break;
     case "CANCELLED":
@@ -86,20 +89,23 @@ const StatusBadge = ({ status }: { status: OrderStatus }) => {
   }
 
   // Display appropriate status text
-  const getStatusText = (status: OrderStatus) => {
-    switch (status) {
-      case "READY_FOR_PICKUP_DELIVERY":
-        return t("orderHistory.status.ready", "READY");
-      case "NEW":
-        return t("orderHistory.status.new", "NEW");
+  const getStatusText = (status: OrderStatus | string): string => {
+    // Ensure status is treated as a string for the switch statement
+    const statusStr = String(status);
+    
+    switch (statusStr) {
+      case "DISPATCHED":
+        return t("orderHistory.status.dispatched", "DISPATCHED");
+      case "PLACED":
+        return t("orderHistory.status.placed", "PLACED");
       case "PREPARING":
         return t("orderHistory.status.preparing", "PREPARING");
-      case "COMPLETED":
-        return t("orderHistory.status.completed", "COMPLETED");
+      case "DELIVERED":
+        return t("orderHistory.status.delivered", "DELIVERED");
       case "CANCELLED":
         return t("orderHistory.status.cancelled", "CANCELLED");
       default:
-        return status;
+        return String(status);
     }
   };
 
@@ -168,7 +174,23 @@ export default function OrderHistoryPage() {
 
   // No need for manual refetch as the query key (activeFilter) change will trigger a refetch
 
-  const orders = data?.orders || [];
+  // Normalize orders to ensure both total and totalAmount properties exist
+  // and cast status to OrderStatus to satisfy TypeScript
+  const orders = (data?.orders || []).map(order => {
+    // Create a properly typed normalized order object with both fields
+    const normalizedOrder = {
+      ...order,
+      // If order has total but not totalAmount, copy total to totalAmount
+      // If order has neither, both will be undefined which is handled by formatPrice
+      total: order.total,
+      // Type assertion used because we know we're adding this property
+      totalAmount: order.total,
+      // Ensure status is treated as OrderStatus enum
+      status: order.status as OrderStatus
+    } as Order;
+    
+    return normalizedOrder;
+  });
 
   // Format date according to user's locale
   const formatDate = (date: Date) => {
@@ -425,7 +447,7 @@ export default function OrderHistoryPage() {
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">{t("orderHistory.total", "Total")}</span>
                           <span className="font-bold text-lg">
-                            ${formatPrice(order.total)}
+                            ${formatPrice(order.total || order.totalAmount)}
                           </span>
                         </div>
                       </div>
