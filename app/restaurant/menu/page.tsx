@@ -19,6 +19,7 @@ import {
 import MenuTable from "./components/menu-table";
 import { trpc } from "@/lib/trpc/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "@/hooks/useTranslation";
 
 /**
  * Restaurant Menu Page Component
@@ -30,6 +31,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function RestaurantMenuPage() {
   const { data: session, status } = useSession();
   const [restaurantId, setRestaurantId] = useState<string>("");
+  const { t, i18n } = useTranslation();
+
+  // Ensure translations are ready to avoid hydration mismatch
+  const isTranslationReady = i18n.isInitialized && i18n.hasLoadedNamespace('common');
+
+  // Helper function to get translated text with fallback
+  const getTranslation = (key: string, fallback: string): string => {
+    if (!isTranslationReady) {
+      return fallback;
+    }
+    const translated = t(key);
+    // If translation returns the key itself, use fallback
+    return translated === key ? fallback : translated;
+  };
   
   // Check if user is authenticated and get their restaurant ID
   useEffect(() => {
@@ -80,12 +95,13 @@ export default function RestaurantMenuPage() {
     menuItemsCheck.pagination.total > 0;
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <div>{getTranslation('restaurantMenu.loading', 'Loading...')}</div>;
   }
 
-  return (
-    <div className="space-y-6 bg-background p-6 md:p-8 rounded-md min-h-screen">
-      {isLoading ? (
+  // Show loading skeleton while checking for menu items
+  if (isLoading || !restaurantId) {
+    return (
+      <div className="space-y-6 bg-background p-6 md:p-8 rounded-md min-h-screen">
         <div className="w-full space-y-4">
           <div className="rounded-lg border">
             <div className="p-1">
@@ -133,10 +149,17 @@ export default function RestaurantMenuPage() {
             </div>
           </div>
         </div>
-      ) : hasMenuItems ? (
+      </div>
+    );
+  }
+
+  // After loading is complete, show either the menu items or empty state
+  return (
+    <div className="space-y-6 bg-background p-6 md:p-8 rounded-md min-h-screen">
+      {hasMenuItems ? (
         <Suspense
           fallback={
-            <div className="py-8 text-center">Loading menu items...</div>
+            <div className="py-8 text-center">{getTranslation('restaurantMenu.loadingMenuItems', 'Loading menu items...')}</div>
           }
         >
           <MenuTable restaurantId={restaurantId} />
@@ -144,15 +167,14 @@ export default function RestaurantMenuPage() {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Menu Items</CardTitle>
+            <CardTitle>{getTranslation('restaurantMenu.title', 'Menu Items')}</CardTitle>
             <CardDescription>
-              View and manage your restaurant&apos;s menu items
+              {getTranslation('restaurantMenu.description', "View and manage your restaurant's menu items")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground text-sm">
-              No menu items added yet. Click the &quot;Add Menu Item&quot;
-              button to add your first menu item.
+              {getTranslation('restaurantMenu.noMenuItems', 'No menu items added yet. Click the "Add Menu Item" button to add your first menu item.')}
             </p>
           </CardContent>
         </Card>

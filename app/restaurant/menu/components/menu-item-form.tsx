@@ -24,6 +24,7 @@ import type { CreateMenuItemInput, UpdateMenuItemInput } from "@/server/schemas/
 import { toastNotification } from "@/components/custom/toast-notification";
 import { JSX } from "react/jsx-runtime";
 import Image from "next/image";
+import { useTranslation } from "@/hooks/useTranslation";
 
 /**
  * Menu Item Form Component
@@ -50,6 +51,7 @@ export function MenuItemForm({
   onSuccess?: () => void;
 }): JSX.Element {
   const router = useRouter();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -102,8 +104,8 @@ export function MenuItemForm({
   const createMenuItemMutation = trpc.restaurant.createMenuItem.useMutation({
     onSuccess: () => {
       toastNotification.success(
-        "Menu item created successfully",
-        "Your new menu item has been added to the menu"
+        t("restaurantMenu.form.success.created.title"),
+        t("restaurantMenu.form.success.created.message")
       );
       setIsLoading(false);
       // Reset form
@@ -121,8 +123,8 @@ export function MenuItemForm({
     },
     onError: (error) => {
       toastNotification.error(
-        "Failed to create menu item",
-        error.message || "An unexpected error occurred. Please try again."
+        t("restaurantMenu.form.error.create.title"),
+        error.message || t("restaurantMenu.form.error.create.defaultMessage")
       );
       setIsLoading(false);
     },
@@ -134,8 +136,8 @@ export function MenuItemForm({
   const updateMenuItemMutation = trpc.restaurant.updateMenuItem.useMutation({
     onSuccess: () => {
       toastNotification.success(
-        "Menu item updated successfully",
-        "Your menu item has been updated"
+        t("restaurantMenu.form.success.updated.title"),
+        t("restaurantMenu.form.success.updated.message")
       );
       setIsLoading(false);
 
@@ -151,8 +153,8 @@ export function MenuItemForm({
     },
     onError: (error) => {
       toastNotification.error(
-        "Failed to update menu item",
-        error.message || "An unexpected error occurred. Please try again."
+        t("restaurantMenu.form.error.update.title"),
+        error.message || t("restaurantMenu.form.error.update.defaultMessage")
       );
       setIsLoading(false);
     },
@@ -194,8 +196,8 @@ export function MenuItemForm({
       setIsLoading(false);
       console.error("Error submitting form:", err);
       toastNotification.error(
-        "Something went wrong",
-        "An unexpected error occurred while processing your request."
+        t("restaurantMenu.form.error.general.title"),
+        t("restaurantMenu.form.error.general.message")
       );
     }
   };
@@ -216,8 +218,8 @@ export function MenuItemForm({
     // Check file size (limit to 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toastNotification.error(
-        "File too large",
-        "Image must be less than 5MB. Please select a smaller file."
+        t("restaurantMenu.form.fields.image.fileTooLarge"),
+        t("restaurantMenu.form.fields.image.fileTooLargeMessage")
       );
       return;
     }
@@ -247,25 +249,23 @@ export function MenuItemForm({
   return (
     <div className="max-w-2xl">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="text-sm text-muted-foreground mb-4">
-            Fields marked with <span className="text-red-500">*</span> are
-            required.
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <div className="text-xs text-muted-foreground mb-3">
+            {t("restaurantMenu.form.requiredFieldsNote")} <span className="text-red-500">*</span>
           </div>
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  Name <span className="text-red-500">*</span>
+                <FormLabel className="text-sm">
+                  {t("restaurantMenu.form.fields.name.label")} <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Chicken Burger" {...field} />
+                  <Input className="text-sm h-9" placeholder={t("restaurantMenu.form.fields.name.placeholder")} {...field} />
                 </FormControl>
-                <FormDescription>
-                  Enter the name of the menu item as it should appear on the
-                  menu.
+                <FormDescription className="text-xs">
+                  {t("restaurantMenu.form.fields.name.description")}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -276,34 +276,35 @@ export function MenuItemForm({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel className="text-sm">{t("restaurantMenu.form.fields.description.label")}</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Delicious chicken burger with lettuce, tomato, and special sauce"
-                    className="resize-none min-h-[100px]"
+                    placeholder={t("restaurantMenu.form.fields.description.placeholder")}
+                    className="resize-none min-h-[80px] text-sm"
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  Provide a brief description of the menu item (optional).
+                <FormDescription className="text-xs">
+                  {t("restaurantMenu.form.fields.description.description")}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <FormField
               control={form.control}
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Price (USD) <span className="text-red-500">*</span>
+                  <FormLabel className="text-sm">
+                    {t("restaurantMenu.form.fields.price.label")} <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="5"
+                      className="text-sm h-9"
+                      placeholder={t("restaurantMenu.form.fields.price.placeholder")}
                       value={
                         field.value === 0 &&
                         !document.activeElement?.id?.includes("price")
@@ -317,8 +318,8 @@ export function MenuItemForm({
                       }
                     />
                   </FormControl>
-                  <FormDescription>
-                    Enter the price in (USD) currency.
+                  <FormDescription className="text-xs">
+                    {t("restaurantMenu.form.fields.price.description")}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -330,17 +331,18 @@ export function MenuItemForm({
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Category <span className="text-red-500">*</span>
+                  <FormLabel className="text-sm">
+                    {t("restaurantMenu.form.fields.category.label")} <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Burgers, Pizza, Dessert, etc."
+                      className="text-sm h-9"
+                      placeholder={t("restaurantMenu.form.fields.category.placeholder")}
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Category to group this item under.
+                  <FormDescription className="text-xs">
+                    {t("restaurantMenu.form.fields.category.description")}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -352,14 +354,14 @@ export function MenuItemForm({
             name="imageUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  Image <span className="text-red-500">*</span>
+                <FormLabel className="text-sm">
+                  {t("restaurantMenu.form.fields.image.label")} <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input type="hidden" {...field} />
-                </FormControl>{" "}
+                </FormControl>
                 <div
-                  className="border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors min-h-[120px]"
+                  className="border-2 border-dashed rounded-lg p-3 flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors min-h-[100px]"
                   onClick={triggerFileInput}
                 >
                   <input
@@ -373,17 +375,17 @@ export function MenuItemForm({
 
                   {!imagePreview ? (
                     <>
-                      <Upload className="h-8 w-8 text-gray-400 mb-1" />
-                      <div className="text-orange-500 font-medium">
-                        Upload a file
+                      <Upload className="h-6 w-6 text-gray-400 mb-1" />
+                      <div className="text-orange-500 font-medium text-sm">
+                        {t("restaurantMenu.form.fields.image.uploadText")}
                       </div>
                       <div className="text-xs text-gray-500">
-                        PNG, JPG, GIF up to 5MB
+                        {t("restaurantMenu.form.fields.image.fileTypes")}
                       </div>
                     </>
                   ) : (
-                    <div className="w-full flex items-center gap-4">
-                      <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden">
+                    <div className="w-full flex items-center gap-3">
+                      <div className="relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden">
                         <Image
                           src={imagePreview}
                           alt="Menu item preview"
@@ -393,18 +395,18 @@ export function MenuItemForm({
                       </div>
                       <div className="flex-1 flex flex-col">
                         <p className="text-sm font-medium truncate">
-                          Image Selected
+                          {t("restaurantMenu.form.fields.image.imageSelected")}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          Click to change image
+                          {t("restaurantMenu.form.fields.image.changeImage")}
                         </p>
                       </div>
-                      <Upload className="h-5 w-5 text-muted-foreground" />
+                      <Upload className="h-4 w-4 text-muted-foreground" />
                     </div>
                   )}
                 </div>
-                <FormDescription>
-                  Click the box to upload an image of your menu item.
+                <FormDescription className="text-xs">
+                  {t("restaurantMenu.form.fields.image.description")}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -414,7 +416,7 @@ export function MenuItemForm({
             control={form.control}
             name="available"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -422,18 +424,17 @@ export function MenuItemForm({
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel>Available</FormLabel>
-                  <FormDescription>
-                    Is this item currently available for order? If unchecked,
-                    the item won&apos;t be shown to customers.
+                  <FormLabel className="text-sm">{t("restaurantMenu.form.fields.available.label")}</FormLabel>
+                  <FormDescription className="text-xs">
+                    {t("restaurantMenu.form.fields.available.description")}
                   </FormDescription>
                 </div>
               </FormItem>
             )}
           />
-          <div className="flex items-center justify-end gap-4 pt-4">
+          <div className="flex items-center justify-end gap-3 pt-4">
             <Button
-              className="cursor-pointer"
+              className="cursor-pointer h-9 text-sm"
               type="button"
               variant="outline"
               onClick={() => {
@@ -442,19 +443,20 @@ export function MenuItemForm({
               }}
               disabled={isLoading}
             >
-              Cancel
-            </Button>              <Button
-              className="cursor-pointer"
+              {t("restaurantMenu.form.buttons.cancel")}
+            </Button>
+            <Button
+              className="cursor-pointer h-9 text-sm"
               type="submit"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {isEditing ? "Updating..." : "Creating..."}
+                  <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                  {isEditing ? t("restaurantMenu.form.buttons.updating") : t("restaurantMenu.form.buttons.creating")}
                 </>
               ) : (
-                isEditing ? "Update Menu Item" : "Create Menu Item"
+                isEditing ? t("restaurantMenu.form.buttons.update") : t("restaurantMenu.form.buttons.create")
               )}
             </Button>
           </div>

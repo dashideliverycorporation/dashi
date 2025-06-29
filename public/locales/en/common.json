@@ -1,7 +1,22 @@
 {
   "app": {
     "name": "Dashi",
-    "tagline": "Delicious food, delivered"
+        "update": "Update",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "loading": "Loading...",
+    "required": "Required",
+    "optional": "Optional",
+    "yes": "Yes",
+    "no": "No"
   },
   "home": {
     "heroTitle": "Delicious Food Delivered To Your Door",
@@ -247,7 +262,9 @@
     "completeOrder": "Complete Order"
   },
   "orders": {
+    "loading": "Loading orders...",
     "orderDetails": "Order Details",
+    "orderNumber": "Order",
     "currentStatus": "Current Status",
     "selectStatus": "Select Status",
     "updateStatus": "Update Status",
@@ -278,6 +295,51 @@
     "paymentStatus": "Status",
     "noPaymentInfo": "No payment information available",
     "customerNotes": "Customer Notes",
+    "title": "Orders",
+    "allStatuses": "All Statuses",
+    "filterByStatus": "Filter by status",
+    "searchByOrderId": "Search by Order ID...",
+    "clearFilters": "Clear Filters",
+    "clearAllFilters": "Clear all filters",
+    "summaryCards": {
+      "placed": "Placed",
+      "preparing": "Preparing", 
+      "dispatched": "Dispatched",
+      "delivered": "Delivered"
+    },
+    "mobileLabels": {
+      "customer": "Customer:",
+      "items": "Items:",
+      "total": "Total:"
+    },
+    "noOrdersFound": "No orders found",
+    "noOrdersFilter": "No orders match your current filters",
+    "noOrdersYet": "No orders have been placed yet",
+    "viewDetails": "View Details",
+    "unknownItem": "Unknown Item",
+    "unknownRestaurant": "Unknown Restaurant",
+    "table": {
+      "orderId": "Order ID",
+      "status": "Status",
+      "customer": "Customer",
+      "anonymous": "Anonymous",
+      "items": "Items",
+      "oneItem": "1 item",
+      "multipleItems": "{{count}} items",
+      "total": "Total",
+      "placedAt": "Placed At",
+      "actions": "Actions"
+    },
+    "pagination": {
+      "showing": "Showing",
+      "of": "of",
+      "orders": "orders",
+      "page": "Page",
+      "firstPage": "First page",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "lastPage": "Last page"
+    },
     "statusOptions": {
       "placed": "Placed",
       "preparing": "Preparing",
@@ -341,5 +403,232 @@
       "description": "You don't have any failed or cancelled orders."
     },
     "errorLoading": "Failed to load orders. Please try again later."
+  },
+  "restaurantDashboard": {
+    "title": "Restaurant Dashboard",
+    "menuItems": "Menu Items",
+    "activeOrders": "Active Orders",
+    "todaysOrders": "Today's Orders",
+    "customers": "Customers",
+    "menuItemsDescription": "Manage your menu items",
+    "activeOrdersDescription": "Orders being prepared",
+    "todaysOrdersDescription": "Orders placed today",
+    "customersDescription": "Customers this month",
+    "monthlySales": "Monthly Sales",
+    "monthlySalesDescription": "Your restaurant's sales performance this month",
+    "totalSales": "Total Sales",
+    "ordersCompleted": "Orders Completed",
+    "averageOrderValue": "Average Order Value",
+    "commissionSummary": "Commission Summary",
+    "commissionSummaryDescription": "Platform commission (10% of sales)",
+    "commissionRate": "Commission Rate",
+    "commissionOwed": "Commission Owed",
+    "commissionNote": "Commission is calculated automatically and will be collected via the agreed payment method.",
+    "errorLoading": "Error loading dashboard:"
+  },
+  "restaurantSidebar": {
+    "dashboard": "Dashboard",
+    "menu": "Menu",
+    "orders": "Orders",
+    "sales": "Sales",
+    "settings": "Settings",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar",
+    "version": "Dashi Restaurant v1.0"
+  },
+  "restaurantMenu": {
+    "title": "Menu Items",
+    "description": "View and manage your restaurant's menu items",
+    "loading": "Loading...",
+    "loadingMenuItems": "Loading menu items...",
+    "noMenuItems": "No menu items added yet. Click the \"Add Menu Item\" button to add your first menu item.",
+    "addMenuItemButton": "Add Menu Item",
+    "table": {
+      "image": "Image",
+      "itemName": "Item Name",
+      "category": "Category",
+      "description": "Description",
+      "price": "Price",
+      "available": "Available",
+      "created": "Created",
+      "actions": "Actions",
+      "noImage": "No image",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "search": {
+      "placeholder": "Search by name...",
+      "button": "Search",
+      "clear": "Clear",
+      "clearFilter": "Clear filter"
+    },
+    "pagination": {
+      "showing": "Showing",
+      "of": "of",
+      "menuItems": "menu items",
+      "page": "Page",
+      "firstPage": "First page",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "lastPage": "Last page"
+    },
+    "empty": {
+      "title": "No menu items found",
+      "noItems": "No menu items have been added to this restaurant yet.",
+      "noMatches": "No menu items match the filter"
+    },
+    "error": {
+      "title": "Error Loading Menu Items",
+      "message": "Failed to load menu item data"
+    },
+    "status": {
+      "available": "Available",
+      "unavailable": "Unavailable"
+    },
+    "delete": {
+      "title": "Delete Menu Item",
+      "description": "Are you sure you want to delete",
+      "cannotUndo": "? This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "success": {
+        "title": "Menu item deleted",
+        "message": "has been removed from your menu."
+      },
+      "error": {
+        "title": "Error deleting menu item",
+        "message": "Failed to delete menu item. Please try again."
+      }
+    },
+    "form": {
+      "title": "Menu Item Form",
+      "createTitle": "Create Menu Item",
+      "editTitle": "Edit Menu Item",
+      "requiredFieldsNote": "Fields marked with * are required.",
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Chicken Burger",
+          "description": "Enter the name of the menu item as it should appear on the menu."
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Delicious chicken burger with lettuce, tomato, and special sauce",
+          "description": "Provide a brief description of the menu item (optional)."
+        },
+        "price": {
+          "label": "Price (USD)",
+          "placeholder": "5",
+          "description": "Enter the price in (USD) currency."
+        },
+        "category": {
+          "label": "Category",
+          "placeholder": "Burgers, Pizza, Dessert, etc.",
+          "description": "Category to group this item under."
+        },
+        "image": {
+          "label": "Image",
+          "description": "Click the box to upload an image of your menu item.",
+          "uploadText": "Upload a file",
+          "fileTypes": "PNG, JPG, GIF up to 5MB",
+          "imageSelected": "Image Selected",
+          "changeImage": "Click to change image",
+          "fileTooLarge": "File too large",
+          "fileTooLargeMessage": "Image must be less than 5MB. Please select a smaller file."
+        },
+        "available": {
+          "label": "Available",
+          "description": "Is this item currently available for order? If unchecked, the item won't be shown to customers."
+        }
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "create": "Create Menu Item",
+        "update": "Update Menu Item",
+        "creating": "Creating...",
+        "updating": "Updating..."
+      },
+      "success": {
+        "created": {
+          "title": "Menu item created successfully",
+          "message": "Your new menu item has been added to the menu"
+        },
+        "updated": {
+          "title": "Menu item updated successfully",
+          "message": "Your menu item has been updated"
+        }
+      },
+      "error": {
+        "create": {
+          "title": "Failed to create menu item",
+          "defaultMessage": "An unexpected error occurred. Please try again."
+        },
+        "update": {
+          "title": "Failed to update menu item",
+          "defaultMessage": "An unexpected error occurred. Please try again."
+        },
+        "general": {
+          "title": "Something went wrong",
+          "message": "An unexpected error occurred while processing your request."
+        }
+      }
+    }
+  },
+  "restaurantSales": {
+    "loadingSalesData": "Loading sales data...",
+    "title": "Restaurant Sales",
+    "searchByOrderId": "Search by Order ID...",
+    "clearFilters": "Clear Filters",
+    "period": "Period",
+    "filterByPeriod": "Filter by period",
+    "periods": {
+      "allTime": "All Time",
+      "today": "Today",
+      "thisWeek": "This Week",
+      "thisMonth": "This Month",
+      "last30Days": "Last 30 Days"
+    },
+    "table": {
+      "orderId": "Order ID",
+      "date": "Date",
+      "customer": "Customer",
+      "items": "Items",
+      "amount": "Amount"
+    },
+    "summaryCards": {
+      "totalSales": "Total Sales",
+      "totalOrders": "Total Orders",
+      "averageOrder": "Average Order",
+      "commission": "Commission (10%)"
+    },
+    "orderNumber": "Order",
+    "mobileLabels": {
+      "customer": "Customer",
+      "items": "Items"
+    },
+    "itemSingular": "item",
+    "itemsPlural": "items",
+    "noSalesDataFound": "No sales data found",
+    "noSalesDataMatches": "No sales data matches your current filters",
+    "noSalesDataRecorded": "No sales data has been recorded yet",
+    "clearAllFilters": "Clear all filters",
+    "pagination": {
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "results": "results",
+      "page": "Page",
+      "firstPage": "First page",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "lastPage": "Last page"
+    },
+    "error": {
+      "unableToLoad": "Unable to load sales data",
+      "restaurantInfoNotAvailable": "Your restaurant information is not available. Please try refreshing or contact support."
+    }
   }
 }

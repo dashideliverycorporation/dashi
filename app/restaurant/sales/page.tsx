@@ -10,7 +10,9 @@ import { useEffect, useState, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
 import RestaurantSalesTable from "./components/sales-table";
+import { useTranslation } from "@/hooks/useTranslation";
 
 /**
  * Restaurant Sales Page Component
@@ -22,6 +24,7 @@ import RestaurantSalesTable from "./components/sales-table";
 export default function RestaurantSalesPage() {
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { t } = useTranslation();
   
   // Check if user is authenticated and has restaurant role
   useEffect(() => {
@@ -40,7 +43,7 @@ export default function RestaurantSalesPage() {
   }, [session, status]);
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <div>{t('common.loading')}</div>;
   }
 
   return (
@@ -48,7 +51,18 @@ export default function RestaurantSalesPage() {
       
       {isLoading ? (
         <div className="w-full space-y-4">
-          <div className="rounded-lg border">
+          {/* Header skeleton */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <Skeleton className="h-8 w-32" />
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <Skeleton className="h-10 w-full md:w-[180px]" />
+              <Skeleton className="h-10 w-full md:w-80" />
+              <Skeleton className="h-10 w-full md:w-32" />
+            </div>
+          </div>
+
+          {/* Desktop table skeleton - only show on md and larger screens */}
+          <div className="hidden md:block rounded-lg border">
             <div className="p-1">
               {/* Table header skeleton */}
               <div className="flex items-center p-4 bg-muted-foreground/5">
@@ -90,11 +104,37 @@ export default function RestaurantSalesPage() {
               ))}
             </div>
           </div>
+
+          {/* Mobile cards skeleton - only show on mobile screens */}
+          <div className="md:hidden space-y-3">
+            {[1, 2, 3, 4, 5].map((card) => (
+              <Card key={card}>
+                <CardContent className="p-3">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-start">
+                      <Skeleton className="h-4 w-20" />
+                      <Skeleton className="h-5 w-16 rounded-full" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Skeleton className="h-3 w-28" />
+                      <Skeleton className="h-3 w-16" />
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-3 w-32" />
+                    </div>
+                    <div className="flex space-x-2 pt-2">
+                      <Skeleton className="h-7 w-20" />
+                      <Skeleton className="h-7 w-28" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       ) : (
         <Suspense
           fallback={
-            <div className="py-8 text-center">Loading sales data...</div>
+            <div className="py-8 text-center">{t('restaurantSales.loadingSalesData')}</div>
           }
         >
           <RestaurantSalesTable />

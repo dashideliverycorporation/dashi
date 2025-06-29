@@ -12,6 +12,9 @@ import { useSession } from "next-auth/react";
 // tRPC
 import { trpc } from "@/lib/trpc/client";
 
+// Hooks
+import { useTranslation } from "@/hooks/useTranslation";
+
 // UI Components
 import {
   Table,
@@ -94,6 +97,9 @@ export default function RestaurantSalesTable({
   const { data: session } = useSession();
   const restaurantId = session?.user?.id;
   
+  // Translation hook
+  const { t } = useTranslation();
+  
   // Debug logging for session data
   console.log("Session data:", session);
   console.log("Using user ID as restaurant ID:", restaurantId);
@@ -115,35 +121,35 @@ export default function RestaurantSalesTable({
     {
       id: "orderId",
       accessorKey: "orderId",
-      header: "Order ID",
+      header: t("restaurantSales.table.orderId"),
       cell: (info) => <span className="font-medium">#{info.getValue()}</span>,
       enableSorting: true,
     },
     {
       id: "orderDate",
       accessorKey: "orderDate",
-      header: "Date",
+      header: t("restaurantSales.table.date"),
       cell: (info) => new Date(info.getValue()).toLocaleDateString(),
       enableSorting: true,
     },
     {
       id: "customerName",
       accessorKey: "customerName",
-      header: "Customer",
+      header: t("restaurantSales.table.customer"),
       cell: (info) => info.getValue(),
       enableSorting: true,
     },
     {
       id: "itemCount",
       accessorKey: "itemCount",
-      header: "Items",
+      header: t("restaurantSales.table.items"),
       cell: (info) => info.getValue(),
       enableSorting: true,
     },
     {
       id: "totalAmount",
       accessorKey: "totalAmount",
-      header: "Amount",
+      header: t("restaurantSales.table.amount"),
       cell: (info) => `$${Number(info.getValue()).toFixed(2)}`,
       enableSorting: true,
     },
@@ -156,9 +162,9 @@ export default function RestaurantSalesTable({
         <div className="flex justify-center items-center mb-4">
           <Calendar className="h-12 w-12 text-muted-foreground" />
         </div>
-        <h3 className="text-xl font-medium">Unable to load sales data</h3>
+        <h3 className="text-xl font-medium">{t("restaurantSales.error.unableToLoad")}</h3>
         <p className="mt-2 text-muted-foreground mx-auto max-w-md text-center">
-          Your restaurant information is not available. Please try refreshing or contact support.
+          {t("restaurantSales.error.restaurantInfoNotAvailable")}
         </p>
       </div>
     );
@@ -337,7 +343,7 @@ export default function RestaurantSalesTable({
   return (
     <div className="w-full space-y-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-xl font-semibold">Restaurant Sales</h2>
+        <h2 className="text-xl font-semibold">{t("restaurantSales.title")}</h2>
         
         <div className="flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex w-full md:w-auto">
@@ -350,14 +356,14 @@ export default function RestaurantSalesTable({
             >
               <Input
                 type="text"
-                placeholder="Search by Order ID..."
+                placeholder={t("restaurantSales.searchByOrderId")}
                 value={filterInputValue}
                 onChange={(e) => setFilterInputValue(e.target.value)}
                 className="w-full"
               />
               <Button type="submit" variant="outline" className="cursor-pointer">
                 <Search className="h-4 w-4" />
-                <span className="sr-only">Search</span>
+                <span className="sr-only">{t("common.search")}</span>
               </Button>
             </form>
   
@@ -369,7 +375,7 @@ export default function RestaurantSalesTable({
                 onClick={clearFilter}
                 className="ml-2"
               >
-                Clear Filters
+                {t("restaurantSales.clearFilters")}
               </Button>
             )}
           </div>
@@ -377,21 +383,21 @@ export default function RestaurantSalesTable({
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Period:</span>
+              <span className="text-sm font-medium">{t("restaurantSales.period")}:</span>
             </div>
             <Select
               value={filters.period || "ALL"}
               onValueChange={handlePeriodChange}
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by period" />
+                <SelectValue placeholder={t("restaurantSales.filterByPeriod")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">All Time</SelectItem>
-                <SelectItem value="TODAY">Today</SelectItem>
-                <SelectItem value="THIS_WEEK">This Week</SelectItem>
-                <SelectItem value="THIS_MONTH">This Month</SelectItem>
-                <SelectItem value="LAST_30_DAYS">Last 30 Days</SelectItem>
+                <SelectItem value="ALL">{t("restaurantSales.periods.allTime")}</SelectItem>
+                <SelectItem value="TODAY">{t("restaurantSales.periods.today")}</SelectItem>
+                <SelectItem value="THIS_WEEK">{t("restaurantSales.periods.thisWeek")}</SelectItem>
+                <SelectItem value="THIS_MONTH">{t("restaurantSales.periods.thisMonth")}</SelectItem>
+                <SelectItem value="LAST_30_DAYS">{t("restaurantSales.periods.last30Days")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -403,8 +409,8 @@ export default function RestaurantSalesTable({
         <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-blue-600 font-medium">Total Sales</p>
-              <p className="text-2xl font-bold">
+              <p className="text-blue-600 font-medium">{t("restaurantSales.summaryCards.totalSales")}</p>
+              <p className="text-xl font-bold">
                 ${totalSales.toFixed(2)}
               </p>
             </div>
@@ -416,8 +422,8 @@ export default function RestaurantSalesTable({
         <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-yellow-600 font-medium">Total Orders</p>
-              <p className="text-2xl font-bold">{orderCount}</p>
+              <p className="text-yellow-600 font-medium">{t("restaurantSales.summaryCards.totalOrders")}</p>
+              <p className="text-xl font-bold">{orderCount}</p>
             </div>
             <div className="bg-yellow-100 p-2 rounded-full">
               <ShoppingBag className="h-5 w-5 text-yellow-600" />
@@ -427,8 +433,8 @@ export default function RestaurantSalesTable({
         <div className="bg-green-50 p-4 rounded-lg border border-green-100">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-green-600 font-medium">Average Order</p>
-              <p className="text-2xl font-bold">
+              <p className="text-green-600 font-medium">{t("restaurantSales.summaryCards.averageOrder")}</p>
+              <p className="text-xl font-bold">
                 ${averageOrderValue.toFixed(2)}
               </p>
             </div>
@@ -440,8 +446,8 @@ export default function RestaurantSalesTable({
         <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-purple-600 font-medium">Commission (10%)</p>
-              <p className="text-2xl font-bold">
+              <p className="text-purple-600 font-medium">{t("restaurantSales.summaryCards.commission")}</p>
+              <p className="text-xl font-bold">
                 ${commission.toFixed(2)}
               </p>
             </div>
@@ -515,11 +521,11 @@ export default function RestaurantSalesTable({
           <div className="flex justify-center items-center mb-4">
             <Calendar className="h-12 w-12 text-muted-foreground" />
           </div>
-          <h3 className="text-xl font-medium">No sales data found</h3>
+          <h3 className="text-xl font-medium">{t("restaurantSales.noSalesDataFound")}</h3>
           <p className="mt-2 text-muted-foreground mx-auto max-w-md text-center">
             {isFiltering
-              ? "No sales data matches your current filters"
-              : "No sales data has been recorded yet"}
+              ? t("restaurantSales.noSalesDataMatches")
+              : t("restaurantSales.noSalesDataRecorded")}
           </p>
           {isFiltering && (
             <Button
@@ -528,7 +534,7 @@ export default function RestaurantSalesTable({
               size="sm"
               onClick={clearFilter}
             >
-              Clear all filters
+              {t("restaurantSales.clearAllFilters")}
             </Button>
           )}
         </div>
@@ -584,7 +590,7 @@ export default function RestaurantSalesTable({
                     {/* Sale header */}
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="font-medium text-sm">Order #{sale.orderId}</h3>
+                        <h3 className="font-medium text-sm">{t("restaurantSales.orderNumber")} #{sale.orderId}</h3>
                         <p className="text-xs text-muted-foreground mt-1">
                           {new Date(sale.orderDate).toLocaleDateString()}
                         </p>
@@ -599,12 +605,12 @@ export default function RestaurantSalesTable({
                     {/* Sale details */}
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Customer:</span>
+                        <span className="text-muted-foreground">{t("restaurantSales.mobileLabels.customer")}:</span>
                         <span>{sale.customerName}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Items:</span>
-                        <span>{sale.itemCount} item{sale.itemCount !== 1 ? 's' : ''}</span>
+                        <span className="text-muted-foreground">{t("restaurantSales.mobileLabels.items")}:</span>
+                        <span>{sale.itemCount} {sale.itemCount !== 1 ? t("restaurantSales.itemsPlural") : t("restaurantSales.itemSingular")}</span>
                       </div>
                     </div>
                   </div>
@@ -616,19 +622,19 @@ export default function RestaurantSalesTable({
           {/* Pagination controls */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="text-sm text-muted-foreground">
-              Showing{" "}
+              {t("restaurantSales.pagination.showing")}{" "}
               <span className="font-medium">
                 {tableData.sales.length > 0
                   ? (page - 1) * pageSize + 1
                   : 0}
               </span>
-              {" to "}
+              {" "}{t("restaurantSales.pagination.to")}{" "}
               <span className="font-medium">
                 {Math.min(page * pageSize, totalOrders)}
               </span>{" "}
-              of{" "}
+              {t("restaurantSales.pagination.of")}{" "}
               <span className="font-medium">{totalOrders}</span>{" "}
-              results
+              {t("restaurantSales.pagination.results")}
             </div>
             
             <div className="flex items-center justify-center sm:justify-end space-x-2">
@@ -640,7 +646,7 @@ export default function RestaurantSalesTable({
                 className="hidden sm:flex"
               >
                 <ChevronsLeft className="h-4 w-4" />
-                <span className="sr-only">First page</span>
+                <span className="sr-only">{t("restaurantSales.pagination.firstPage")}</span>
               </Button>
               <Button
                 variant="outline"
@@ -649,11 +655,11 @@ export default function RestaurantSalesTable({
                 disabled={page === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Previous page</span>
+                <span className="sr-only">{t("restaurantSales.pagination.previousPage")}</span>
               </Button>
               <div className="flex items-center">
                 <span className="text-sm font-medium">
-                  Page {page} of {totalPages}
+                  {t("restaurantSales.pagination.page")} {page} {t("restaurantSales.pagination.of")} {totalPages}
                 </span>
               </div>
               <Button
@@ -663,7 +669,7 @@ export default function RestaurantSalesTable({
                 disabled={page >= totalPages}
               >
                 <ChevronRight className="h-4 w-4" />
-                <span className="sr-only">Next page</span>
+                <span className="sr-only">{t("restaurantSales.pagination.nextPage")}</span>
               </Button>
               <Button
                 variant="outline"
@@ -673,7 +679,7 @@ export default function RestaurantSalesTable({
                 className="hidden sm:flex"
               >
                 <ChevronsRight className="h-4 w-4" />
-                <span className="sr-only">Last page</span>
+                <span className="sr-only">{t("restaurantSales.pagination.lastPage")}</span>
               </Button>
             </div>
           </div>

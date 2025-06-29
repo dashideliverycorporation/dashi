@@ -44,6 +44,7 @@ import type { MenuItemWithCategory } from "@/types/menu";
 
 // Components
 import { DeleteMenuItemButton } from "./delete-menu-item-button";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // Type definitions
 interface MenuItemTableColumn {
@@ -84,6 +85,21 @@ export default function MenuTable({
   initialFilter = "",
   restaurantId,
 }: MenuTableProps) {
+  const { t, i18n } = useTranslation();
+
+  // Ensure translations are ready to avoid hydration mismatch
+  const isTranslationReady = i18n.isInitialized && i18n.hasLoadedNamespace('common');
+
+  // Helper function to get translated text with fallback
+  const getTranslation = (key: string, fallback: string): string => {
+    if (!isTranslationReady) {
+      return fallback;
+    }
+    const translated = t(key);
+    // If translation returns the key itself, use fallback
+    return translated === key ? fallback : translated;
+  };
+
   // Router for URL manipulation
   const router = useRouter();
   const pathname = usePathname();
@@ -104,7 +120,7 @@ export default function MenuTable({
     {
       id: "image",
       accessorKey: "imageUrl",
-      header: "Image",
+      header: getTranslation('restaurantMenu.table.image', 'Image'),
       cell: (info) => {
         const imageUrl = info.getValue() as string | null;
         return (
@@ -119,7 +135,7 @@ export default function MenuTable({
               />
             ) : (
               <div className="h-full w-full bg-muted flex items-center justify-center text-muted-foreground">
-                <span className="text-xs">No image</span>
+                <span className="text-xs">{getTranslation('restaurantMenu.table.noImage', 'No image')}</span>
               </div>
             )}
           </div>
@@ -130,13 +146,13 @@ export default function MenuTable({
     {
       id: "name",
       accessorKey: "name",
-      header: "Item Name",
+      header: getTranslation('restaurantMenu.table.itemName', 'Item Name'),
       enableSorting: true,
     },
     {
       id: "category",
       accessorKey: "category",
-      header: "Category",
+      header: getTranslation('restaurantMenu.table.category', 'Category'),
       cell: (info) => {
         const category = info.getValue() as string;
         return category || "—";
@@ -146,7 +162,7 @@ export default function MenuTable({
     {
       id: "description",
       accessorKey: "description",
-      header: "Description",
+      header: getTranslation('restaurantMenu.table.description', 'Description'),
       cell: (info) => {
         const value = info.getValue() || "—";
         return (
@@ -160,7 +176,7 @@ export default function MenuTable({
     {
       id: "price",
       accessorKey: "price",
-      header: "Price",
+      header: getTranslation('restaurantMenu.table.price', 'Price'),
       cell: (info) => {
         const value = info.getValue();
         // Handle different possible types for price (string, number, or Decimal)
@@ -177,12 +193,12 @@ export default function MenuTable({
     {
       id: "available",
       accessorKey: "isAvailable",
-      header: "Available",
+      header: getTranslation('restaurantMenu.table.available', 'Available'),
       cell: (info) => {
         const isAvailable = info.getValue() as boolean;
         return (
           <div className={`font-medium ${isAvailable ? 'text-green-600' : 'text-red-600'}`}>
-            {isAvailable ? "Yes" : "No"}
+            {isAvailable ? getTranslation('restaurantMenu.table.yes', 'Yes') : getTranslation('restaurantMenu.table.no', 'No')}
           </div>
         );
       },
@@ -191,7 +207,7 @@ export default function MenuTable({
     {
       id: "createdAt",
       accessorKey: "createdAt",
-      header: "Created",
+      header: getTranslation('restaurantMenu.table.created', 'Created'),
       cell: (info) =>
         format(new Date(info.getValue() as string), "MMM d, yyyy"),
       enableSorting: true,
@@ -199,7 +215,7 @@ export default function MenuTable({
     {
       id: "actions",
       accessorKey: "id",
-      header: "Actions",
+      header: getTranslation('restaurantMenu.table.actions', 'Actions'),
       cell: (info) => {
         const menuItem = info.row.original as MenuItemWithCategory;
         return (
@@ -387,14 +403,14 @@ export default function MenuTable({
     return (
       <div className="w-full space-y-4">
         <div className="flex justify-between">
-          <h2 className="text-xl font-semibold">Menu Items</h2>
+          <h2 className="text-xl font-semibold">{getTranslation('restaurantMenu.title', 'Menu Items')}</h2>
         </div>
         <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center">
           <h3 className="text-lg font-medium text-destructive">
-            Error Loading Menu Items
+            {getTranslation('restaurantMenu.error.title', 'Error Loading Menu Items')}
           </h3>
           <p className="mt-2 text-muted-foreground">
-            {error?.message || "Failed to load menu item data"}
+            {error?.message || getTranslation('restaurantMenu.error.message', 'Failed to load menu item data')}
           </p>
         </div>
       </div>
@@ -404,7 +420,7 @@ export default function MenuTable({
   return (
     <div className="w-full space-y-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-xl font-semibold">Menu Items</h2>
+        <h2 className="text-xl font-semibold">{getTranslation('restaurantMenu.title', 'Menu Items')}</h2>
 
         {/* Filter form */}
         <div className="flex w-full md:w-auto">
@@ -414,14 +430,14 @@ export default function MenuTable({
           >
             <Input
               type="text"
-              placeholder="Search by name..."
+              placeholder={getTranslation('restaurantMenu.search.placeholder', 'Search by name...')}
               value={filterInputValue}
               onChange={(e) => setFilterInputValue(e.target.value)}
               className="w-full"
             />
             <Button type="submit" variant="outline" className="cursor-pointer">
               <Search className="h-4 w-4" />
-              <span className="sr-only">Search</span>
+              <span className="sr-only">{getTranslation('restaurantMenu.search.button', 'Search')}</span>
             </Button>
             {isFiltering && (
               <Button
@@ -430,7 +446,7 @@ export default function MenuTable({
                 size="sm"
                 onClick={clearFilter}
               >
-                Clear
+                {getTranslation('restaurantMenu.search.clear', 'Clear')}
               </Button>
             )}
           </form>
@@ -456,11 +472,11 @@ export default function MenuTable({
               className="mx-auto"
             />
           </div>
-          <h3 className="text-xl font-medium">No menu items found</h3>
+          <h3 className="text-xl font-medium">{getTranslation('restaurantMenu.empty.title', 'No menu items found')}</h3>
           <p className="mt-2 text-muted-foreground max-w-md">
             {isFiltering
-              ? `No menu items match the filter "${filters.name}"`
-              : "No menu items have been added to this restaurant yet."}
+              ? `${getTranslation('restaurantMenu.empty.noMatches', 'No menu items match the filter')} "${filters.name}"`
+              : getTranslation('restaurantMenu.empty.noItems', 'No menu items have been added to this restaurant yet.')}
           </p>
           {isFiltering && (
             <Button
@@ -469,7 +485,7 @@ export default function MenuTable({
               size="sm"
               onClick={clearFilter}
             >
-              Clear filter
+              {getTranslation('restaurantMenu.search.clearFilter', 'Clear filter')}
             </Button>
           )}
         </div>
@@ -582,7 +598,7 @@ export default function MenuTable({
                           />
                         ) : (
                           <div className="h-full w-full bg-muted flex items-center justify-center text-muted-foreground">
-                            <span className="text-xs">No image</span>
+                            <span className="text-xs">{getTranslation('restaurantMenu.table.noImage', 'No image')}</span>
                           </div>
                         )}
                       </div>
@@ -603,7 +619,7 @@ export default function MenuTable({
                               variant={menuItem.isAvailable ? "default" : "destructive"}
                               className="text-xs"
                             >
-                              {menuItem.isAvailable ? "Available" : "Unavailable"}
+                              {menuItem.isAvailable ? getTranslation('restaurantMenu.status.available', 'Available') : getTranslation('restaurantMenu.status.unavailable', 'Unavailable')}
                             </Badge>
                           </div>
                         </div>
@@ -656,7 +672,7 @@ export default function MenuTable({
           {/* Pagination controls */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="text-sm text-muted-foreground">
-              Showing {start}–{end} of {total} menu items
+              {getTranslation('restaurantMenu.pagination.showing', 'Showing')} {start}–{end} {getTranslation('restaurantMenu.pagination.of', 'of')} {total} {getTranslation('restaurantMenu.pagination.menuItems', 'menu items')}
             </div>
             <div className="flex items-center justify-center sm:justify-end space-x-2">
               <Button
@@ -667,7 +683,7 @@ export default function MenuTable({
                 className="hidden sm:flex"
               >
                 <ChevronsLeft className="h-4 w-4" />
-                <span className="sr-only">First page</span>
+                <span className="sr-only">{getTranslation('restaurantMenu.pagination.firstPage', 'First page')}</span>
               </Button>
               <Button
                 variant="outline"
@@ -676,11 +692,11 @@ export default function MenuTable({
                 disabled={page === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Previous page</span>
+                <span className="sr-only">{getTranslation('restaurantMenu.pagination.previousPage', 'Previous page')}</span>
               </Button>
               <div className="flex items-center">
                 <span className="text-sm font-medium">
-                  Page {page} of {totalPages}
+                  {getTranslation('restaurantMenu.pagination.page', 'Page')} {page} {getTranslation('restaurantMenu.pagination.of', 'of')} {totalPages}
                 </span>
               </div>
               <Button
@@ -690,7 +706,7 @@ export default function MenuTable({
                 disabled={page >= totalPages}
               >
                 <ChevronRight className="h-4 w-4" />
-                <span className="sr-only">Next page</span>
+                <span className="sr-only">{getTranslation('restaurantMenu.pagination.nextPage', 'Next page')}</span>
               </Button>
               <Button
                 variant="outline"
@@ -700,7 +716,7 @@ export default function MenuTable({
                 className="hidden sm:flex"
               >
                 <ChevronsRight className="h-4 w-4" />
-                <span className="sr-only">Last page</span>
+                <span className="sr-only">{getTranslation('restaurantMenu.pagination.lastPage', 'Last page')}</span>
               </Button>
             </div>
           </div>
