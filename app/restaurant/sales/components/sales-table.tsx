@@ -12,6 +12,9 @@ import { useSession } from "next-auth/react";
 // tRPC
 import { trpc } from "@/lib/trpc/client";
 
+// Hooks
+import { useTranslation } from "@/hooks/useTranslation";
+
 // UI Components
 import {
   Table,
@@ -31,6 +34,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ChevronLeft,
   ChevronRight,
@@ -92,6 +97,9 @@ export default function RestaurantSalesTable({
   const { data: session } = useSession();
   const restaurantId = session?.user?.id;
   
+  // Translation hook
+  const { t } = useTranslation();
+  
   // Debug logging for session data
   console.log("Session data:", session);
   console.log("Using user ID as restaurant ID:", restaurantId);
@@ -113,36 +121,36 @@ export default function RestaurantSalesTable({
     {
       id: "orderId",
       accessorKey: "orderId",
-      header: "Order ID",
+      header: t("restaurantSales.table.orderId"),
       cell: (info) => <span className="font-medium">#{info.getValue()}</span>,
       enableSorting: true,
     },
     {
       id: "orderDate",
       accessorKey: "orderDate",
-      header: "Date",
+      header: t("restaurantSales.table.date"),
       cell: (info) => new Date(info.getValue()).toLocaleDateString(),
       enableSorting: true,
     },
     {
       id: "customerName",
       accessorKey: "customerName",
-      header: "Customer",
+      header: t("restaurantSales.table.customer"),
       cell: (info) => info.getValue(),
       enableSorting: true,
     },
     {
       id: "itemCount",
       accessorKey: "itemCount",
-      header: "Items",
+      header: t("restaurantSales.table.items"),
       cell: (info) => info.getValue(),
       enableSorting: true,
     },
     {
       id: "totalAmount",
       accessorKey: "totalAmount",
-      header: "Amount",
-      cell: (info) => `$${parseFloat(info.getValue()).toFixed(2)}`,
+      header: t("restaurantSales.table.amount"),
+      cell: (info) => `$${Number(info.getValue()).toFixed(2)}`,
       enableSorting: true,
     },
   ];
@@ -154,9 +162,9 @@ export default function RestaurantSalesTable({
         <div className="flex justify-center items-center mb-4">
           <Calendar className="h-12 w-12 text-muted-foreground" />
         </div>
-        <h3 className="text-xl font-medium">Unable to load sales data</h3>
+        <h3 className="text-xl font-medium">{t("restaurantSales.error.unableToLoad")}</h3>
         <p className="mt-2 text-muted-foreground mx-auto max-w-md text-center">
-          Your restaurant information is not available. Please try refreshing or contact support.
+          {t("restaurantSales.error.restaurantInfoNotAvailable")}
         </p>
       </div>
     );
@@ -335,7 +343,7 @@ export default function RestaurantSalesTable({
   return (
     <div className="w-full space-y-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-xl font-semibold">Restaurant Sales</h2>
+        <h2 className="text-xl font-semibold">{t("restaurantSales.title")}</h2>
         
         <div className="flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex w-full md:w-auto">
@@ -348,14 +356,14 @@ export default function RestaurantSalesTable({
             >
               <Input
                 type="text"
-                placeholder="Search by Order ID..."
+                placeholder={t("restaurantSales.searchByOrderId")}
                 value={filterInputValue}
                 onChange={(e) => setFilterInputValue(e.target.value)}
                 className="w-full"
               />
               <Button type="submit" variant="outline" className="cursor-pointer">
                 <Search className="h-4 w-4" />
-                <span className="sr-only">Search</span>
+                <span className="sr-only">{t("common.search")}</span>
               </Button>
             </form>
   
@@ -367,7 +375,7 @@ export default function RestaurantSalesTable({
                 onClick={clearFilter}
                 className="ml-2"
               >
-                Clear Filters
+                {t("restaurantSales.clearFilters")}
               </Button>
             )}
           </div>
@@ -375,21 +383,21 @@ export default function RestaurantSalesTable({
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Period:</span>
+              <span className="text-sm font-medium">{t("restaurantSales.period")}:</span>
             </div>
             <Select
               value={filters.period || "ALL"}
               onValueChange={handlePeriodChange}
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by period" />
+                <SelectValue placeholder={t("restaurantSales.filterByPeriod")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">All Time</SelectItem>
-                <SelectItem value="TODAY">Today</SelectItem>
-                <SelectItem value="THIS_WEEK">This Week</SelectItem>
-                <SelectItem value="THIS_MONTH">This Month</SelectItem>
-                <SelectItem value="LAST_30_DAYS">Last 30 Days</SelectItem>
+                <SelectItem value="ALL">{t("restaurantSales.periods.allTime")}</SelectItem>
+                <SelectItem value="TODAY">{t("restaurantSales.periods.today")}</SelectItem>
+                <SelectItem value="THIS_WEEK">{t("restaurantSales.periods.thisWeek")}</SelectItem>
+                <SelectItem value="THIS_MONTH">{t("restaurantSales.periods.thisMonth")}</SelectItem>
+                <SelectItem value="LAST_30_DAYS">{t("restaurantSales.periods.last30Days")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -401,8 +409,8 @@ export default function RestaurantSalesTable({
         <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-blue-600 font-medium">Total Sales</p>
-              <p className="text-2xl font-bold">
+              <p className="text-blue-600 font-medium">{t("restaurantSales.summaryCards.totalSales")}</p>
+              <p className="text-xl font-bold">
                 ${totalSales.toFixed(2)}
               </p>
             </div>
@@ -414,8 +422,8 @@ export default function RestaurantSalesTable({
         <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-yellow-600 font-medium">Total Orders</p>
-              <p className="text-2xl font-bold">{orderCount}</p>
+              <p className="text-yellow-600 font-medium">{t("restaurantSales.summaryCards.totalOrders")}</p>
+              <p className="text-xl font-bold">{orderCount}</p>
             </div>
             <div className="bg-yellow-100 p-2 rounded-full">
               <ShoppingBag className="h-5 w-5 text-yellow-600" />
@@ -425,8 +433,8 @@ export default function RestaurantSalesTable({
         <div className="bg-green-50 p-4 rounded-lg border border-green-100">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-green-600 font-medium">Average Order</p>
-              <p className="text-2xl font-bold">
+              <p className="text-green-600 font-medium">{t("restaurantSales.summaryCards.averageOrder")}</p>
+              <p className="text-xl font-bold">
                 ${averageOrderValue.toFixed(2)}
               </p>
             </div>
@@ -438,8 +446,8 @@ export default function RestaurantSalesTable({
         <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-purple-600 font-medium">Commission (10%)</p>
-              <p className="text-2xl font-bold">
+              <p className="text-purple-600 font-medium">{t("restaurantSales.summaryCards.commission")}</p>
+              <p className="text-xl font-bold">
                 ${commission.toFixed(2)}
               </p>
             </div>
@@ -450,81 +458,74 @@ export default function RestaurantSalesTable({
         </div>
       </div>
 
-
-
-      {/* Sales table */}
-      <ScrollArea className="w-full whitespace-nowrap">
-        <Table>
-          <TableHeader className="rounded-b-lg">
-            <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
-              {columns.map((column) => (
-                <TableHead 
-                  key={column.id} 
-                  className="whitespace-nowrap"
-                  onClick={() => column.enableSorting && handleSort(column.accessorKey)}
-                  style={{ cursor: column.enableSorting ? 'pointer' : 'default' }}
-                >
-                  <div className="flex items-center">
-                    {column.header}
-                    {column.enableSorting && sortField === column.accessorKey && (
-                      <span className="ml-1">
-                        {sortOrder === 'asc' ? '▲' : '▼'}
-                      </span>
-                    )}
+      {/* Loading state */}
+      {isLoading ? (
+        <div className="w-full space-y-4">
+          {/* Desktop table skeleton */}
+          <div className="hidden md:block rounded-lg border">
+            <div className="p-1">
+              {/* Table header skeleton */}
+              <div className="flex items-center p-4 bg-muted-foreground/5">
+                {columns.map((_, i) => (
+                  <div key={i} className="flex-1">
+                    <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
                   </div>
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              // Loading state
-              Array.from({ length: pageSize }).map((_, index) => (
-                <TableRow key={index}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id}>
-                      <div className="h-5 w-24 animate-pulse bg-muted-foreground/5 rounded"></div>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))                ) : tableData.sales.length === 0 ? (
-                  // No data state
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No sales data found
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  // Data rows
-                  tableData.sales.map((sale) => (
-                <TableRow key={sale.id}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id}>
-                      {column.cell ? column.cell({ getValue: () => sale[column.accessorKey as keyof typeof sale] }) : sale[column.accessorKey as keyof typeof sale]?.toString()}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+                ))}
+              </div>
 
-      {/* No results message (when sales.length is 0) */}
-      {!isLoading && tableData.sales.length === 0 && (
+              {/* Table rows skeleton */}
+              {Array.from({ length: pageSize }).map((_, row) => (
+                <div key={row} className="flex items-center p-4 border-t">
+                  {columns.map((_, cell) => (
+                    <div key={`${row}-${cell}`} className="flex-1">
+                      <Skeleton
+                        className={`h-5 bg-muted-foreground/5 ${
+                          cell === 0 ? "w-24" : 
+                          cell === 1 ? "w-28" : 
+                          cell === 2 ? "w-32" : 
+                          cell === 3 ? "w-16" : 
+                          "w-20"
+                        }`}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile cards skeleton */}
+          <div className="md:hidden space-y-4">
+            {Array.from({ length: pageSize }).map((_, card) => (
+              <Card key={card}>
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-start">
+                      <Skeleton className="h-5 w-24" />
+                      <Skeleton className="h-4 w-20" />
+                    </div>
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-4 w-20" />
+                      <Skeleton className="h-6 w-24" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      ) : tableData.sales.length === 0 ? (
+        /* No results message */
         <div className="rounded-lg border p-8 text-center">
           <div className="flex justify-center items-center mb-4">
             <Calendar className="h-12 w-12 text-muted-foreground" />
           </div>
-          <h3 className="text-xl font-medium">No sales data found</h3>
+          <h3 className="text-xl font-medium">{t("restaurantSales.noSalesDataFound")}</h3>
           <p className="mt-2 text-muted-foreground mx-auto max-w-md text-center">
             {isFiltering
-              ? "No sales data matches your current filters"
-              : "No sales data has been recorded yet"}
+              ? t("restaurantSales.noSalesDataMatches")
+              : t("restaurantSales.noSalesDataRecorded")}
           </p>
           {isFiltering && (
             <Button
@@ -533,76 +534,157 @@ export default function RestaurantSalesTable({
               size="sm"
               onClick={clearFilter}
             >
-              Clear all filters
+              {t("restaurantSales.clearAllFilters")}
             </Button>
           )}
         </div>
-      )}
-
-      {/* Pagination controls */}
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
-          Showing{" "}
-          <span className="font-medium">
-            {tableData.sales.length > 0
-              ? (page - 1) * pageSize + 1
-              : 0}
-          </span>
-          {" to "}
-          <span className="font-medium">
-            {Math.min(page * pageSize, totalOrders)}
-          </span>{" "}
-          of{" "}
-          <span className="font-medium">{totalOrders}</span>{" "}
-          results
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPage(1)}
-            disabled={page === 1}
-            className="hidden sm:flex"
-          >
-            <ChevronsLeft className="h-4 w-4" />
-            <span className="sr-only">First page</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPage(page - 1)}
-            disabled={page === 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Previous page</span>
-          </Button>
-          <div className="flex items-center">
-            <span className="text-sm font-medium">
-              Page {page} of {totalPages}
-            </span>
+      ) : (
+        <>
+          {/* Desktop table view */}
+          <div className="hidden md:block">
+            <ScrollArea className="w-full whitespace-nowrap">
+              <Table>
+                <TableHeader className="rounded-b-lg">
+                  <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
+                    {columns.map((column) => (
+                      <TableHead 
+                        key={column.id} 
+                        className="whitespace-nowrap"
+                        onClick={() => column.enableSorting && handleSort(column.accessorKey)}
+                        style={{ cursor: column.enableSorting ? 'pointer' : 'default' }}
+                      >
+                        <div className="flex items-center">
+                          {column.header}
+                          {column.enableSorting && sortField === column.accessorKey && (
+                            <span className="ml-1">
+                              {sortOrder === 'asc' ? '▲' : '▼'}
+                            </span>
+                          )}
+                        </div>
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tableData.sales.map((sale) => (
+                    <TableRow key={sale.id}>
+                      {columns.map((column) => (
+                        <TableCell key={column.id}>
+                          {column.cell ? column.cell({ getValue: () => sale[column.accessorKey as keyof typeof sale] }) : sale[column.accessorKey as keyof typeof sale]?.toString()}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPage(page + 1)}
-            disabled={page >= totalPages}
-          >
-            <ChevronRight className="h-4 w-4" />
-            <span className="sr-only">Next page</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPage(totalPages)}
-            disabled={page >= totalPages}
-            className="hidden sm:flex"
-          >
-            <ChevronsRight className="h-4 w-4" />
-            <span className="sr-only">Last page</span>
-          </Button>
-        </div>
-      </div>
+
+          {/* Mobile card view */}
+          <div className="md:hidden space-y-4">
+            {tableData.sales.map((sale) => (
+              <Card key={sale.id}>
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    {/* Sale header */}
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium text-sm">{t("restaurantSales.orderNumber")} #{sale.orderId}</h3>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {new Date(sale.orderDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-green-600">
+                          ${Number(sale.totalAmount).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Sale details */}
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">{t("restaurantSales.mobileLabels.customer")}:</span>
+                        <span>{sale.customerName}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">{t("restaurantSales.mobileLabels.items")}:</span>
+                        <span>{sale.itemCount} {sale.itemCount !== 1 ? t("restaurantSales.itemsPlural") : t("restaurantSales.itemSingular")}</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Pagination controls */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="text-sm text-muted-foreground">
+              {t("restaurantSales.pagination.showing")}{" "}
+              <span className="font-medium">
+                {tableData.sales.length > 0
+                  ? (page - 1) * pageSize + 1
+                  : 0}
+              </span>
+              {" "}{t("restaurantSales.pagination.to")}{" "}
+              <span className="font-medium">
+                {Math.min(page * pageSize, totalOrders)}
+              </span>{" "}
+              {t("restaurantSales.pagination.of")}{" "}
+              <span className="font-medium">{totalOrders}</span>{" "}
+              {t("restaurantSales.pagination.results")}
+            </div>
+            
+            <div className="flex items-center justify-center sm:justify-end space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(1)}
+                disabled={page === 1}
+                className="hidden sm:flex"
+              >
+                <ChevronsLeft className="h-4 w-4" />
+                <span className="sr-only">{t("restaurantSales.pagination.firstPage")}</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(page - 1)}
+                disabled={page === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                <span className="sr-only">{t("restaurantSales.pagination.previousPage")}</span>
+              </Button>
+              <div className="flex items-center">
+                <span className="text-sm font-medium">
+                  {t("restaurantSales.pagination.page")} {page} {t("restaurantSales.pagination.of")} {totalPages}
+                </span>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(page + 1)}
+                disabled={page >= totalPages}
+              >
+                <ChevronRight className="h-4 w-4" />
+                <span className="sr-only">{t("restaurantSales.pagination.nextPage")}</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(totalPages)}
+                disabled={page >= totalPages}
+                className="hidden sm:flex"
+              >
+                <ChevronsRight className="h-4 w-4" />
+                <span className="sr-only">{t("restaurantSales.pagination.lastPage")}</span>
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

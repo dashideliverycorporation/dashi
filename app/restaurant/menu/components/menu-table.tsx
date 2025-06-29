@@ -23,6 +23,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   ChevronLeft,
   ChevronRight,
@@ -42,6 +44,7 @@ import type { MenuItemWithCategory } from "@/types/menu";
 
 // Components
 import { DeleteMenuItemButton } from "./delete-menu-item-button";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // Type definitions
 interface MenuItemTableColumn {
@@ -82,6 +85,21 @@ export default function MenuTable({
   initialFilter = "",
   restaurantId,
 }: MenuTableProps) {
+  const { t, i18n } = useTranslation();
+
+  // Ensure translations are ready to avoid hydration mismatch
+  const isTranslationReady = i18n.isInitialized && i18n.hasLoadedNamespace('common');
+
+  // Helper function to get translated text with fallback
+  const getTranslation = (key: string, fallback: string): string => {
+    if (!isTranslationReady) {
+      return fallback;
+    }
+    const translated = t(key);
+    // If translation returns the key itself, use fallback
+    return translated === key ? fallback : translated;
+  };
+
   // Router for URL manipulation
   const router = useRouter();
   const pathname = usePathname();
@@ -102,7 +120,7 @@ export default function MenuTable({
     {
       id: "image",
       accessorKey: "imageUrl",
-      header: "Image",
+      header: getTranslation('restaurantMenu.table.image', 'Image'),
       cell: (info) => {
         const imageUrl = info.getValue() as string | null;
         return (
@@ -117,7 +135,7 @@ export default function MenuTable({
               />
             ) : (
               <div className="h-full w-full bg-muted flex items-center justify-center text-muted-foreground">
-                <span className="text-xs">No image</span>
+                <span className="text-xs">{getTranslation('restaurantMenu.table.noImage', 'No image')}</span>
               </div>
             )}
           </div>
@@ -128,13 +146,13 @@ export default function MenuTable({
     {
       id: "name",
       accessorKey: "name",
-      header: "Item Name",
+      header: getTranslation('restaurantMenu.table.itemName', 'Item Name'),
       enableSorting: true,
     },
     {
       id: "category",
       accessorKey: "category",
-      header: "Category",
+      header: getTranslation('restaurantMenu.table.category', 'Category'),
       cell: (info) => {
         const category = info.getValue() as string;
         return category || "—";
@@ -144,7 +162,7 @@ export default function MenuTable({
     {
       id: "description",
       accessorKey: "description",
-      header: "Description",
+      header: getTranslation('restaurantMenu.table.description', 'Description'),
       cell: (info) => {
         const value = info.getValue() || "—";
         return (
@@ -158,7 +176,7 @@ export default function MenuTable({
     {
       id: "price",
       accessorKey: "price",
-      header: "Price",
+      header: getTranslation('restaurantMenu.table.price', 'Price'),
       cell: (info) => {
         const value = info.getValue();
         // Handle different possible types for price (string, number, or Decimal)
@@ -175,12 +193,12 @@ export default function MenuTable({
     {
       id: "available",
       accessorKey: "isAvailable",
-      header: "Available",
+      header: getTranslation('restaurantMenu.table.available', 'Available'),
       cell: (info) => {
         const isAvailable = info.getValue() as boolean;
         return (
           <div className={`font-medium ${isAvailable ? 'text-green-600' : 'text-red-600'}`}>
-            {isAvailable ? "Yes" : "No"}
+            {isAvailable ? getTranslation('restaurantMenu.table.yes', 'Yes') : getTranslation('restaurantMenu.table.no', 'No')}
           </div>
         );
       },
@@ -189,7 +207,7 @@ export default function MenuTable({
     {
       id: "createdAt",
       accessorKey: "createdAt",
-      header: "Created",
+      header: getTranslation('restaurantMenu.table.created', 'Created'),
       cell: (info) =>
         format(new Date(info.getValue() as string), "MMM d, yyyy"),
       enableSorting: true,
@@ -197,7 +215,7 @@ export default function MenuTable({
     {
       id: "actions",
       accessorKey: "id",
-      header: "Actions",
+      header: getTranslation('restaurantMenu.table.actions', 'Actions'),
       cell: (info) => {
         const menuItem = info.row.original as MenuItemWithCategory;
         return (
@@ -299,49 +317,81 @@ export default function MenuTable({
   // Loading state
   if (isLoading) {
     return (
-      <div className="rounded-lg border">
-        <div className="p-1">
-          {/* Table header skeleton */}
-          <div className="flex items-center p-4 bg-muted-foreground/5">
-            {/* Image column header */}
-            <div className="flex-0 w-16">
-              <Skeleton className="h-5 w-10 bg-muted-foreground/5" />
-            </div>
-            {/* Other columns */}
-            {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-              <div key={i} className={`flex-1 ${i === 7 ? "flex-0 w-16" : ""}`}>
-                <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
-              </div>
-            ))}
-          </div>
+      <div className="w-full space-y-4">
+        {/* Header skeleton */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-10 w-full md:w-80" />
+          <Skeleton className="h-10 w-full md:w-32" />
+        </div>
 
-          {/* Table rows skeleton */}
-          {[1, 2, 3, 4, 5].map((row) => (
-            <div key={row} className="flex items-center p-4 border-t">
-              {/* Image cell skeleton */}
+        {/* Desktop table skeleton */}
+        <div className="hidden md:block rounded-lg border">
+          <div className="p-1">
+            {/* Table header skeleton */}
+            <div className="flex items-center p-4 bg-muted-foreground/5">
+              {/* Image column header */}
               <div className="flex-0 w-16">
-                <Skeleton className="h-12 w-12 bg-muted-foreground/5 rounded-md" />
+                <Skeleton className="h-5 w-10 bg-muted-foreground/5" />
               </div>
-              {/* Other cells */}
-              {[1, 2, 3, 4, 5, 6, 7].map((cell) => (
-                <div
-                  key={`${row}-${cell}`}
-                  className={`flex-1 ${cell === 7 ? "flex-0 w-16" : ""}`}
-                >
-                  <Skeleton
-                    className={`h-5 bg-muted-foreground/5 ${
-                      cell === 1 ? "w-28" : 
-                      cell === 2 ? "w-20" : 
-                      cell === 3 ? "w-32" : 
-                      cell === 4 ? "w-20" : 
-                      cell === 5 ? "w-16" :
-                      cell === 6 ? "w-24" :
-                      "w-12"
-                    }`}
-                  />
+              {/* Other columns */}
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                <div key={i} className={`flex-1 ${i === 7 ? "flex-0 w-16" : ""}`}>
+                  <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
                 </div>
               ))}
             </div>
+
+            {/* Table rows skeleton */}
+            {[1, 2, 3, 4, 5].map((row) => (
+              <div key={row} className="flex items-center p-4 border-t">
+                {/* Image cell skeleton */}
+                <div className="flex-0 w-16">
+                  <Skeleton className="h-12 w-12 bg-muted-foreground/5 rounded-md" />
+                </div>
+                {/* Other cells */}
+                {[1, 2, 3, 4, 5, 6, 7].map((cell) => (
+                  <div
+                    key={`${row}-${cell}`}
+                    className={`flex-1 ${cell === 7 ? "flex-0 w-16" : ""}`}
+                  >
+                    <Skeleton
+                      className={`h-5 bg-muted-foreground/5 ${
+                        cell === 1 ? "w-28" : 
+                        cell === 2 ? "w-20" : 
+                        cell === 3 ? "w-32" : 
+                        cell === 4 ? "w-20" : 
+                        cell === 5 ? "w-16" :
+                        cell === 6 ? "w-24" :
+                        "w-12"
+                      }`}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile cards skeleton */}
+        <div className="md:hidden space-y-4">
+          {[1, 2, 3, 4, 5].map((card) => (
+            <Card key={card}>
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-4">
+                  <Skeleton className="h-16 w-16 rounded-md" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                    <Skeleton className="h-4 w-1/4" />
+                    <div className="flex space-x-2 pt-2">
+                      <Skeleton className="h-8 w-16" />
+                      <Skeleton className="h-8 w-16" />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
@@ -353,14 +403,14 @@ export default function MenuTable({
     return (
       <div className="w-full space-y-4">
         <div className="flex justify-between">
-          <h2 className="text-xl font-semibold">Menu Items</h2>
+          <h2 className="text-xl font-semibold">{getTranslation('restaurantMenu.title', 'Menu Items')}</h2>
         </div>
         <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center">
           <h3 className="text-lg font-medium text-destructive">
-            Error Loading Menu Items
+            {getTranslation('restaurantMenu.error.title', 'Error Loading Menu Items')}
           </h3>
           <p className="mt-2 text-muted-foreground">
-            {error?.message || "Failed to load menu item data"}
+            {error?.message || getTranslation('restaurantMenu.error.message', 'Failed to load menu item data')}
           </p>
         </div>
       </div>
@@ -370,7 +420,7 @@ export default function MenuTable({
   return (
     <div className="w-full space-y-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-xl font-semibold">Menu Items</h2>
+        <h2 className="text-xl font-semibold">{getTranslation('restaurantMenu.title', 'Menu Items')}</h2>
 
         {/* Filter form */}
         <div className="flex w-full md:w-auto">
@@ -380,14 +430,14 @@ export default function MenuTable({
           >
             <Input
               type="text"
-              placeholder="Search by name..."
+              placeholder={getTranslation('restaurantMenu.search.placeholder', 'Search by name...')}
               value={filterInputValue}
               onChange={(e) => setFilterInputValue(e.target.value)}
               className="w-full"
             />
             <Button type="submit" variant="outline" className="cursor-pointer">
               <Search className="h-4 w-4" />
-              <span className="sr-only">Search</span>
+              <span className="sr-only">{getTranslation('restaurantMenu.search.button', 'Search')}</span>
             </Button>
             {isFiltering && (
               <Button
@@ -396,7 +446,7 @@ export default function MenuTable({
                 size="sm"
                 onClick={clearFilter}
               >
-                Clear
+                {getTranslation('restaurantMenu.search.clear', 'Clear')}
               </Button>
             )}
           </form>
@@ -422,11 +472,11 @@ export default function MenuTable({
               className="mx-auto"
             />
           </div>
-          <h3 className="text-xl font-medium">No menu items found</h3>
+          <h3 className="text-xl font-medium">{getTranslation('restaurantMenu.empty.title', 'No menu items found')}</h3>
           <p className="mt-2 text-muted-foreground max-w-md">
             {isFiltering
-              ? `No menu items match the filter "${filters.name}"`
-              : "No menu items have been added to this restaurant yet."}
+              ? `${getTranslation('restaurantMenu.empty.noMatches', 'No menu items match the filter')} "${filters.name}"`
+              : getTranslation('restaurantMenu.empty.noItems', 'No menu items have been added to this restaurant yet.')}
           </p>
           {isFiltering && (
             <Button
@@ -435,151 +485,241 @@ export default function MenuTable({
               size="sm"
               onClick={clearFilter}
             >
-              Clear filter
+              {getTranslation('restaurantMenu.search.clearFilter', 'Clear filter')}
             </Button>
           )}
         </div>
       ) : (
         <>
-          {/* Menu items table */}
-          <ScrollArea className="w-[1150px]">
-            <Table>
-              <TableHeader className="rounded-b-lg">
-                <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
-                  {columns.map((column) => (
-                    <TableHead 
-                      key={column.id} 
-                      className="whitespace-nowrap"
-                      onClick={() => column.enableSorting && handleSort(column.id)}
-                    >
-                      <div className="flex items-center">
-                        {column.header}
-                        {column.enableSorting && (
-                          <div className="ml-1">
-                            {sortField === column.id ? (
-                              sortOrder === "asc" ? (
-                                <ChevronUp className="h-4 w-4" />
+          {/* Desktop table view */}
+          <div className="hidden md:block">
+            <ScrollArea className="w-full">
+              <Table>
+                <TableHeader className="rounded-b-lg">
+                  <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
+                    {columns.map((column) => (
+                      <TableHead 
+                        key={column.id} 
+                        className="whitespace-nowrap"
+                        onClick={() => column.enableSorting && handleSort(column.id)}
+                      >
+                        <div className="flex items-center">
+                          {column.header}
+                          {column.enableSorting && (
+                            <div className="ml-1">
+                              {sortField === column.id ? (
+                                sortOrder === "asc" ? (
+                                  <ChevronUp className="h-4 w-4" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4" />
+                                )
                               ) : (
-                                <ChevronDown className="h-4 w-4" />
-                              )
-                            ) : (
-                              <ChevronDown className="h-4 w-4 text-muted-foreground/50" />
-                            )}
+                                <ChevronDown className="h-4 w-4 text-muted-foreground/50" />
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data &&
+                    data.menuItems.map((menuItem) => (
+                      <TableRow key={menuItem.id}>
+                        {columns.map((column) => {
+                          // Handle nested properties with dot notation
+                          const accessorKey = column.accessorKey;
+                          let value: unknown;
+
+                          if (
+                            typeof accessorKey === "string" &&
+                            accessorKey.includes(".")
+                          ) {
+                            // Handle dot notation for nested properties
+                            const keys = accessorKey.split(".");
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            let nestedValue: any = menuItem;
+                            
+                            for (const key of keys) {
+                              if (nestedValue && typeof nestedValue === "object") {
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                nestedValue = (nestedValue as any)[key];
+                              } else {
+                                nestedValue = undefined;
+                                break;
+                              }
+                            }
+                            
+                            value = nestedValue;
+                          } else if (typeof accessorKey === "string") {
+                            // Handle direct property access
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            value = (menuItem as any)[accessorKey];
+                          } else {
+                            value = undefined;
+                          }
+
+                          return (
+                            <TableCell key={column.id}>
+                              {column.cell
+                                ? column.cell({
+                                    getValue: () => value,
+                                    row: { original: menuItem },
+                                  })
+                                : (value as React.ReactNode)}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </div>
+
+          {/* Mobile card view */}
+          <div className="md:hidden space-y-4">
+            {data &&
+              data.menuItems.map((menuItem) => (
+                <Card key={menuItem.id}>
+                  <CardContent className="p-4">
+                    <div className="flex items-start space-x-4">
+                      {/* Menu item image */}
+                      <div className="h-16 w-16 rounded-md overflow-hidden relative flex-shrink-0">
+                        {menuItem.imageUrl ? (
+                          <Image
+                            src={menuItem.imageUrl}
+                            alt="Menu item image"
+                            fill
+                            sizes="64px"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="h-full w-full bg-muted flex items-center justify-center text-muted-foreground">
+                            <span className="text-xs">{getTranslation('restaurantMenu.table.noImage', 'No image')}</span>
                           </div>
                         )}
                       </div>
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data &&
-                  data.menuItems.map((menuItem) => (
-                    <TableRow key={menuItem.id}>
-                      {columns.map((column) => {
-                        // Handle nested properties with dot notation
-                        const accessorKey = column.accessorKey;
-                        let value: unknown;
 
-                        if (
-                          typeof accessorKey === "string" &&
-                          accessorKey.includes(".")
-                        ) {
-                          // Handle dot notation for nested properties
-                          const keys = accessorKey.split(".");
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          let nestedValue: any = menuItem;
-                          
-                          for (const key of keys) {
-                            if (nestedValue && typeof nestedValue === "object") {
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              nestedValue = (nestedValue as any)[key];
-                            } else {
-                              nestedValue = undefined;
-                              break;
+                      {/* Menu item details */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-sm truncate">{menuItem.name}</h3>
+                            {menuItem.category && (
+                              <Badge variant="secondary" className="text-xs mt-1">
+                                {menuItem.category}
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2 ml-2">
+                            <Badge 
+                              variant={menuItem.isAvailable ? "default" : "destructive"}
+                              className="text-xs"
+                            >
+                              {menuItem.isAvailable ? getTranslation('restaurantMenu.status.available', 'Available') : getTranslation('restaurantMenu.status.unavailable', 'Unavailable')}
+                            </Badge>
+                          </div>
+                        </div>
+
+                        {menuItem.description && (
+                          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                            {menuItem.description}
+                          </p>
+                        )}
+
+                        <div className="flex items-center justify-between mt-3">
+                          <div className="text-sm font-medium">
+                            ${typeof menuItem.price === 'string' 
+                              ? parseFloat(menuItem.price).toFixed(2)
+                              : Number(menuItem.price).toFixed(2)
                             }
-                          }
-                          
-                          value = nestedValue;
-                        } else if (typeof accessorKey === "string") {
-                          // Handle direct property access
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          value = (menuItem as any)[accessorKey];
-                        } else {
-                          value = undefined;
-                        }
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {format(new Date(menuItem.createdAt), "MMM d, yyyy")}
+                          </div>
+                        </div>
 
-                        return (
-                          <TableCell key={column.id}>
-                            {column.cell
-                              ? column.cell({
-                                  getValue: () => value,
-                                  row: { original: menuItem },
-                                })
-                              : (value as React.ReactNode)}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+                        {/* Action buttons */}
+                        <div className="flex items-center space-x-2 mt-3">
+                          <MenuItemFormModal 
+                            menuItem={menuItem} 
+                            restaurantId={restaurantId}
+                            isEdit={true}
+                            onMenuItemChange={() => {
+                              // Invalidate the menu items query to refresh the data
+                              utils.restaurant.getMenuItems.invalidate();
+                            }}
+                          />
+                          <DeleteMenuItemButton 
+                            menuItemId={menuItem.id}
+                            menuItemName={menuItem.name}
+                            onDeleteSuccess={() => {
+                              // Invalidate the menu items query to refresh the data
+                              utils.restaurant.getMenuItems.invalidate();
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+          </div>
 
           {/* Pagination controls */}
-          {
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-muted-foreground">
-                Showing {start}–{end} of {total} menu items
-              </div>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => goToPage(1)}
-                  disabled={page === 1}
-                  className="hidden sm:flex"
-                >
-                  <ChevronsLeft className="h-4 w-4" />
-                  <span className="sr-only">First page</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => goToPage(page - 1)}
-                  disabled={page === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  <span className="sr-only">Previous page</span>
-                </Button>
-                <div className="flex items-center">
-                  <span className="text-sm font-medium">
-                    Page {page} of {totalPages}
-                  </span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => goToPage(page + 1)}
-                  disabled={page >= totalPages}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                  <span className="sr-only">Next page</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => goToPage(totalPages)}
-                  disabled={page >= totalPages}
-                  className="hidden sm:flex"
-                >
-                  <ChevronsRight className="h-4 w-4" />
-                  <span className="sr-only">Last page</span>
-                </Button>
-              </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="text-sm text-muted-foreground">
+              {getTranslation('restaurantMenu.pagination.showing', 'Showing')} {start}–{end} {getTranslation('restaurantMenu.pagination.of', 'of')} {total} {getTranslation('restaurantMenu.pagination.menuItems', 'menu items')}
             </div>
-          }
+            <div className="flex items-center justify-center sm:justify-end space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => goToPage(1)}
+                disabled={page === 1}
+                className="hidden sm:flex"
+              >
+                <ChevronsLeft className="h-4 w-4" />
+                <span className="sr-only">{getTranslation('restaurantMenu.pagination.firstPage', 'First page')}</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => goToPage(page - 1)}
+                disabled={page === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                <span className="sr-only">{getTranslation('restaurantMenu.pagination.previousPage', 'Previous page')}</span>
+              </Button>
+              <div className="flex items-center">
+                <span className="text-sm font-medium">
+                  {getTranslation('restaurantMenu.pagination.page', 'Page')} {page} {getTranslation('restaurantMenu.pagination.of', 'of')} {totalPages}
+                </span>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => goToPage(page + 1)}
+                disabled={page >= totalPages}
+              >
+                <ChevronRight className="h-4 w-4" />
+                <span className="sr-only">{getTranslation('restaurantMenu.pagination.nextPage', 'Next page')}</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => goToPage(totalPages)}
+                disabled={page >= totalPages}
+                className="hidden sm:flex"
+              >
+                <ChevronsRight className="h-4 w-4" />
+                <span className="sr-only">{getTranslation('restaurantMenu.pagination.lastPage', 'Last page')}</span>
+              </Button>
+            </div>
+          </div>
         </>
       )}
     </div>

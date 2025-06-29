@@ -246,7 +246,9 @@
     "completeOrder": "Finaliser la Commande"
   },
   "orders": {
+    "loading": "Chargement des commandes...",
     "orderDetails": "Détails de la commande",
+    "orderNumber": "Commande",
     "currentStatus": "Statut actuel",
     "selectStatus": "Sélectionner le statut",
     "updateStatus": "Mettre à jour le statut",
@@ -277,6 +279,51 @@
     "paymentStatus": "Statut",
     "noPaymentInfo": "Aucune information de paiement disponible",
     "customerNotes": "Notes du client",
+    "title": "Commandes",
+    "allStatuses": "Tous les statuts",
+    "filterByStatus": "Filtrer par statut",
+    "searchByOrderId": "Rechercher par ID de commande...",
+    "clearFilters": "Effacer les filtres",
+    "clearAllFilters": "Effacer tous les filtres",
+    "summaryCards": {
+      "placed": "Placées",
+      "preparing": "En préparation", 
+      "dispatched": "Expédiées",
+      "delivered": "Livrées"
+    },
+    "mobileLabels": {
+      "customer": "Client :",
+      "items": "Articles :",
+      "total": "Total :"
+    },
+    "noOrdersFound": "Aucune commande trouvée",
+    "noOrdersFilter": "Aucune commande ne correspond à vos filtres actuels",
+    "noOrdersYet": "Aucune commande n'a encore été passée",
+    "viewDetails": "Voir les détails",
+    "unknownItem": "Article inconnu",
+    "unknownRestaurant": "Restaurant inconnu",
+    "table": {
+      "orderId": "ID de commande",
+      "status": "Statut",
+      "customer": "Client",
+      "anonymous": "Anonyme",
+      "items": "Articles",
+      "oneItem": "1 article",
+      "multipleItems": "{{count}} articles",
+      "total": "Total",
+      "placedAt": "Passée à",
+      "actions": "Actions"
+    },
+    "pagination": {
+      "showing": "Affichage",
+      "of": "de",
+      "orders": "commandes",
+      "page": "Page",
+      "firstPage": "Première page",
+      "previousPage": "Page précédente",
+      "nextPage": "Page suivante",
+      "lastPage": "Dernière page"
+    },
     "statusOptions": {
       "placed": "Placée",
       "preparing": "En préparation",
@@ -340,5 +387,232 @@
       "description": "Vous n'avez pas de commandes échouées ou annulées."
     },
     "errorLoading": "Échec du chargement des commandes. Veuillez réessayer plus tard."
+  },
+  "restaurantDashboard": {
+    "title": "Tableau de bord du restaurant",
+    "menuItems": "Articles du menu",
+    "activeOrders": "Commandes actives",
+    "todaysOrders": "Commandes d'aujourd'hui",
+    "customers": "Clients",
+    "menuItemsDescription": "Gérez vos articles de menu",
+    "activeOrdersDescription": "Commandes en préparation",
+    "todaysOrdersDescription": "Commandes passées aujourd'hui",
+    "customersDescription": "Clients ce mois-ci",
+    "monthlySales": "Ventes mensuelles",
+    "monthlySalesDescription": "Performance des ventes de votre restaurant ce mois-ci",
+    "totalSales": "Ventes totales",
+    "ordersCompleted": "Commandes terminées",
+    "averageOrderValue": "Valeur moyenne des commandes",
+    "commissionSummary": "Résumé des commissions",
+    "commissionSummaryDescription": "Commission de la plateforme (10% des ventes)",
+    "commissionRate": "Taux de commission",
+    "commissionOwed": "Commission due",
+    "commissionNote": "La commission est calculée automatiquement et sera collectée via le mode de paiement convenu.",
+    "errorLoading": "Erreur lors du chargement du tableau de bord :"
+  },
+  "restaurantSidebar": {
+    "dashboard": "Tableau de bord",
+    "menu": "Menu",
+    "orders": "Commandes",
+    "sales": "Ventes",
+    "settings": "Paramètres",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "expandSidebar": "Développer la barre latérale",
+    "collapseSidebar": "Réduire la barre latérale",
+    "version": "Dashi Restaurant v1.0"
+  },
+  "restaurantMenu": {
+    "title": "Articles du menu",
+    "description": "Consultez et gérez les articles du menu de votre restaurant",
+    "loading": "Chargement...",
+    "loadingMenuItems": "Chargement des articles du menu...",
+    "noMenuItems": "Aucun article de menu ajouté pour le moment. Cliquez sur le bouton \"Ajouter un article de menu\" pour ajouter votre premier article de menu.",
+    "addMenuItemButton": "Ajouter un article de menu",
+    "table": {
+      "image": "Image",
+      "itemName": "Nom de l'article",
+      "category": "Catégorie",
+      "description": "Description",
+      "price": "Prix",
+      "available": "Disponible",
+      "created": "Créé",
+      "actions": "Actions",
+      "noImage": "Pas d'image",
+      "yes": "Oui",
+      "no": "Non"
+    },
+    "search": {
+      "placeholder": "Rechercher par nom...",
+      "button": "Rechercher",
+      "clear": "Effacer",
+      "clearFilter": "Effacer le filtre"
+    },
+    "pagination": {
+      "showing": "Affichage de",
+      "of": "sur",
+      "menuItems": "articles du menu",
+      "page": "Page",
+      "firstPage": "Première page",
+      "previousPage": "Page précédente",
+      "nextPage": "Page suivante",
+      "lastPage": "Dernière page"
+    },
+    "empty": {
+      "title": "Aucun article de menu trouvé",
+      "noItems": "Aucun article de menu n'a été ajouté à ce restaurant pour le moment.",
+      "noMatches": "Aucun article de menu ne correspond au filtre"
+    },
+    "error": {
+      "title": "Erreur lors du chargement des articles du menu",
+      "message": "Échec du chargement des données des articles du menu"
+    },
+    "status": {
+      "available": "Disponible",
+      "unavailable": "Indisponible"
+    },
+    "delete": {
+      "title": "Supprimer l'article du menu",
+      "description": "Êtes-vous sûr de vouloir supprimer",
+      "cannotUndo": " ? Cette action ne peut pas être annulée.",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "deleting": "Suppression...",
+      "success": {
+        "title": "Article du menu supprimé",
+        "message": "a été retiré de votre menu."
+      },
+      "error": {
+        "title": "Erreur lors de la suppression de l'article du menu",
+        "message": "Échec de la suppression de l'article du menu. Veuillez réessayer."
+      }
+    },
+    "form": {
+      "title": "Formulaire d'Article de Menu",
+      "createTitle": "Créer un Article de Menu",
+      "editTitle": "Modifier l'Article de Menu",
+      "requiredFieldsNote": "Les champs marqués d'un * sont requis.",
+      "fields": {
+        "name": {
+          "label": "Nom",
+          "placeholder": "Burger au Poulet",
+          "description": "Entrez le nom de l'article de menu tel qu'il doit apparaître sur le menu."
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Délicieux burger au poulet avec laitue, tomate et sauce spéciale",
+          "description": "Fournissez une brève description de l'article de menu (facultatif)."
+        },
+        "price": {
+          "label": "Prix (USD)",
+          "placeholder": "5",
+          "description": "Entrez le prix en devise (USD)."
+        },
+        "category": {
+          "label": "Catégorie",
+          "placeholder": "Burgers, Pizza, Dessert, etc.",
+          "description": "Catégorie sous laquelle grouper cet article."
+        },
+        "image": {
+          "label": "Image",
+          "description": "Cliquez sur la boîte pour télécharger une image de votre article de menu.",
+          "uploadText": "Télécharger un fichier",
+          "fileTypes": "PNG, JPG, GIF jusqu'à 5MB",
+          "imageSelected": "Image Sélectionnée",
+          "changeImage": "Cliquez pour changer l'image",
+          "fileTooLarge": "Fichier trop volumineux",
+          "fileTooLargeMessage": "L'image doit faire moins de 5MB. Veuillez sélectionner un fichier plus petit."
+        },
+        "available": {
+          "label": "Disponible",
+          "description": "Cet article est-il actuellement disponible à la commande ? Si non coché, l'article ne sera pas montré aux clients."
+        }
+      },
+      "buttons": {
+        "cancel": "Annuler",
+        "create": "Créer l'Article de Menu",
+        "update": "Mettre à jour l'Article de Menu",
+        "creating": "Création...",
+        "updating": "Mise à jour..."
+      },
+      "success": {
+        "created": {
+          "title": "Article de menu créé avec succès",
+          "message": "Votre nouvel article de menu a été ajouté au menu"
+        },
+        "updated": {
+          "title": "Article de menu mis à jour avec succès",
+          "message": "Votre article de menu a été mis à jour"
+        }
+      },
+      "error": {
+        "create": {
+          "title": "Échec de la création de l'article de menu",
+          "defaultMessage": "Une erreur inattendue s'est produite. Veuillez réessayer."
+        },
+        "update": {
+          "title": "Échec de la mise à jour de l'article de menu",
+          "defaultMessage": "Une erreur inattendue s'est produite. Veuillez réessayer."
+        },
+        "general": {
+          "title": "Quelque chose s'est mal passé",
+          "message": "Une erreur inattendue s'est produite lors du traitement de votre demande."
+        }
+      }
+    }
+  },
+  "restaurantSales": {
+    "loadingSalesData": "Chargement des données de vente...",
+    "title": "Ventes du Restaurant",
+    "searchByOrderId": "Rechercher par ID de commande...",
+    "clearFilters": "Effacer les filtres",
+    "period": "Période",
+    "filterByPeriod": "Filtrer par période",
+    "periods": {
+      "allTime": "Tout le temps",
+      "today": "Aujourd'hui",
+      "thisWeek": "Cette semaine",
+      "thisMonth": "Ce mois",
+      "last30Days": "30 derniers jours"
+    },
+    "table": {
+      "orderId": "ID Commande",
+      "date": "Date",
+      "customer": "Client",
+      "items": "Articles",
+      "amount": "Montant"
+    },
+    "summaryCards": {
+      "totalSales": "Ventes totales",
+      "totalOrders": "Commandes totales",
+      "averageOrder": "Commande moyenne",
+      "commission": "Commission (10%)"
+    },
+    "orderNumber": "Commande",
+    "mobileLabels": {
+      "customer": "Client",
+      "items": "Articles"
+    },
+    "itemSingular": "article",
+    "itemsPlural": "articles",
+    "noSalesDataFound": "Aucune donnée de vente trouvée",
+    "noSalesDataMatches": "Aucune donnée de vente ne correspond à vos filtres actuels",
+    "noSalesDataRecorded": "Aucune donnée de vente n'a encore été enregistrée",
+    "clearAllFilters": "Effacer tous les filtres",
+    "pagination": {
+      "showing": "Affichage",
+      "to": "à",
+      "of": "sur",
+      "results": "résultats",
+      "page": "Page",
+      "firstPage": "Première page",
+      "previousPage": "Page précédente",
+      "nextPage": "Page suivante",
+      "lastPage": "Dernière page"
+    },
+    "error": {
+      "unableToLoad": "Impossible de charger les données de vente",
+      "restaurantInfoNotAvailable": "Les informations de votre restaurant ne sont pas disponibles. Veuillez actualiser ou contacter le support."
+    }
   }
 }

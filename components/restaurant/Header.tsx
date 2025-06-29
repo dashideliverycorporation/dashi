@@ -13,6 +13,7 @@ import {
 import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import LanguageSwitcher from "../i18n/LanguageSwitcher";
 type HeaderProps = {
   restaurantName: string;
   username: string;
@@ -31,7 +32,10 @@ export function Header({ restaurantName, username, email }: HeaderProps) {
         <h2 className="text-lg font-semibold">{restaurantName}</h2>
       </div>
 
-      <div className="ml-auto flex items-center gap-4">
+      <div className="ml-auto flex items-center">
+                  
+                      <LanguageSwitcher variant="simple" />
+                  
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

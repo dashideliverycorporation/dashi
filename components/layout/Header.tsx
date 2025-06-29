@@ -85,7 +85,7 @@ export function Header({ className }: HeaderProps) {
             {/* Language Switcher - Desktop */}
             <div className="hidden md:flex">
               <LanguageSwitcher variant="simple" />
-            </div>{" "}
+            </div>
             {/* Shopping Cart */}
             <CartIcon />
             {/* Auth Buttons or User Menu - Desktop */}

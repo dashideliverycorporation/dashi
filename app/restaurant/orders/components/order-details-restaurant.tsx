@@ -29,19 +29,15 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-
-// Extended TranslationOptions to include dynamic values
-interface ExtendedTranslationOptions {
-  [key: string]: string | number | undefined;
-}
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface OrderDetailsRestaurantProps {
   order: Order | null;
   onClose: () => void;
-  t: (key: string | string[], options?: ExtendedTranslationOptions | string) => string;
 }
 
-export default function OrderDetailsRestaurant({ order, onClose, t }: OrderDetailsRestaurantProps) {
+export default function OrderDetailsRestaurant({ order, onClose }: OrderDetailsRestaurantProps) {
+  const { t } = useTranslation();
   // Get TRPC utils for query invalidation
   const utils = trpc.useContext();
   
@@ -214,7 +210,7 @@ export default function OrderDetailsRestaurant({ order, onClose, t }: OrderDetai
             <span>{formatDate(order.createdAt)}</span>
           </div>
           <span className="text-orange-600 font-bold">
-                  Order {order.displayOrderNumber || `#${order.orderNumber}`}
+            {t("orders.orderNumber", "Order")} {order.displayOrderNumber || `#${order.orderNumber}`}
           </span>
 
           {/* Status management for restaurant staff */}
@@ -342,7 +338,7 @@ export default function OrderDetailsRestaurant({ order, onClose, t }: OrderDetai
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">{t("orders.paymentMethod", "Payment Method")}:</span>
-                      <span className="font-medium">{order.paymentTransaction.paymentMethod || 'Mobile Money'}</span>
+                      <span className="font-medium">{order.paymentTransaction.paymentMethod || t("payment.mobileMoneyTitle", "Mobile Money")}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">{t("orders.mobileNumber", "Mobile Number")}:</span>
@@ -357,7 +353,7 @@ export default function OrderDetailsRestaurant({ order, onClose, t }: OrderDetai
                       <span className="font-medium">{order.paymentTransaction.transactionId || '-'}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">{t("orders.status", "Status")}:</span>
+                      <span className="text-gray-600">{t("orders.paymentStatus", "Status")}:</span>
                       <span className="font-medium">{order.paymentTransaction.status || '-'}</span>
                     </div>
                   </div>

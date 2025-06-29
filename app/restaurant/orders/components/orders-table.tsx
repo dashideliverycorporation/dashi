@@ -38,6 +38,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   ChevronLeft,
   ChevronRight,
@@ -90,22 +91,19 @@ interface OrdersTableProps {
 /**
  * Get status badge UI based on order status
  */
-
-/**
- * Get status badge UI based on order status
- */
-const getStatusBadge = (status: OrderStatus) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getStatusBadge = (status: OrderStatus, t: (key: string, options?: any) => string) => {
   switch (status) {
     case ORDER_STATUS.PLACED:
-      return <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-100 hover:text-blue-800">Placed</Badge>;
+      return <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-100 hover:text-blue-800">{t("orders.statusOptions.placed")}</Badge>;
     case ORDER_STATUS.PREPARING:
-      return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 hover:text-yellow-800">Preparing</Badge>;
+      return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 hover:text-yellow-800">{t("orders.statusOptions.preparing")}</Badge>;
     case ORDER_STATUS.DISPATCHED:
-      return <Badge variant="secondary" className="bg-green-100 text-green-800 hover:bg-green-100 hover:text-green-800">Dispatched</Badge>;
+      return <Badge variant="secondary" className="bg-green-100 text-green-800 hover:bg-green-100 hover:text-green-800">{t("orders.statusOptions.dispatched")}</Badge>;
     case ORDER_STATUS.DELIVERED:
-      return <Badge variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-100 hover:text-purple-800">Delivered</Badge>;
+      return <Badge variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-100 hover:text-purple-800">{t("orders.statusOptions.delivered")}</Badge>;
     case ORDER_STATUS.CANCELLED:
-      return <Badge variant="secondary" className="bg-red-100 text-red-800 hover:bg-red-100 hover:text-red-800">Cancelled</Badge>;
+      return <Badge variant="secondary" className="bg-red-100 text-red-800 hover:bg-red-100 hover:text-red-800">{t("orders.statusOptions.cancelled")}</Badge>;
     default:
       return <Badge variant="outline">{status}</Badge>;
   }
@@ -162,45 +160,48 @@ export default function OrdersTable({
     {
       id: "displayOrderNumber",
       accessorKey: "displayOrderNumber",
-      header: "Order ID",
+      header: t("orders.table.orderId"),
       enableSorting: true,
     },
     {
       id: "status",
       accessorKey: "status",
-      header: "Status",
+      header: t("orders.table.status"),
       cell: (info) => {
         const status = info.getValue() as OrderStatus;
-        return getStatusBadge(status);
+        return getStatusBadge(status, t);
       },
       enableSorting: true,
     },
     {
       id: "customer",
       accessorKey: "customer",
-      header: "Customer",
+      header: t("orders.table.customer"),
       cell: (info) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const customer = info.getValue() as any;
-        return customer?.user?.name || 'Anonymous';
+        return customer?.user?.name || t("orders.table.anonymous");
       },
       enableSorting: false,
     },
     {
       id: "orderItems",
       accessorKey: "orderItems",
-      header: "Items",
+      header: t("orders.table.items"),
       cell: (info) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const items = info.getValue() as any[];
-        return items ? `${items.length} item${items.length !== 1 ? 's' : ''}` : '—';
+        return items ? (items.length === 1 
+          ? t("orders.table.oneItem")
+          : t("orders.table.multipleItems", { count: items.length })
+        ) : '—';
       },
       enableSorting: false,
     },
     {
       id: "totalAmount",
       accessorKey: "totalAmount",
-      header: "Total",
+      header: t("orders.table.total"),
       cell: (info) => {
         const value = info.getValue();
         // Handle different possible types for total amount
@@ -217,7 +218,7 @@ export default function OrdersTable({
     {
       id: "createdAt",
       accessorKey: "createdAt",
-      header: "Placed At",
+      header: t("orders.table.placedAt"),
       cell: (info) =>
         format(new Date(info.getValue() as string), "MMM d, yyyy h:mm a"),
       enableSorting: true,
@@ -225,7 +226,7 @@ export default function OrdersTable({
     {
       id: "actions",
       accessorKey: "id",
-      header: "Actions",
+      header: t("orders.table.actions"),
       cell: (info) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const order = info.row.original as any;
@@ -243,7 +244,7 @@ export default function OrdersTable({
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   items: order.orderItems?.map((item: any) => ({
                     id: item.id,
-                    name: item.menuItem?.name || "Unknown Item",
+                    name: item.menuItem?.name || t("orders.unknownItem"),
                     price: item.price,
                     quantity: item.quantity,
                     imageUrl: item.menuItem?.imageUrl
@@ -258,7 +259,7 @@ export default function OrdersTable({
                     deliveryFee: order.restaurant.deliveryFee
                   } : {
                     id: order.restaurantId,
-                    name: "Unknown Restaurant",
+                    name: t("orders.unknownRestaurant"),
                     deliveryFee: 0
                   },
                   // Ensure paymentTransaction is passed through correctly
@@ -269,7 +270,7 @@ export default function OrdersTable({
                 setSelectedOrder(formattedOrder);
               }}
             >
-              View Details
+              {t("orders.viewDetails")}
             </Button>
             <Select
               value={order.status}
@@ -283,14 +284,14 @@ export default function OrdersTable({
               disabled={updateOrderStatusMutation.isPending || order.status === "CANCELLED"}
             >
               <SelectTrigger className="w-32">
-                <SelectValue placeholder="Update Status" />
+                <SelectValue placeholder={t("orders.updateStatus")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ORDER_STATUS.PLACED}>Placed</SelectItem>
-                <SelectItem value={ORDER_STATUS.PREPARING}>Preparing</SelectItem>
-                <SelectItem value={ORDER_STATUS.DISPATCHED}>Dispatched</SelectItem>
-                <SelectItem value={ORDER_STATUS.DELIVERED}>Delivered</SelectItem>
-                <SelectItem value={ORDER_STATUS.CANCELLED} disabled>Cancelled</SelectItem>
+                <SelectItem value={ORDER_STATUS.PLACED}>{t("orders.statusOptions.placed")}</SelectItem>
+                <SelectItem value={ORDER_STATUS.PREPARING}>{t("orders.statusOptions.preparing")}</SelectItem>
+                <SelectItem value={ORDER_STATUS.DISPATCHED}>{t("orders.statusOptions.dispatched")}</SelectItem>
+                <SelectItem value={ORDER_STATUS.DELIVERED}>{t("orders.statusOptions.delivered")}</SelectItem>
+                <SelectItem value={ORDER_STATUS.CANCELLED} disabled>{t("orders.statusOptions.cancelled")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -389,41 +390,95 @@ export default function OrdersTable({
   // Loading state
   if (isLoading) {
     return (
-      <div className="rounded-lg border">
-        <div className="p-1">
-          {/* Table header skeleton */}
-          <div className="flex items-center p-4 bg-muted-foreground/5">
-            {/* Column skeletons */}
-            {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-              <div key={i} className="flex-1">
-                <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
-              </div>
-            ))}
+      <div className="w-full space-y-4">
+        {/* Header skeleton */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <Skeleton className="h-8 w-32" />
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <Skeleton className="h-10 w-[180px]" />
+            <Skeleton className="h-10 w-full md:w-80" />
+            <Skeleton className="h-10 w-full md:w-32" />
           </div>
+        </div>
 
-          {/* Table rows skeleton */}
-          {[1, 2, 3, 4, 5].map((row) => (
-            <div key={row} className="flex items-center p-4 border-t">
-              {/* Cell skeletons */}
-              {[1, 2, 3, 4, 5, 6, 7].map((cell) => (
-                <div
-                  key={`${row}-${cell}`}
-                  className="flex-1"
-                >
-                  <Skeleton
-                    className={`h-5 bg-muted-foreground/5 ${
-                      cell === 1 ? "w-24" : 
-                      cell === 2 ? "w-20" : 
-                      cell === 3 ? "w-28" : 
-                      cell === 4 ? "w-16" : 
-                      cell === 5 ? "w-20" :
-                      cell === 6 ? "w-32" :
-                      "w-24"
-                    }`}
-                  />
+        {/* Status summary skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-muted/20 p-4 rounded-lg border">
+              <div className="flex justify-between items-center">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="h-8 w-8" />
+                </div>
+                <Skeleton className="h-9 w-9 rounded-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop table skeleton */}
+        <div className="hidden md:block rounded-lg border">
+          <div className="p-1">
+            {/* Table header skeleton */}
+            <div className="flex items-center p-4 bg-muted-foreground/5">
+              {/* Column skeletons */}
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                <div key={i} className="flex-1">
+                  <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
                 </div>
               ))}
             </div>
+
+            {/* Table rows skeleton */}
+            {[1, 2, 3, 4, 5].map((row) => (
+              <div key={row} className="flex items-center p-4 border-t">
+                {/* Cell skeletons */}
+                {[1, 2, 3, 4, 5, 6, 7].map((cell) => (
+                  <div
+                    key={`${row}-${cell}`}
+                    className="flex-1"
+                  >
+                    <Skeleton
+                      className={`h-5 bg-muted-foreground/5 ${
+                        cell === 1 ? "w-24" : 
+                        cell === 2 ? "w-20" : 
+                        cell === 3 ? "w-28" : 
+                        cell === 4 ? "w-16" : 
+                        cell === 5 ? "w-20" :
+                        cell === 6 ? "w-32" :
+                        "w-24"
+                      }`}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile cards skeleton */}
+        <div className="md:hidden space-y-4">
+          {[1, 2, 3, 4, 5].map((card) => (
+            <Card key={card}>
+              <CardContent className="p-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-start">
+                    <Skeleton className="h-5 w-24" />
+                    <Skeleton className="h-6 w-20 rounded-full" />
+                  </div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-28" />
+                    <Skeleton className="h-4 w-40" />
+                  </div>
+                  <div className="flex space-x-2 pt-2">
+                    <Skeleton className="h-8 w-24" />
+                    <Skeleton className="h-8 w-32" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
@@ -433,7 +488,7 @@ export default function OrdersTable({
   return (
     <div className="w-full space-y-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-xl font-semibold">Orders</h2>
+        <h2 className="text-xl font-semibold">{t("orders.title")}</h2>
 
         <div className="flex flex-col md:flex-row md:items-center gap-4">
           {/* Status filter */}
@@ -442,15 +497,15 @@ export default function OrdersTable({
             onValueChange={handleStatusChange}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by status" />
+              <SelectValue placeholder={t("orders.filterByStatus")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">All Statuses</SelectItem>
-              <SelectItem value="PLACED">Placed</SelectItem>
-              <SelectItem value="PREPARING">Preparing</SelectItem>
-              <SelectItem value="DISPATCHED">Dispatched</SelectItem>
-              <SelectItem value="DELIVERED">Delivered</SelectItem>
-              <SelectItem value="CANCELLED">Cancelled</SelectItem>
+              <SelectItem value="ALL">{t("orders.allStatuses")}</SelectItem>
+              <SelectItem value="PLACED">{t("orders.statusOptions.placed")}</SelectItem>
+              <SelectItem value="PREPARING">{t("orders.statusOptions.preparing")}</SelectItem>
+              <SelectItem value="DISPATCHED">{t("orders.statusOptions.dispatched")}</SelectItem>
+              <SelectItem value="DELIVERED">{t("orders.statusOptions.delivered")}</SelectItem>
+              <SelectItem value="CANCELLED">{t("orders.statusOptions.cancelled")}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -461,14 +516,14 @@ export default function OrdersTable({
           >
             <Input
               type="text"
-              placeholder="Search by Order ID..."
+              placeholder={t("orders.searchByOrderId")}
               value={filterInputValue}
               onChange={(e) => setFilterInputValue(e.target.value)}
               className="w-full"
             />
             <Button type="submit" variant="outline" className="cursor-pointer">
               <Search className="h-4 w-4" />
-              <span className="sr-only">Search</span>
+              <span className="sr-only">{t("common.search")}</span>
             </Button>
           </form>
 
@@ -479,7 +534,7 @@ export default function OrdersTable({
               size="sm"
               onClick={clearFilters}
             >
-              Clear Filters
+              {t("orders.clearFilters")}
             </Button>
           )}
         </div>
@@ -491,11 +546,11 @@ export default function OrdersTable({
           <div className="flex justify-center items-center mb-4">
             <Clock className="h-12 w-12 text-muted-foreground" />
           </div>
-          <h3 className="text-xl font-medium">No orders found</h3>
+          <h3 className="text-xl font-medium">{t("orders.noOrdersFound")}</h3>
           <p className="mt-2 text-muted-foreground mx-auto max-w-md text-center">
             {isFiltering
-              ? t("orders.noOrdersFilter", "No orders match your current filters")
-              : t("orders.noOrdersYet", "No orders have been placed yet")}
+              ? t("orders.noOrdersFilter")
+              : t("orders.noOrdersYet")}
           </p>
           {isFiltering && (
             <Button
@@ -504,7 +559,7 @@ export default function OrdersTable({
               size="sm"
               onClick={clearFilters}
             >
-              Clear all filters
+              {t("orders.clearAllFilters")}
             </Button>
           )}
         </div>
@@ -515,7 +570,7 @@ export default function OrdersTable({
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-blue-600 font-medium">Placed</p>
+                  <p className="text-blue-600 font-medium">{t("orders.summaryCards.placed")}</p>
                   <p className="text-2xl font-bold">{data.orders.filter(o => o.status === "PLACED").length}</p>
                 </div>
                 <div className="bg-blue-100 p-2 rounded-full">
@@ -526,7 +581,7 @@ export default function OrdersTable({
             <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-yellow-600 font-medium">Preparing</p>
+                  <p className="text-yellow-600 font-medium">{t("orders.summaryCards.preparing")}</p>
                   <p className="text-2xl font-bold">{data.orders.filter(o => o.status === "PREPARING").length}</p>
                 </div>
                 <div className="bg-yellow-100 p-2 rounded-full">
@@ -537,7 +592,7 @@ export default function OrdersTable({
             <div className="bg-green-50 p-4 rounded-lg border border-green-100">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-green-600 font-medium">Dispatched</p>
+                  <p className="text-green-600 font-medium">{t("orders.summaryCards.dispatched")}</p>
                   <p className="text-2xl font-bold">{data.orders.filter(o => o.status === "DISPATCHED").length}</p>
                 </div>
                 <div className="bg-green-100 p-2 rounded-full">
@@ -548,7 +603,7 @@ export default function OrdersTable({
             <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-purple-600 font-medium">Delivered</p>
+                  <p className="text-purple-600 font-medium">{t("orders.summaryCards.delivered")}</p>
                   <p className="text-2xl font-bold">{data.orders.filter(o => o.status === "DELIVERED").length}</p>
                 </div>
                 <div className="bg-purple-100 p-2 rounded-full">
@@ -558,97 +613,224 @@ export default function OrdersTable({
             </div>
           </div>
 
-          {/* Orders table */}
-          <ScrollArea className="w-[1150px]">
-            <Table>
-              <TableHeader className="rounded-b-lg">
-                <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
-                  {columns.map((column) => (
-                    <TableHead 
-                      key={column.id} 
-                      className="whitespace-nowrap"
-                      onClick={() => column.enableSorting && handleSort(column.id)}
-                    >
-                      <div className="flex items-center">
-                        {column.header}
-                        {column.enableSorting && (
-                          <div className="ml-1">
-                            {sortField === column.id ? (
-                              sortOrder === "asc" ? (
-                                <ChevronUp className="h-4 w-4" />
+          {/* Desktop table view */}
+          <div className="hidden md:block">
+            <ScrollArea className="w-full">
+              <Table>
+                <TableHeader className="rounded-b-lg">
+                  <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
+                    {columns.map((column) => (
+                      <TableHead 
+                        key={column.id} 
+                        className="whitespace-nowrap"
+                        onClick={() => column.enableSorting && handleSort(column.id)}
+                      >
+                        <div className="flex items-center">
+                          {column.header}
+                          {column.enableSorting && (
+                            <div className="ml-1">
+                              {sortField === column.id ? (
+                                sortOrder === "asc" ? (
+                                  <ChevronUp className="h-4 w-4" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4" />
+                                )
                               ) : (
-                                <ChevronDown className="h-4 w-4" />
-                              )
-                            ) : (
-                              <ChevronDown className="h-4 w-4 text-muted-foreground/50" />
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.orders.map((order) => (
-                  <TableRow key={order.id}>
-                    {columns.map((column) => {
-                      // Handle nested properties with dot notation
-                      const accessorKey = column.accessorKey;
-                      let value: unknown;
-
-                      if (
-                        typeof accessorKey === "string" &&
-                        accessorKey.includes(".")
-                      ) {
-                        // Handle dot notation for nested properties
-                        const keys = accessorKey.split(".");
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        let nestedValue: any = order;
-                        
-                        for (const key of keys) {
-                          if (nestedValue && typeof nestedValue === "object") {
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            nestedValue = (nestedValue as any)[key];
-                          } else {
-                            nestedValue = undefined;
-                            break;
-                          }
-                        }
-                        
-                        value = nestedValue;
-                      } else if (typeof accessorKey === "string") {
-                        // Handle direct property access
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        value = (order as any)[accessorKey];
-                      } else {
-                        value = undefined;
-                      }
-
-                      return (
-                        <TableCell key={column.id}>
-                          {column.cell
-                            ? column.cell({
-                                getValue: () => value,
-                                row: { original: order },
-                              })
-                            : (value as React.ReactNode)}
-                        </TableCell>
-                      );
-                    })}
+                                <ChevronDown className="h-4 w-4 text-muted-foreground/50" />
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </TableHead>
+                    ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+                </TableHeader>
+                <TableBody>
+                  {data.orders.map((order) => (
+                    <TableRow key={order.id}>
+                      {columns.map((column) => {
+                        // Handle nested properties with dot notation
+                        const accessorKey = column.accessorKey;
+                        let value: unknown;
+
+                        if (
+                          typeof accessorKey === "string" &&
+                          accessorKey.includes(".")
+                        ) {
+                          // Handle dot notation for nested properties
+                          const keys = accessorKey.split(".");
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          let nestedValue: any = order;
+                          
+                          for (const key of keys) {
+                            if (nestedValue && typeof nestedValue === "object") {
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              nestedValue = (nestedValue as any)[key];
+                            } else {
+                              nestedValue = undefined;
+                              break;
+                            }
+                          }
+                          
+                          value = nestedValue;
+                        } else if (typeof accessorKey === "string") {
+                          // Handle direct property access
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          value = (order as any)[accessorKey];
+                        } else {
+                          value = undefined;
+                        }
+
+                        return (
+                          <TableCell key={column.id}>
+                            {column.cell
+                              ? column.cell({
+                                  getValue: () => value,
+                                  row: { original: order },
+                                })
+                              : (value as React.ReactNode)}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </div>
+
+          {/* Mobile card view */}
+          <div className="md:hidden space-y-4">
+            {data.orders.map((order) => (
+              <Card key={order.id}>
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    {/* Order header */}
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium text-sm">{t("orders.table.orderId")} {order.displayOrderNumber}</h3>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {format(new Date(order.createdAt), "MMM d, yyyy h:mm a")}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        {getStatusBadge(order.status, t)}
+                      </div>
+                    </div>
+
+                    {/* Order details */}
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">{t("orders.mobileLabels.customer")}</span>
+                        <span>{(
+                          order 
+                          ).customer?.user?.name || t("orders.table.anonymous")}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">{t("orders.mobileLabels.items")}</span>
+                        <span>
+                          {(order).orderItems ? (
+                            (order).orderItems.length === 1
+                              ? t("orders.table.oneItem")
+                              : t("orders.table.multipleItems", { count: (order).orderItems.length })
+                          ) : '—'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">{t("orders.mobileLabels.total")}</span>
+                        <span className="font-medium">
+                          ${typeof order.totalAmount === 'string' 
+                            ? parseFloat(order.totalAmount).toFixed(2)
+                            : Number(order.totalAmount).toFixed(2)
+                          }
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => {
+                          // Transform order data to match the expected format
+                          const formattedOrder = {
+                            ...order,
+                            // Map orderItems to items
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            items: (order as any).orderItems?.map((item: any) => ({
+                              id: item.id,
+                              name: item.menuItem?.name || t("orders.unknownItem"),
+                              price: item.price,
+                              quantity: item.quantity,
+                              imageUrl: item.menuItem?.imageUrl
+                            })) || [],
+                            // Use totalAmount for order total
+                            totalAmount: order.totalAmount,
+                            // Include restaurant with deliveryFee
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            restaurant: (order as any).restaurant ? {
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              id: (order as any).restaurant.id,
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              name: (order as any).restaurant.name,
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              imageUrl: (order as any).restaurant.imageUrl,
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              deliveryFee: (order as any).restaurant.deliveryFee
+                            } : {
+                              id: order.restaurantId,
+                              name: t("orders.unknownRestaurant"),
+                              deliveryFee: 0
+                            },
+                            // Ensure paymentTransaction is passed through correctly
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            paymentTransaction: (order as any).paymentTransaction ? {
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              ...(order as any).paymentTransaction,
+                            } : undefined
+                          };
+                          setSelectedOrder(formattedOrder);
+                        }}
+                      >
+                        {t("orders.viewDetails")}
+                      </Button>
+                      <Select
+                        value={order.status}
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        onValueChange={(newStatus: any) => {
+                          updateOrderStatusMutation.mutate({
+                            orderId: order.id,
+                            status: newStatus
+                          });
+                        }}
+                        disabled={updateOrderStatusMutation.isPending || order.status === "CANCELLED"}
+                      >
+                        <SelectTrigger className="flex-1 sm:w-32 sm:flex-none w-full">
+                          <SelectValue placeholder={t("orders.updateStatus")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={ORDER_STATUS.PLACED}>{t("orders.statusOptions.placed")}</SelectItem>
+                          <SelectItem value={ORDER_STATUS.PREPARING}>{t("orders.statusOptions.preparing")}</SelectItem>
+                          <SelectItem value={ORDER_STATUS.DISPATCHED}>{t("orders.statusOptions.dispatched")}</SelectItem>
+                          <SelectItem value={ORDER_STATUS.DELIVERED}>{t("orders.statusOptions.delivered")}</SelectItem>
+                          <SelectItem value={ORDER_STATUS.CANCELLED} disabled>{t("orders.statusOptions.cancelled")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
           {/* Pagination controls */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="text-sm text-muted-foreground">
-              Showing {start}–{end} of {totalOrders} orders
+              {t("orders.pagination.showing")} {start}–{end} {t("orders.pagination.of")} {totalOrders} {t("orders.pagination.orders")}
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-center sm:justify-end space-x-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -657,7 +839,7 @@ export default function OrdersTable({
                 className="hidden sm:flex"
               >
                 <ChevronsLeft className="h-4 w-4" />
-                <span className="sr-only">First page</span>
+                <span className="sr-only">{t("orders.pagination.firstPage")}</span>
               </Button>
               <Button
                 variant="outline"
@@ -666,11 +848,11 @@ export default function OrdersTable({
                 disabled={page === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Previous page</span>
+                <span className="sr-only">{t("orders.pagination.previousPage")}</span>
               </Button>
               <div className="flex items-center">
                 <span className="text-sm font-medium">
-                  Page {page} of {totalPages}
+                  {t("orders.pagination.page")} {page} {t("orders.pagination.of")} {totalPages}
                 </span>
               </div>
               <Button
@@ -680,7 +862,7 @@ export default function OrdersTable({
                 disabled={page >= totalPages}
               >
                 <ChevronRight className="h-4 w-4" />
-                <span className="sr-only">Next page</span>
+                <span className="sr-only">{t("orders.pagination.nextPage")}</span>
               </Button>
               <Button
                 variant="outline"
@@ -690,7 +872,7 @@ export default function OrdersTable({
                 className="hidden sm:flex"
               >
                 <ChevronsRight className="h-4 w-4" />
-                <span className="sr-only">Last page</span>
+                <span className="sr-only">{t("orders.pagination.lastPage")}</span>
               </Button>
             </div>
           </div>
@@ -702,7 +884,6 @@ export default function OrdersTable({
         <OrderDetailsRestaurant
           order={selectedOrder}
           onClose={() => setSelectedOrder(null)}
-          t={t}
         />
       )}
     </div>

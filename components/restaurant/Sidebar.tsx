@@ -18,40 +18,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import logo from "@/public/logo.svg";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type NavItem = {
   icon: React.ElementType;
-  label: string;
+  labelKey: string;
   href: string;
 };
-
-const navItems: NavItem[] = [
-  {
-    icon: LayoutDashboard,
-    label: "Dashboard",
-    href: "/restaurant",
-  },
-  {
-    icon: Utensils,
-    label: "Menu",
-    href: "/restaurant/menu",
-  },
-  {
-    icon: ShoppingBag,
-    label: "Orders",
-    href: "/restaurant/orders",
-  },
-  {
-    icon: DollarSign,
-    label: "Sales",
-    href: "/restaurant/sales",
-  },
-  {
-    icon: Settings,
-    label: "Settings",
-    href: "/restaurant/settings",
-  },
-];
 
 type SidebarProps = {
   collapsed?: boolean;
@@ -65,6 +38,57 @@ export function Sidebar({
   const pathname = usePathname();
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t, i18n } = useTranslation();
+
+  // Ensure translations are ready to avoid hydration mismatch
+  const isTranslationReady = i18n.isInitialized && i18n.hasLoadedNamespace('common');
+
+  const navItems: NavItem[] = [
+    {
+      icon: LayoutDashboard,
+      labelKey: "restaurantSidebar.dashboard",
+      href: "/restaurant",
+    },
+    {
+      icon: Utensils,
+      labelKey: "restaurantSidebar.menu",
+      href: "/restaurant/menu",
+    },
+    {
+      icon: ShoppingBag,
+      labelKey: "restaurantSidebar.orders",
+      href: "/restaurant/orders",
+    },
+    {
+      icon: DollarSign,
+      labelKey: "restaurantSidebar.sales",
+      href: "/restaurant/sales",
+    },
+    {
+      icon: Settings,
+      labelKey: "restaurantSidebar.settings",
+      href: "/restaurant/settings",
+    },
+  ];
+
+  // Helper function to get translated text with fallback
+  const getTranslation = (key: string, fallback: string): string => {
+    if (!isTranslationReady) {
+      return fallback;
+    }
+    const translated = t(key);
+    // If translation returns the key itself, use fallback
+    return translated === key ? fallback : translated;
+  };
+
+  // Fallback labels for navigation items
+  const navItemFallbacks: Record<string, string> = {
+    "restaurantSidebar.dashboard": "Dashboard",
+    "restaurantSidebar.menu": "Menu",
+    "restaurantSidebar.orders": "Orders",
+    "restaurantSidebar.sales": "Sales",
+    "restaurantSidebar.settings": "Settings",
+  };
 
   // Use either the external controlled state or internal state
   const collapsed =
@@ -87,7 +111,7 @@ export function Sidebar({
           variant="ghost"
           size="icon"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-label={mobileOpen ? getTranslation('restaurantSidebar.closeMenu', 'Close menu') : getTranslation('restaurantSidebar.openMenu', 'Open menu')}
         >
           {mobileOpen ? <X /> : <Menu />}
         </Button>
@@ -114,7 +138,7 @@ export function Sidebar({
             size="icon"
             onClick={handleToggleCollapse}
             className="h-6 w-6 rounded-full border border-neutral-mediumGray bg-white shadow-md cursor-pointer hover:bg-neutral-lightGray "
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={collapsed ? getTranslation('restaurantSidebar.expandSidebar', 'Expand sidebar') : getTranslation('restaurantSidebar.collapseSidebar', 'Collapse sidebar')}
           >
             {collapsed ? (
               <ChevronRight className="h-4 w-4" />
@@ -157,7 +181,7 @@ export function Sidebar({
                     onClick={() => setMobileOpen(false)}
                   >
                     <Icon className={cn("h-5 w-5", collapsed && "mx-auto")} />
-                    {!collapsed && <span>{item.label}</span>}
+                    {!collapsed && <span>{getTranslation(item.labelKey, navItemFallbacks[item.labelKey] || item.labelKey)}</span>}
                   </Link>
                 </li>
               );
@@ -169,7 +193,7 @@ export function Sidebar({
         <div className="border-t border-sidebar-border p-4">
           {!collapsed && (
             <div className="text-xs text-muted-foreground">
-              Dashi Restaurant v1.0
+              {getTranslation('restaurantSidebar.version', 'Dashi Restaurant v1.0')}
             </div>
           )}
         </div>

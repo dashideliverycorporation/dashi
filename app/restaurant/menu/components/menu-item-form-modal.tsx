@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -15,6 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { MenuItemForm } from "@/app/restaurant/menu/components/menu-item-form";
 import { JSX } from "react/jsx-runtime";
 import type { MenuItemWithCategory } from "@/types/menu";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface MenuItemFormModalProps {
   buttonText?: string;
@@ -40,6 +40,7 @@ export function MenuItemFormModal({
   onMenuItemChange,
 }: MenuItemFormModalProps): JSX.Element {
   const [open, setOpen] = React.useState(false);
+  const { t } = useTranslation();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -57,16 +58,13 @@ export function MenuItemFormModal({
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-[95vh] md:max-h-[90vh]">
-        <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit Menu Item" : "Add New Menu Item"}</DialogTitle>
-          <DialogDescription>
-            {isEdit 
-              ? "Update the details of this menu item."
-              : "Fill in the details below to create a new menu item for your restaurant."}
-          </DialogDescription>
+        <DialogHeader className="flex justify-between items-center">
+          <DialogTitle className="self-start">
+            {isEdit ? t("restaurantMenu.form.editTitle") : t("restaurantMenu.form.createTitle")}
+          </DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[65vh] md:max-h-[70vh] pr-4">
-          <div className="pb-6 px-2">
+          <div className="lg:pb-6 lg:px-2 p-0">
             <MenuItemForm 
               setOpen={setOpen} 
               menuItem={menuItem}
