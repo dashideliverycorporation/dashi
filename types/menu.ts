@@ -5,6 +5,7 @@
  */
 
 import { JSX } from "react/jsx-runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 /**
  * Type representing a menu item with category information
@@ -13,12 +14,12 @@ export type MenuItemWithCategory = {
   id: string;
   name: string;
   description: string | null;
-  price: number | string;
+  price: number | string | Decimal;
   category: string;
   imageUrl: string;
   isAvailable: boolean;
   restaurantId: string;
-  deletedAt: Date | string | null;
+  deletedAt?: Date | string | null;
   createdAt: Date | string;
   updatedAt: Date | string;
 };

@@ -31,6 +31,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ChevronLeft,
   ChevronRight,
@@ -142,7 +144,7 @@ export default function RestaurantSalesTable({
       id: "totalAmount",
       accessorKey: "totalAmount",
       header: "Amount",
-      cell: (info) => `$${parseFloat(info.getValue()).toFixed(2)}`,
+      cell: (info) => `$${Number(info.getValue()).toFixed(2)}`,
       enableSorting: true,
     },
   ];
@@ -450,72 +452,65 @@ export default function RestaurantSalesTable({
         </div>
       </div>
 
-
-
-      {/* Sales table */}
-      <ScrollArea className="w-full whitespace-nowrap">
-        <Table>
-          <TableHeader className="rounded-b-lg">
-            <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
-              {columns.map((column) => (
-                <TableHead 
-                  key={column.id} 
-                  className="whitespace-nowrap"
-                  onClick={() => column.enableSorting && handleSort(column.accessorKey)}
-                  style={{ cursor: column.enableSorting ? 'pointer' : 'default' }}
-                >
-                  <div className="flex items-center">
-                    {column.header}
-                    {column.enableSorting && sortField === column.accessorKey && (
-                      <span className="ml-1">
-                        {sortOrder === 'asc' ? '▲' : '▼'}
-                      </span>
-                    )}
+      {/* Loading state */}
+      {isLoading ? (
+        <div className="w-full space-y-4">
+          {/* Desktop table skeleton */}
+          <div className="hidden md:block rounded-lg border">
+            <div className="p-1">
+              {/* Table header skeleton */}
+              <div className="flex items-center p-4 bg-muted-foreground/5">
+                {columns.map((_, i) => (
+                  <div key={i} className="flex-1">
+                    <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
                   </div>
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              // Loading state
-              Array.from({ length: pageSize }).map((_, index) => (
-                <TableRow key={index}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id}>
-                      <div className="h-5 w-24 animate-pulse bg-muted-foreground/5 rounded"></div>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))                ) : tableData.sales.length === 0 ? (
-                  // No data state
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No sales data found
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  // Data rows
-                  tableData.sales.map((sale) => (
-                <TableRow key={sale.id}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id}>
-                      {column.cell ? column.cell({ getValue: () => sale[column.accessorKey as keyof typeof sale] }) : sale[column.accessorKey as keyof typeof sale]?.toString()}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+                ))}
+              </div>
 
-      {/* No results message (when sales.length is 0) */}
-      {!isLoading && tableData.sales.length === 0 && (
+              {/* Table rows skeleton */}
+              {Array.from({ length: pageSize }).map((_, row) => (
+                <div key={row} className="flex items-center p-4 border-t">
+                  {columns.map((_, cell) => (
+                    <div key={`${row}-${cell}`} className="flex-1">
+                      <Skeleton
+                        className={`h-5 bg-muted-foreground/5 ${
+                          cell === 0 ? "w-24" : 
+                          cell === 1 ? "w-28" : 
+                          cell === 2 ? "w-32" : 
+                          cell === 3 ? "w-16" : 
+                          "w-20"
+                        }`}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile cards skeleton */}
+          <div className="md:hidden space-y-4">
+            {Array.from({ length: pageSize }).map((_, card) => (
+              <Card key={card}>
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-start">
+                      <Skeleton className="h-5 w-24" />
+                      <Skeleton className="h-4 w-20" />
+                    </div>
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-4 w-20" />
+                      <Skeleton className="h-6 w-24" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      ) : tableData.sales.length === 0 ? (
+        /* No results message */
         <div className="rounded-lg border p-8 text-center">
           <div className="flex justify-center items-center mb-4">
             <Calendar className="h-12 w-12 text-muted-foreground" />
@@ -537,72 +532,153 @@ export default function RestaurantSalesTable({
             </Button>
           )}
         </div>
-      )}
-
-      {/* Pagination controls */}
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
-          Showing{" "}
-          <span className="font-medium">
-            {tableData.sales.length > 0
-              ? (page - 1) * pageSize + 1
-              : 0}
-          </span>
-          {" to "}
-          <span className="font-medium">
-            {Math.min(page * pageSize, totalOrders)}
-          </span>{" "}
-          of{" "}
-          <span className="font-medium">{totalOrders}</span>{" "}
-          results
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPage(1)}
-            disabled={page === 1}
-            className="hidden sm:flex"
-          >
-            <ChevronsLeft className="h-4 w-4" />
-            <span className="sr-only">First page</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPage(page - 1)}
-            disabled={page === 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Previous page</span>
-          </Button>
-          <div className="flex items-center">
-            <span className="text-sm font-medium">
-              Page {page} of {totalPages}
-            </span>
+      ) : (
+        <>
+          {/* Desktop table view */}
+          <div className="hidden md:block">
+            <ScrollArea className="w-full whitespace-nowrap">
+              <Table>
+                <TableHeader className="rounded-b-lg">
+                  <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
+                    {columns.map((column) => (
+                      <TableHead 
+                        key={column.id} 
+                        className="whitespace-nowrap"
+                        onClick={() => column.enableSorting && handleSort(column.accessorKey)}
+                        style={{ cursor: column.enableSorting ? 'pointer' : 'default' }}
+                      >
+                        <div className="flex items-center">
+                          {column.header}
+                          {column.enableSorting && sortField === column.accessorKey && (
+                            <span className="ml-1">
+                              {sortOrder === 'asc' ? '▲' : '▼'}
+                            </span>
+                          )}
+                        </div>
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tableData.sales.map((sale) => (
+                    <TableRow key={sale.id}>
+                      {columns.map((column) => (
+                        <TableCell key={column.id}>
+                          {column.cell ? column.cell({ getValue: () => sale[column.accessorKey as keyof typeof sale] }) : sale[column.accessorKey as keyof typeof sale]?.toString()}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPage(page + 1)}
-            disabled={page >= totalPages}
-          >
-            <ChevronRight className="h-4 w-4" />
-            <span className="sr-only">Next page</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPage(totalPages)}
-            disabled={page >= totalPages}
-            className="hidden sm:flex"
-          >
-            <ChevronsRight className="h-4 w-4" />
-            <span className="sr-only">Last page</span>
-          </Button>
-        </div>
-      </div>
+
+          {/* Mobile card view */}
+          <div className="md:hidden space-y-4">
+            {tableData.sales.map((sale) => (
+              <Card key={sale.id}>
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    {/* Sale header */}
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium text-sm">Order #{sale.orderId}</h3>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {new Date(sale.orderDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-green-600">
+                          ${Number(sale.totalAmount).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Sale details */}
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Customer:</span>
+                        <span>{sale.customerName}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Items:</span>
+                        <span>{sale.itemCount} item{sale.itemCount !== 1 ? 's' : ''}</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Pagination controls */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="text-sm text-muted-foreground">
+              Showing{" "}
+              <span className="font-medium">
+                {tableData.sales.length > 0
+                  ? (page - 1) * pageSize + 1
+                  : 0}
+              </span>
+              {" to "}
+              <span className="font-medium">
+                {Math.min(page * pageSize, totalOrders)}
+              </span>{" "}
+              of{" "}
+              <span className="font-medium">{totalOrders}</span>{" "}
+              results
+            </div>
+            
+            <div className="flex items-center justify-center sm:justify-end space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(1)}
+                disabled={page === 1}
+                className="hidden sm:flex"
+              >
+                <ChevronsLeft className="h-4 w-4" />
+                <span className="sr-only">First page</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(page - 1)}
+                disabled={page === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                <span className="sr-only">Previous page</span>
+              </Button>
+              <div className="flex items-center">
+                <span className="text-sm font-medium">
+                  Page {page} of {totalPages}
+                </span>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(page + 1)}
+                disabled={page >= totalPages}
+              >
+                <ChevronRight className="h-4 w-4" />
+                <span className="sr-only">Next page</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(totalPages)}
+                disabled={page >= totalPages}
+                className="hidden sm:flex"
+              >
+                <ChevronsRight className="h-4 w-4" />
+                <span className="sr-only">Last page</span>
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

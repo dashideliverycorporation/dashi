@@ -1098,6 +1098,125 @@ export const restaurantRouter = router({
     }),
 
   /**
+   * Get dashboard statistics for the authenticated restaurant
+   * Returns key metrics including menu items count, active orders, today's orders, and unique customers
+   */
+  getDashboardStats: restaurantProcedure.query(async ({ ctx }) => {
+    try {
+      const userId = ctx.session.user.id;
+      
+      // Get the restaurant for the authenticated user
+      const restaurantManager = await prisma.restaurantManager.findUnique({
+        where: { userId },
+        include: {
+          restaurant: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      if (!restaurantManager) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User is not associated with any restaurant",
+        });
+      }
+
+      const restaurantId = restaurantManager.restaurant.id;
+
+      // Get start of today for filtering today's orders
+      const startOfToday = startOfDay(new Date());
+      
+      // Get start of current month for filtering this month's customers
+      const startOfThisMonth = startOfMonth(new Date());
+
+      // Execute all queries in parallel for better performance
+      const [menuItemsCount, activeOrdersCount, todaysOrdersCount, customersCount, monthlySales] = await Promise.all([
+        // Count of menu items (available and non-deleted)
+        prisma.menuItem.count({
+          where: {
+            restaurantId,
+            deletedAt: null,
+          },
+        }),
+        
+        // Count of active orders (orders that are not completed or cancelled)
+        prisma.order.count({
+          where: {
+            restaurantId,
+            status: {
+              in: [ 'PREPARING'],
+            },
+          },
+        }),
+        
+        // Count of today's orders
+        prisma.order.count({
+          where: {
+            restaurantId,
+            createdAt: {
+              gte: startOfToday,
+            },
+          },
+        }),
+        
+        // Count of total customers this month
+        prisma.order.count({
+          where: {
+            restaurantId,
+            createdAt: {
+              gte: startOfThisMonth,
+            },
+          },
+        }),
+        
+        // Get monthly sales data for commission calculation
+        prisma.order.findMany({
+          where: {
+            restaurantId,
+            createdAt: {
+              gte: startOfThisMonth,
+            },
+            status: 'DELIVERED', // Only count delivered orders as sales
+          },
+          select: {
+            totalAmount: true,
+          },
+        }),
+      ]);
+
+      // Calculate total sales and commission
+      const totalSales = monthlySales.reduce((sum, order) => sum + order.totalAmount.toNumber(), 0);
+      const deliveredOrdersCount = monthlySales.length;
+
+      return {
+        restaurantName: restaurantManager.restaurant.name,
+        menuItems: menuItemsCount,
+        activeOrders: activeOrdersCount,
+        todaysOrders: todaysOrdersCount,
+        customers: customersCount,
+        monthlySales: {
+          totalSales,
+          orderCount: deliveredOrdersCount,
+          averageOrderValue: deliveredOrdersCount > 0 ? totalSales / deliveredOrdersCount : 0,
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching dashboard statistics:", error);
+      if (error instanceof TRPCError) {
+        throw error;
+      }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to fetch dashboard statistics",
+      });
+    }
+  }),
+
+  /**
    * Get the restaurant name for the authenticated manager
    * Returns the name of the restaurant associated with the logged-in manager
    */

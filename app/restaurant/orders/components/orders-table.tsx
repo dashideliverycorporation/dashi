@@ -38,6 +38,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   ChevronLeft,
   ChevronRight,
@@ -389,41 +390,95 @@ export default function OrdersTable({
   // Loading state
   if (isLoading) {
     return (
-      <div className="rounded-lg border">
-        <div className="p-1">
-          {/* Table header skeleton */}
-          <div className="flex items-center p-4 bg-muted-foreground/5">
-            {/* Column skeletons */}
-            {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-              <div key={i} className="flex-1">
-                <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
-              </div>
-            ))}
+      <div className="w-full space-y-4">
+        {/* Header skeleton */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <Skeleton className="h-8 w-32" />
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <Skeleton className="h-10 w-[180px]" />
+            <Skeleton className="h-10 w-full md:w-80" />
+            <Skeleton className="h-10 w-full md:w-32" />
           </div>
+        </div>
 
-          {/* Table rows skeleton */}
-          {[1, 2, 3, 4, 5].map((row) => (
-            <div key={row} className="flex items-center p-4 border-t">
-              {/* Cell skeletons */}
-              {[1, 2, 3, 4, 5, 6, 7].map((cell) => (
-                <div
-                  key={`${row}-${cell}`}
-                  className="flex-1"
-                >
-                  <Skeleton
-                    className={`h-5 bg-muted-foreground/5 ${
-                      cell === 1 ? "w-24" : 
-                      cell === 2 ? "w-20" : 
-                      cell === 3 ? "w-28" : 
-                      cell === 4 ? "w-16" : 
-                      cell === 5 ? "w-20" :
-                      cell === 6 ? "w-32" :
-                      "w-24"
-                    }`}
-                  />
+        {/* Status summary skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-muted/20 p-4 rounded-lg border">
+              <div className="flex justify-between items-center">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="h-8 w-8" />
+                </div>
+                <Skeleton className="h-9 w-9 rounded-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop table skeleton */}
+        <div className="hidden md:block rounded-lg border">
+          <div className="p-1">
+            {/* Table header skeleton */}
+            <div className="flex items-center p-4 bg-muted-foreground/5">
+              {/* Column skeletons */}
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                <div key={i} className="flex-1">
+                  <Skeleton className="h-5 w-32 bg-muted-foreground/5" />
                 </div>
               ))}
             </div>
+
+            {/* Table rows skeleton */}
+            {[1, 2, 3, 4, 5].map((row) => (
+              <div key={row} className="flex items-center p-4 border-t">
+                {/* Cell skeletons */}
+                {[1, 2, 3, 4, 5, 6, 7].map((cell) => (
+                  <div
+                    key={`${row}-${cell}`}
+                    className="flex-1"
+                  >
+                    <Skeleton
+                      className={`h-5 bg-muted-foreground/5 ${
+                        cell === 1 ? "w-24" : 
+                        cell === 2 ? "w-20" : 
+                        cell === 3 ? "w-28" : 
+                        cell === 4 ? "w-16" : 
+                        cell === 5 ? "w-20" :
+                        cell === 6 ? "w-32" :
+                        "w-24"
+                      }`}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile cards skeleton */}
+        <div className="md:hidden space-y-4">
+          {[1, 2, 3, 4, 5].map((card) => (
+            <Card key={card}>
+              <CardContent className="p-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-start">
+                    <Skeleton className="h-5 w-24" />
+                    <Skeleton className="h-6 w-20 rounded-full" />
+                  </div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-28" />
+                    <Skeleton className="h-4 w-40" />
+                  </div>
+                  <div className="flex space-x-2 pt-2">
+                    <Skeleton className="h-8 w-24" />
+                    <Skeleton className="h-8 w-32" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
@@ -558,97 +613,224 @@ export default function OrdersTable({
             </div>
           </div>
 
-          {/* Orders table */}
-          <ScrollArea className="w-[1150px]">
-            <Table>
-              <TableHeader className="rounded-b-lg">
-                <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
-                  {columns.map((column) => (
-                    <TableHead 
-                      key={column.id} 
-                      className="whitespace-nowrap"
-                      onClick={() => column.enableSorting && handleSort(column.id)}
-                    >
-                      <div className="flex items-center">
-                        {column.header}
-                        {column.enableSorting && (
-                          <div className="ml-1">
-                            {sortField === column.id ? (
-                              sortOrder === "asc" ? (
-                                <ChevronUp className="h-4 w-4" />
+          {/* Desktop table view */}
+          <div className="hidden md:block">
+            <ScrollArea className="w-full">
+              <Table>
+                <TableHeader className="rounded-b-lg">
+                  <TableRow className="bg-muted-foreground/5 border-none rounded-b-lg">
+                    {columns.map((column) => (
+                      <TableHead 
+                        key={column.id} 
+                        className="whitespace-nowrap"
+                        onClick={() => column.enableSorting && handleSort(column.id)}
+                      >
+                        <div className="flex items-center">
+                          {column.header}
+                          {column.enableSorting && (
+                            <div className="ml-1">
+                              {sortField === column.id ? (
+                                sortOrder === "asc" ? (
+                                  <ChevronUp className="h-4 w-4" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4" />
+                                )
                               ) : (
-                                <ChevronDown className="h-4 w-4" />
-                              )
-                            ) : (
-                              <ChevronDown className="h-4 w-4 text-muted-foreground/50" />
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.orders.map((order) => (
-                  <TableRow key={order.id}>
-                    {columns.map((column) => {
-                      // Handle nested properties with dot notation
-                      const accessorKey = column.accessorKey;
-                      let value: unknown;
-
-                      if (
-                        typeof accessorKey === "string" &&
-                        accessorKey.includes(".")
-                      ) {
-                        // Handle dot notation for nested properties
-                        const keys = accessorKey.split(".");
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        let nestedValue: any = order;
-                        
-                        for (const key of keys) {
-                          if (nestedValue && typeof nestedValue === "object") {
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            nestedValue = (nestedValue as any)[key];
-                          } else {
-                            nestedValue = undefined;
-                            break;
-                          }
-                        }
-                        
-                        value = nestedValue;
-                      } else if (typeof accessorKey === "string") {
-                        // Handle direct property access
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        value = (order as any)[accessorKey];
-                      } else {
-                        value = undefined;
-                      }
-
-                      return (
-                        <TableCell key={column.id}>
-                          {column.cell
-                            ? column.cell({
-                                getValue: () => value,
-                                row: { original: order },
-                              })
-                            : (value as React.ReactNode)}
-                        </TableCell>
-                      );
-                    })}
+                                <ChevronDown className="h-4 w-4 text-muted-foreground/50" />
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </TableHead>
+                    ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+                </TableHeader>
+                <TableBody>
+                  {data.orders.map((order) => (
+                    <TableRow key={order.id}>
+                      {columns.map((column) => {
+                        // Handle nested properties with dot notation
+                        const accessorKey = column.accessorKey;
+                        let value: unknown;
+
+                        if (
+                          typeof accessorKey === "string" &&
+                          accessorKey.includes(".")
+                        ) {
+                          // Handle dot notation for nested properties
+                          const keys = accessorKey.split(".");
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          let nestedValue: any = order;
+                          
+                          for (const key of keys) {
+                            if (nestedValue && typeof nestedValue === "object") {
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              nestedValue = (nestedValue as any)[key];
+                            } else {
+                              nestedValue = undefined;
+                              break;
+                            }
+                          }
+                          
+                          value = nestedValue;
+                        } else if (typeof accessorKey === "string") {
+                          // Handle direct property access
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          value = (order as any)[accessorKey];
+                        } else {
+                          value = undefined;
+                        }
+
+                        return (
+                          <TableCell key={column.id}>
+                            {column.cell
+                              ? column.cell({
+                                  getValue: () => value,
+                                  row: { original: order },
+                                })
+                              : (value as React.ReactNode)}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </div>
+
+          {/* Mobile card view */}
+          <div className="md:hidden space-y-4">
+            {data.orders.map((order) => (
+              <Card key={order.id}>
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    {/* Order header */}
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium text-sm">Order {order.displayOrderNumber}</h3>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {format(new Date(order.createdAt), "MMM d, yyyy h:mm a")}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        {getStatusBadge(order.status)}
+                      </div>
+                    </div>
+
+                    {/* Order details */}
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Customer:</span>
+                        
+                        <span>{(
+                          order 
+                          ).customer?.user?.name || 'Anonymous'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Items:</span>
+                        <span>
+                          {(order).orderItems ? 
+                            `${(order).orderItems.length} item${(order).orderItems.length !== 1 ? 's' : ''}` : 
+                            '—'
+                          }
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Total:</span>
+                        <span className="font-medium">
+                          ${typeof order.totalAmount === 'string' 
+                            ? parseFloat(order.totalAmount).toFixed(2)
+                            : Number(order.totalAmount).toFixed(2)
+                          }
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => {
+                          // Transform order data to match the expected format
+                          const formattedOrder = {
+                            ...order,
+                            // Map orderItems to items
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            items: (order as any).orderItems?.map((item: any) => ({
+                              id: item.id,
+                              name: item.menuItem?.name || "Unknown Item",
+                              price: item.price,
+                              quantity: item.quantity,
+                              imageUrl: item.menuItem?.imageUrl
+                            })) || [],
+                            // Use totalAmount for order total
+                            totalAmount: order.totalAmount,
+                            // Include restaurant with deliveryFee
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            restaurant: (order as any).restaurant ? {
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              id: (order as any).restaurant.id,
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              name: (order as any).restaurant.name,
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              imageUrl: (order as any).restaurant.imageUrl,
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              deliveryFee: (order as any).restaurant.deliveryFee
+                            } : {
+                              id: order.restaurantId,
+                              name: "Unknown Restaurant",
+                              deliveryFee: 0
+                            },
+                            // Ensure paymentTransaction is passed through correctly
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            paymentTransaction: (order as any).paymentTransaction ? {
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              ...(order as any).paymentTransaction,
+                            } : undefined
+                          };
+                          setSelectedOrder(formattedOrder);
+                        }}
+                      >
+                        View Details
+                      </Button>
+                      <Select
+                        value={order.status}
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        onValueChange={(newStatus: any) => {
+                          updateOrderStatusMutation.mutate({
+                            orderId: order.id,
+                            status: newStatus
+                          });
+                        }}
+                        disabled={updateOrderStatusMutation.isPending || order.status === "CANCELLED"}
+                      >
+                        <SelectTrigger className="flex-1 sm:w-32 sm:flex-none w-full">
+                          <SelectValue placeholder="Update Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={ORDER_STATUS.PLACED}>Placed</SelectItem>
+                          <SelectItem value={ORDER_STATUS.PREPARING}>Preparing</SelectItem>
+                          <SelectItem value={ORDER_STATUS.DISPATCHED}>Dispatched</SelectItem>
+                          <SelectItem value={ORDER_STATUS.DELIVERED}>Delivered</SelectItem>
+                          <SelectItem value={ORDER_STATUS.CANCELLED} disabled>Cancelled</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
           {/* Pagination controls */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="text-sm text-muted-foreground">
               Showing {start}–{end} of {totalOrders} orders
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-center sm:justify-end space-x-2">
               <Button
                 variant="outline"
                 size="sm"
