@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { LogOut, Menu, Moon, Sun } from "lucide-react";
+import { LogOut, Mail, Menu, Moon, Sun, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "./Container";
 import NavLinks from "./NavLinks";
