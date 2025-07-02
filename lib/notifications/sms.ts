@@ -157,5 +157,13 @@ export const createOrderNotificationSMS = (orderData: {
   totalAmount: number;
   deliveryAddress: string;
 }): string => {
-  return `NEW ORDER ALERT! Order #${orderData.orderNumber} received from ${orderData.customerName} for ${orderData.restaurantName}. Total: $${orderData.totalAmount.toFixed(2)}. Delivery to: ${orderData.deliveryAddress}. Please log in to your dashboard to process this order.`;
+  return `NEW ORDER ALERT!
+Order: ${orderData.orderNumber}
+Customer: ${orderData.customerName}
+Restaurant: ${orderData.restaurantName}
+Total: $${orderData.totalAmount.toFixed(2)}
+Delivery: ${orderData.deliveryAddress}
+
+Please log in to your dashboard to process this order.
+`;
 };

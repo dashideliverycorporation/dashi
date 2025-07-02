@@ -10,133 +10,12 @@ import { protectedProcedure, router, restaurantProcedure, adminProcedure } from 
 import { prisma } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 import { createOrderSchema } from "@/server/schemas/order.schema";
-import { UserRole, PaymentMethod, PaymentStatus, OrderStatus } from "@/prisma/app/generated/prisma/client";
+import { UserRole, PaymentMethod, PaymentStatus} from "@/prisma/app/generated/prisma/client";
 import { z } from "zod";
 import { sendHtmlEmail } from "@/lib/notifications/email";
 import { sendSMSMessage, createOrderNotificationSMS } from "@/lib/notifications/sms";
-
-/**
- * Creates HTML email template for order notifications
- */
-const createOrderNotificationEmail = (orderData: {
-  orderNumber: string;
-  customerName: string;
-  customerEmail?: string;
-  customerPhone?: string;
-  restaurantName: string;
-  items: Array<{
-    name: string;
-    quantity: number;
-    price: number;
-  }>;
-  totalAmount: number;
-  deliveryAddress: string;
-  customerNotes?: string;
-  orderDate: Date;
-  payment?: {
-    method: PaymentMethod;
-    mobileNumber?: string;
-    providerName?: string;
-    transactionId?: string;
-  };
-}) => {
-  const itemsHtml = orderData.items
-    .map(
-      (item) => `
-        <tr style="border-bottom: 1px solid #e5e7eb;">
-          <td style="padding: 12px; text-align: left;">${item.name}</td>
-          <td style="padding: 12px; text-align: center;">${item.quantity}</td>
-          <td style="padding: 12px; text-align: right;">$${item.price.toFixed(2)}</td>
-          <td style="padding: 12px; text-align: right;">$${(item.quantity * item.price).toFixed(2)}</td>
-        </tr>
-      `
-    )
-    .join('');
-
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>New Order - ${orderData.orderNumber}</title>
-    </head>
-    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); padding: 30px; text-align: center; margin-bottom: 30px; border-radius: 10px;">
-        <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">🍕 New Order Alert!</h1>
-        <p style="color: white; margin: 10px 0 0 0; font-size: 16px;">You have received a new order on Dashi</p>
-      </div>
-
-      <div style="background-color: #f8fafc; padding: 25px; border-radius: 10px; margin-bottom: 25px;">
-        <h2 style="color: #f97316; margin-top: 0; font-size: 22px;">Order Details</h2>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-          <div>
-            <p style="margin: 5px 0;"><strong>Order Number:</strong> ${orderData.orderNumber}</p>
-            <p style="margin: 5px 0;"><strong>Restaurant:</strong> ${orderData.restaurantName}</p>
-            <p style="margin: 5px 0;"><strong>Order Date:</strong> ${orderData.orderDate.toLocaleString()}</p>
-          </div>
-        </div>
-      </div>
-
-      <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 25px; margin-bottom: 25px;">
-        <h3 style="color: #f97316; margin-top: 0;">Customer Information</h3>
-        <p style="margin: 5px 0;"><strong>Name:</strong> ${orderData.customerName}</p>
-        ${orderData.customerEmail ? `<p style="margin: 5px 0;"><strong>Email:</strong> ${orderData.customerEmail}</p>` : ''}
-        ${orderData.customerPhone ? `<p style="margin: 5px 0;"><strong>Phone:</strong> ${orderData.customerPhone}</p>` : ''}
-        <p style="margin: 5px 0;"><strong>Delivery Address:</strong> ${orderData.deliveryAddress}</p>
-        ${orderData.customerNotes ? `<p style="margin: 5px 0;"><strong>Special Instructions:</strong> ${orderData.customerNotes}</p>` : ''}
-      </div>
-
-      ${orderData.payment ? `
-      <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 25px; margin-bottom: 25px;">
-        <h3 style="color: #f97316; margin-top: 0;">Payment Information</h3>
-        <p style="margin: 5px 0;"><strong>Payment Method:</strong> ${orderData.payment.method}</p>
-        ${orderData.payment.mobileNumber ? `<p style="margin: 5px 0;"><strong>Mobile Number:</strong> ${orderData.payment.mobileNumber}</p>` : ''}
-        ${orderData.payment.providerName ? `<p style="margin: 5px 0;"><strong>Operator:</strong> ${orderData.payment.providerName}</p>` : ''}
-        ${orderData.payment.transactionId ? `<p style="margin: 5px 0;"><strong>Reference Number:</strong> ${orderData.payment.transactionId}</p>` : ''}
-      </div>
-      ` : ''}
-
-      <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 25px; margin-bottom: 25px;">
-        <h3 style="color: #f97316; margin-top: 0;">Order Items</h3>
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr style="background-color: #f8fafc;">
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Item</th>
-              <th style="padding: 12px; text-align: center; border-bottom: 2px solid #e5e7eb;">Qty</th>
-              <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Price</th>
-              <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${itemsHtml}
-          </tbody>
-        </table>
-        
-        <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #f97316;">
-          <p style="text-align: right; font-size: 18px; font-weight: bold; color: #f97316; margin: 0;">
-            Total Amount: $${orderData.totalAmount.toFixed(2)}
-          </p>
-        </div>
-      </div>
-
-      <div style="background-color: #fef3c7; border: 1px solid #f59e0b; border-radius: 10px; padding: 20px; margin-bottom: 25px;">
-        <h3 style="color: #92400e; margin-top: 0;">⚡ Action Required</h3>
-        <p style="color: #92400e; margin: 0;">Please log in to your restaurant dashboard to confirm this order and update its status.</p>
-      </div>
-
-      <div style="text-align: center; padding: 20px; border-top: 1px solid #e5e7eb; margin-top: 30px;">
-        <p style="color: #6b7280; font-size: 14px; margin: 0;">
-          This email was sent from <strong style="color: #f97316;">Dashi</strong> - Your Food Delivery Platform
-        </p>
-        <p style="color: #6b7280; font-size: 12px; margin: 5px 0 0 0;">
-          Please do not reply to this email. For support, contact us through your restaurant dashboard.
-        </p>
-      </div>
-    </body>
-    </html>
-  `;
-};
+import { createOrderNotificationEmail } from "@/lib/email/templates/order-notification";
+import { createCustomerOrderConfirmationEmail } from "@/lib/email/templates/customer-order-confirmation";
 
 /**
  * Order router with procedures for order management
@@ -199,14 +78,18 @@ export const orderRouter = router({
         }
         
         // Create the order and order items in a transaction
-        const order = await prisma.$transaction(async (tx) => {
-          // Function to generate a random 4-digit number (between 1000-9999)
-          const generateRandomOrderNumber = () => Math.floor(1000 + Math.random() * 9000);
-          
+        // Use a separate transaction for database operations only (no email/SMS)
+        let newOrder;
+        
+        // Function to generate a random 4-digit number (between 1000-9999)
+        const generateRandomOrderNumber = () => Math.floor(1000 + Math.random() * 9000);
+        
+        // Create the order with DB operations only in the transaction
+        newOrder = await prisma.$transaction(async (tx) => {
           // Maximum number of retry attempts
           const MAX_RETRIES = 5;
           let retryCount = 0;
-          let newOrder = null;
+          let createdOrder = null;
           
           // Keep trying until we get a unique order number or reach max retries
           while (retryCount < MAX_RETRIES) {
@@ -214,11 +97,11 @@ export const orderRouter = router({
             const displayOrderNumber = `#${randomNumber}`;
             
             try {
-              newOrder = await tx.order.create({
+              createdOrder = await tx.order.create({
                 data: {
-                  totalAmount: total,
+                  totalAmount: total.toString(), // Convert to string for proper Decimal handling
                   deliveryAddress: delivery.deliveryAddress,
-                  customerNotes: delivery.notes,
+                  customerNotes: delivery.notes || "", // Ensure customerNotes is not null/undefined
                   customerId: customer.id,
                   restaurantId,
                   orderNumber: randomNumber,
@@ -255,7 +138,7 @@ export const orderRouter = router({
             }
           }
           
-          if (!newOrder) {
+          if (!createdOrder) {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
               message: "Failed to create order",
@@ -265,9 +148,9 @@ export const orderRouter = router({
           // Create order items
           const orderItemsData = items.map((item) => ({
             quantity: item.quantity,
-            price: item.price,
+            price: item.price.toString(), // Convert to string for Decimal
             menuItemId: item.id,
-            orderId: newOrder!.id, // Safe to use non-null assertion as we've checked above
+            orderId: createdOrder!.id, // Safe to use non-null assertion as we've checked above
           }));
           
           await tx.orderItem.createMany({
@@ -278,93 +161,141 @@ export const orderRouter = router({
           if (payment.paymentMethod === "mobile_money") {
             await tx.paymentTransaction.create({
               data: {
-                orderId: newOrder!.id,
-                amount: total,
+                orderId: createdOrder!.id,
+                amount: total.toString(), // Convert to string for proper Decimal handling
                 paymentMethod: PaymentMethod.MOBILE_MONEY,
                 status: PaymentStatus.PENDING, // Payments start as pending until confirmed by restaurant
                 transactionId: payment.transactionId,
                 mobileNumber: payment.mobileNumber,
-                providerName: payment.providerName,
+                providerName: payment.providerName || "", // Ensure providerName is not null/undefined
                 customerId: customer.id,
                 restaurantId,
               },
             });
           }
           
-          // Send order notification email to restaurant
-          const emailHtml = createOrderNotificationEmail({
-            orderNumber: newOrder.displayOrderNumber,
-            customerName: user.name || "Customer",
-            customerEmail: user.email,
-            customerPhone: user.customer?.phoneNumber,
-            restaurantName: restaurant.name,
-            items: items.map(item => ({
-              name: item.name,
-              quantity: item.quantity,
-              price: item.price,
-            })),
-            totalAmount: total,
-            deliveryAddress: delivery.deliveryAddress,
-            customerNotes: delivery.notes,
-            orderDate: newOrder.createdAt,
-            payment: payment.paymentMethod === "mobile_money" ? {
-              method: PaymentMethod.MOBILE_MONEY,
-              mobileNumber: payment.mobileNumber,
-              providerName: payment.providerName,
-              transactionId: payment.transactionId,
-            } : undefined,
-          });
-          
-          // Send email notification to restaurant
-          if (restaurant.email) {
-            try {
-              await sendHtmlEmail(
-                { email: `alvincalvin7@gmail.com`, name: restaurant.name }, // Recipient
-                `New Order Received: ${newOrder.displayOrderNumber}`, // Subject
-                emailHtml // HTML content
-              );
-              
-              console.log(`Order notification email sent to ${restaurant.email} for order ${newOrder.displayOrderNumber}`);
-            } catch (emailError) {
-              console.error(`Failed to send email notification for order ${newOrder.displayOrderNumber}:`, emailError);
-              // Non-critical error, continue with SMS notification and order creation
-            }
-          } else {
-            console.warn(`No email address available for restaurant ${restaurant.name}. Order notification email not sent.`);
-          }
-          
-          // Send SMS notification to restaurant
-          if (restaurant.phoneNumber) {
-            try {
-              // Create SMS message content
-              const smsMessage = createOrderNotificationSMS({
-                orderNumber: newOrder.displayOrderNumber,
-                customerName: user.name || "Customer",
-                restaurantName: restaurant.name,
-                totalAmount: total,
-                deliveryAddress: delivery.deliveryAddress,
-              });
-              
-              // Send SMS
-              const smsResponse = await sendSMSMessage({
-                to: { phoneNumber: `+243849108485`},
-                message: smsMessage
-              });
-              
-              // Log the SMS response to console for debugging
-              console.log(`SMS Response for order ${newOrder.displayOrderNumber}:`, JSON.stringify(smsResponse, null, 2));
-              console.log(`Order notification SMS sent to ${restaurant.phoneNumber} for order ${newOrder.displayOrderNumber}`);
-            } catch (smsError) {
-              console.error(`Failed to send SMS notification for order ${newOrder.displayOrderNumber}:`, smsError);
-              // Non-critical error, continue with order creation
-            }
-          } else {
-            console.warn(`No phone number available for restaurant ${restaurant.name}. Order notification SMS not sent.`);
-          }
-          
-          // Return the created order
-          return newOrder!;
+          return createdOrder;
         });
+        
+        // Order is now created, we can send notifications outside the transaction
+        // These are non-critical operations that don't need to be atomic with the database changes
+        
+        // Send order notification email to restaurant
+        const emailHtml = createOrderNotificationEmail({
+          orderNumber: newOrder.displayOrderNumber,
+          customerName: user.name || "Customer",
+          customerEmail: user.email,
+          customerPhone: user.customer?.phoneNumber,
+          restaurantName: restaurant.name,
+          items: items.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          totalAmount: total,
+          deliveryAddress: delivery.deliveryAddress,
+          customerNotes: delivery.notes,
+          orderDate: newOrder.createdAt,
+          payment: payment.paymentMethod === "mobile_money" ? {
+            method: PaymentMethod.MOBILE_MONEY,
+            mobileNumber: payment.mobileNumber,
+            providerName: payment.providerName,
+            transactionId: payment.transactionId,
+          } : undefined,
+        });
+        
+        // Send email notification to restaurant
+        if (restaurant.email) {
+          try {
+            await sendHtmlEmail(
+              { email: `alvincalvin7@gmail.com`, name: restaurant.name }, // Recipient
+              `New Order Received: ${newOrder.displayOrderNumber}`, // Subject
+              emailHtml // HTML content
+            );
+            
+            console.log(`Order notification email sent to ${restaurant.email} for order ${newOrder.displayOrderNumber}`);
+          } catch (emailError) {
+            console.error(`Failed to send email notification for order ${newOrder.displayOrderNumber}:`, emailError);
+            // Non-critical error, continue with other operations
+          }
+        } else {
+          console.warn(`No email address available for restaurant ${restaurant.name}. Order notification email not sent.`);
+        }
+        
+        // Send order confirmation email to customer
+        if (user.email) {
+          try {
+            // Create customer order confirmation email
+            const customerEmailHtml = createCustomerOrderConfirmationEmail({
+              orderNumber: newOrder.displayOrderNumber,
+              customerName: user.name || "Customer",
+              restaurantName: restaurant.name,
+              restaurantImage: restaurant.imageUrl,
+              restaurantPhone: restaurant.phoneNumber,
+              items: items.map(item => ({
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+              })),
+              totalAmount: total,
+              deliveryAddress: delivery.deliveryAddress,
+              customerNotes: delivery.notes,
+              orderDate: newOrder.createdAt,
+              estimatedDeliveryTime: restaurant.preparationTime,
+              payment: payment.paymentMethod === "mobile_money" ? {
+                method: PaymentMethod.MOBILE_MONEY,
+                mobileNumber: payment.mobileNumber,
+                providerName: payment.providerName,
+                transactionId: payment.transactionId,
+              } : undefined,
+            });
+            
+            // Send email to customer
+            await sendHtmlEmail(
+              { email: user.email, name: user.name || "Customer" }, // Recipient 
+              `Order Confirmation: ${newOrder.displayOrderNumber}`, // Subject
+              customerEmailHtml // HTML content
+            );
+            
+            console.log(`Order confirmation email sent to ${user.email} for order ${newOrder.displayOrderNumber}`);
+          } catch (emailError) {
+            console.error(`Failed to send customer confirmation email for order ${newOrder.displayOrderNumber}:`, emailError);
+            // Non-critical error, continue with other operations
+          }
+        } else {
+          console.warn(`No email address available for customer. Order confirmation email not sent.`);
+        }
+        
+        // Due to sms credit being expensive, we will not send SMS notifications for now. We can uncomment when we are ready for production
+        // if (restaurant.phoneNumber) {
+        //   try {
+        //     // Create SMS message content
+        //     const smsMessage = createOrderNotificationSMS({
+        //       orderNumber: newOrder.displayOrderNumber,
+        //       customerName: user.name || "Customer",
+        //       restaurantName: restaurant.name,
+        //       totalAmount: total,
+        //       deliveryAddress: delivery.deliveryAddress,
+        //     });
+            
+        //     // Send SMS
+        //     const smsResponse = await sendSMSMessage({
+        //       to: { phoneNumber: `+243849108485` },
+        //       message: smsMessage
+        //     });
+              
+        //     // Log the SMS response for monitoring and debugging
+        //     console.log(`SMS API Response for order ${newOrder.displayOrderNumber}:`, JSON.stringify(smsResponse, null, 2));
+        //     console.log(`Order notification SMS sent to +243849108485 for order ${newOrder.displayOrderNumber}`);
+        //   } catch (smsError) {
+        //     console.error(`Failed to send SMS notification for order ${newOrder.displayOrderNumber}:`, smsError);
+        //     // Non-critical error, continue with other operations
+        //   }
+        // } else {
+        //   console.warn(`No phone number available for restaurant ${restaurant.name}. Order notification SMS not sent.`);
+        // }
+        
+        const order = newOrder;
         
         return {
           status: "success",
@@ -721,16 +652,16 @@ export const orderRouter = router({
         let orderStatuses;
         switch (status) {
           case "pending":
-            orderStatuses = ["NEW", "PREPARING", "READY"];
+            orderStatuses = ["PLACED", "PREPARING", "DISPATCHED"];
             break;
           case "delivered":
-            orderStatuses = ["COMPLETED"];
+            orderStatuses = ["DELIVERED"];
             break;
           case "failed":
             orderStatuses = ["CANCELLED"];
             break;
           default:
-            orderStatuses = ["NEW", "PREPARING", "READY", "COMPLETED", "CANCELLED"];
+            orderStatuses = ["PLACED", "PREPARING", "DISPATCHED", "DELIVERED", "CANCELLED"];
         }
 
         // Build the query
@@ -828,7 +759,7 @@ export const orderRouter = router({
         filters: z
           .object({
             orderId: z.string().optional(),
-            status: z.enum(["ALL", "NEW", "PREPARING", "READY", "COMPLETED", "CANCELLED"]).optional(),
+            status: z.enum(["ALL", "PLACED", "PREPARING", "DISPATCHED", "DELIVERED", "CANCELLED"]).optional(),
             startDate: z.string().optional(), // ISO date string
             endDate: z.string().optional(), // ISO date string
           })
