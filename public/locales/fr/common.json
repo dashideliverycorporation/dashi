@@ -98,7 +98,19 @@
     "itemCount_plural": "{{count}} articles",
     "quantity": "Quantité",
     "remove": "Retirer",
-    "deliveryFee": "Frais de livraison"
+    "deliveryFee": "Frais de livraison",
+    "added": {
+      "title": "Ajouté au Panier",
+      "message": "{{itemName}} ajouté à votre panier"
+    },
+    "removed": {
+      "title": "Article Retiré",
+      "message": "Article retiré de votre panier"
+    },
+    "cleared": {
+      "title": "Panier Vidé",
+      "message": "Tous les articles ont été retirés de votre panier"
+    }
   },
   "order": {
     "title": "Commande",
@@ -147,6 +159,23 @@
     "noAccount": "Vous n'avez pas de compte ?",
     "createAccount": "Créer un compte",
     "loginRequired": "Veuillez vous connecter pour continuer"
+  },
+  "signIn": {
+    "title": "Connectez-vous à votre compte",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "rememberMe": "Se souvenir de moi",
+    "signIn": "Se connecter",
+    "signingIn": "Connexion en cours...",
+    "orContinueWith": "Ou",
+    "signInWithGoogle": "Se connecter avec Google",
+    "emailPlaceholder": "vous@exemple.com",
+    "passwordPlaceholder": "••••••••",
+    "invalidCredentials": "Email ou mot de passe invalide. Veuillez réessayer.",
+    "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   },
   "user": {
     "profile": "Profil",

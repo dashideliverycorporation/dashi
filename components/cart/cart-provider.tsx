@@ -148,10 +148,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         // Show toast notification
         toastNotification.success(
           t("cart.added.title"),
-          // Using the defaultValue as a fallback if the translation key doesn't exist
           t("cart.added.message", {
-            defaultValue: "Item added to your cart",
-          }).replace("{{itemName}}", item.name)
+            itemName: item.name
+          })
         );
 
         return newState;
@@ -218,8 +217,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       });
 
       toastNotification.success(
-        t("cart.removed.title", "Item removed"),
-        t("cart.removed.message", "Item removed from your cart")
+        t("cart.removed.title"),
+        t("cart.removed.message")
       );
     },
     [calculateSubtotal, t]

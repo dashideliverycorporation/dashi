@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { LogOut, Menu, Moon, Sun} from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -45,6 +45,12 @@ export function Header({ className }: HeaderProps) {
   const { itemCount } = useCart();
   const { data: session, status } = useSession();
   const { setTheme } = useTheme();
+  const [isClient, setIsClient] = useState(false);
+  
+  // Set isClient to true after hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   
   const handleLogout = async () => {
     await signOut({ redirect: true, callbackUrl: "/signin" });
@@ -123,7 +129,7 @@ export function Header({ className }: HeaderProps) {
                   <DropdownMenuSeparator />
                   <Link href="/order-history" className="w-full">
                     <DropdownMenuItem className="cursor-pointer">
-                      {t("order.history", "Order History")}
+                      {isClient ? t("order.history", "Order History") : "Order History"}
                     </DropdownMenuItem>
                   </Link>
                   <DropdownMenu>
@@ -133,19 +139,19 @@ export function Header({ className }: HeaderProps) {
                           <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                           <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                           <span className="sr-only">Theme</span>
-                          <span>{t("common.toggleTheme", "Toggle theme")}</span>
+                          <span>{isClient ? t("common.toggleTheme", "Toggle theme") : "Toggle theme"}</span>
                         </span>
                       </DropdownMenuItem>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => setTheme("light")}>
-                        {t("common.light", "Light")}
+                        {isClient ? t("common.light", "Light") : "Light"}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setTheme("dark")}>
-                        {t("common.dark", "Dark")}
+                        {isClient ? t("common.dark", "Dark") : "Dark"}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setTheme("system")}>
-                        {t("common.system", "System")}
+                        {isClient ? t("common.system", "System") : "System"}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -154,21 +160,23 @@ export function Header({ className }: HeaderProps) {
                     className="cursor-pointer rounded-md"
                   >
                     <LogOut className="h-5 w-5 mr-2 hover:text-primary" />
-                    <span>{t("auth.signOut", "Sign out")}</span>
+                    <span>{isClient ? t("auth.signOut", "Sign out") : "Sign out"}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <div className="hidden md:flex items-center space-x-2">
                 <Link href="/signin">
-                  <Button variant="ghost">{t("auth.signIn", "Sign In")}</Button>
+                  <Button variant="ghost">
+                    {isClient ? t("auth.signIn", "Sign In") : "Sign In"}
+                  </Button>
                 </Link>
                 <Link href="/signup">
                   <Button
                     variant="default"
                     className="bg-orange-500 hover:bg-orange-600"
                   >
-                    {t("auth.signUp", "Sign Up")}
+                    {isClient ? t("auth.signUp", "Sign Up") : "Sign Up"}
                   </Button>
                 </Link>
               </div>
@@ -223,7 +231,7 @@ export function Header({ className }: HeaderProps) {
                         </div>
                         <Link href="/order-history" className="w-full">
                           <Button variant="ghost" className="w-full justify-start mb-2">
-                            {t("order.history", "Order History")}
+                            {isClient ? t("order.history", "Order History") : "Order History"}
                           </Button>
                         </Link>
                         <Button 
@@ -243,17 +251,17 @@ export function Header({ className }: HeaderProps) {
                           onClick={handleLogout}
                         >
                           <LogOut className="h-4 w-4 mr-2" />
-                          <span>{t("auth.signOut", "Sign out")}</span>
+                          <span>{isClient ? t("auth.signOut", "Sign out") : "Sign out"}</span>
                         </Button>
                       </div>
                     ) : (
                       <div className="px-6 py-4 flex flex-col space-y-2">
                           <Link href="/signin" className="w-full py-2 hover:bg-gray-100">
-                              {t("auth.signIn", "Sign In")}
+                              {isClient ? t("auth.signIn", "Sign In") : "Sign In"}
                            
                           </Link>
                           <Link href="/signup" className="w-full py-2 hover:bg-gray-100">
-                          {t("auth.signUp", "Sign Up")}
+                          {isClient ? t("auth.signUp", "Sign Up") : "Sign Up"}
                           </Link>
 
                       </div>

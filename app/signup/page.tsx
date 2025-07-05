@@ -2,6 +2,7 @@ import { SignUpForm } from "@/components/auth/SignUpForm";
 import { Metadata } from "next";
 import { JSX } from "react/jsx-runtime";
 import Image from "next/image";
+import Link from "next/link";
 
 /**
  * Metadata for the registration page
@@ -23,6 +24,7 @@ export default function RegisterPage(): JSX.Element {
     <div className="flex min-h-screen w-full items-center justify-center bg-white">
       <div className="flex w-full max-w-md flex-col items-center px-4">
         {/* Logo */}
+        <Link href="/">
         <div className="flex justify-center py-8">
           <Image
             src="/logo.svg"
@@ -32,6 +34,7 @@ export default function RegisterPage(): JSX.Element {
             priority
           />
         </div>
+        </Link>
 
         {/* Title */}
         <h1 className="mb-2 text-center text-3xl font-bold text-gray-900">

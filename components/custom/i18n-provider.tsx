@@ -14,6 +14,7 @@ import i18nClient, {
   getBrowserLanguage,
 } from "@/lib/i18n/client";
 import { getDefaultLanguage, isLanguageSupported } from "@/lib/i18n/settings";
+import { getLanguagePreference } from "@/lib/i18n/storage";
 
 /**
  * Props for the I18nProvider component
@@ -38,20 +39,18 @@ export default function I18nProvider({
   useEffect(() => {
     const initializeLanguage = async () => {
       try {
-        // Ensure we start with the initialLang to avoid hydration mismatches
+        // First load - use initialLang to prevent hydration mismatch
         if (i18nClient.language !== initialLang) {
-          await changeLanguage(initialLang);
+          // Just change the language without saving to storage at this point
+          // This keeps the initial server-rendered content matching
+          await i18nClient.changeLanguage(initialLang);
         }
 
-        // After initial render and hydration, we can check local storage
-        // This ensures any state updates happen after hydration is complete
+        // After hydration - check user's actual preference
         setTimeout(async () => {
-          // First check if there's a stored preference
-          const storedLang =
-            localStorage.getItem("i18nextLng") ||
-            document.cookie.match(/i18next=([^;]+)/)?.[1] ||
-            null;
-
+          // Use our updated getLanguagePreference which checks both cookie and localStorage
+          const storedLang = getLanguagePreference();
+          
           if (storedLang && isLanguageSupported(storedLang)) {
             // Use stored preference if available and supported
             if (i18nClient.language !== storedLang) {
@@ -60,11 +59,11 @@ export default function I18nProvider({
           } else if (initialLang === getDefaultLanguage()) {
             // If initialLang is the default and no stored preference, try browser detection
             const browserLang = getBrowserLanguage();
-            if (browserLang && browserLang !== i18nClient.language) {
+            if (browserLang && isLanguageSupported(browserLang) && browserLang !== i18nClient.language) {
               await changeLanguage(browserLang);
             }
           }
-        }, 0);
+        }, 10); // Slightly increased timeout to ensure full hydration is complete
       } catch (error) {
         console.error("Failed to initialize language:", error);
       }

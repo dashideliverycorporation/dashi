@@ -35,6 +35,12 @@ export default function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const { i18n, t } = useTranslation();
   const [currentLang, setCurrentLang] = useState<string>(i18n.language || "en");
+  // Move isClient state to the top level instead of inside the conditional
+  const [isClient, setIsClient] = useState(false);
+  
+  // Current language object based on the selected language code
+  const currentLanguage = getLanguageByCode(currentLang) || LANGUAGES[0];
+  const defaultLanguage = LANGUAGES[0];
 
   // Update component state when i18n language changes
   useEffect(() => {
@@ -42,6 +48,11 @@ export default function LanguageSwitcher({
       setCurrentLang(i18n.language);
     }
   }, [i18n.language, currentLang]);
+  
+  // Use effect to update the client state after hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   /**
    * Toggle between available languages
@@ -60,6 +71,10 @@ export default function LanguageSwitcher({
       await changeLanguage(nextLang);
       setCurrentLang(nextLang);
 
+      // Save language preference to localStorage and cookies for better persistence
+      localStorage.setItem("i18nextLng", nextLang);
+      document.cookie = `i18next=${nextLang}; path=/; max-age=${60*60*24*30}; SameSite=Strict`; // 30 days expiry
+
       // Update HTML lang attribute
       if (typeof document !== "undefined") {
         document.documentElement.lang = nextLang;
@@ -68,13 +83,9 @@ export default function LanguageSwitcher({
       console.error("Failed to change language:", error);
     }
   };
+  
   // Simple variant (just a toggle button with flags)
   if (variant === "simple") {
-    const currentLanguage = getLanguageByCode(currentLang) || LANGUAGES[0];
-    // For server-side rendering, always use the default language's flag to prevent hydration mismatch
-    // After hydration, React will update with the correct flag in the browser
-    const defaultLanguage = LANGUAGES[0];
-
     return (
       <Button
         variant="ghost"
@@ -84,9 +95,7 @@ export default function LanguageSwitcher({
         className="px-2 w-12 flex justify-center"
       >
         <span className="text-lg" aria-hidden="true">
-          {typeof window === "undefined"
-            ? defaultLanguage.flag
-            : currentLanguage.flag}
+          {isClient ? currentLanguage.flag : defaultLanguage.flag}
         </span>
       </Button>
     );
