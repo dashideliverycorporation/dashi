@@ -10,8 +10,12 @@ import { protectedProcedure, router, restaurantProcedure, adminProcedure } from 
 import { prisma } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 import { createOrderSchema } from "@/server/schemas/order.schema";
-import { UserRole, PaymentMethod, PaymentStatus, OrderStatus } from "@/prisma/app/generated/prisma/client";
+import { UserRole, PaymentMethod, PaymentStatus} from "@/prisma/app/generated/prisma/client";
 import { z } from "zod";
+import { sendHtmlEmail } from "@/lib/notifications/email";
+import { sendSMSMessage, createOrderNotificationSMS } from "@/lib/notifications/sms";
+import { createOrderNotificationEmail } from "@/lib/email/templates/order-notification";
+import { createCustomerOrderConfirmationEmail } from "@/lib/email/templates/customer-order-confirmation";
 
 /**
  * Order router with procedures for order management
@@ -74,14 +78,18 @@ export const orderRouter = router({
         }
         
         // Create the order and order items in a transaction
-        const order = await prisma.$transaction(async (tx) => {
-          // Function to generate a random 4-digit number (between 1000-9999)
-          const generateRandomOrderNumber = () => Math.floor(1000 + Math.random() * 9000);
-          
+        // Use a separate transaction for database operations only (no email/SMS)
+        let newOrder;
+        
+        // Function to generate a random 4-digit number (between 1000-9999)
+        const generateRandomOrderNumber = () => Math.floor(1000 + Math.random() * 9000);
+        
+        // Create the order with DB operations only in the transaction
+        newOrder = await prisma.$transaction(async (tx) => {
           // Maximum number of retry attempts
           const MAX_RETRIES = 5;
           let retryCount = 0;
-          let newOrder = null;
+          let createdOrder = null;
           
           // Keep trying until we get a unique order number or reach max retries
           while (retryCount < MAX_RETRIES) {
@@ -89,11 +97,11 @@ export const orderRouter = router({
             const displayOrderNumber = `#${randomNumber}`;
             
             try {
-              newOrder = await tx.order.create({
+              createdOrder = await tx.order.create({
                 data: {
-                  totalAmount: total,
+                  totalAmount: total.toString(), // Convert to string for proper Decimal handling
                   deliveryAddress: delivery.deliveryAddress,
-                  customerNotes: delivery.notes,
+                  customerNotes: delivery.notes || "", // Ensure customerNotes is not null/undefined
                   customerId: customer.id,
                   restaurantId,
                   orderNumber: randomNumber,
@@ -130,7 +138,7 @@ export const orderRouter = router({
             }
           }
           
-          if (!newOrder) {
+          if (!createdOrder) {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
               message: "Failed to create order",
@@ -140,9 +148,9 @@ export const orderRouter = router({
           // Create order items
           const orderItemsData = items.map((item) => ({
             quantity: item.quantity,
-            price: item.price,
+            price: item.price.toString(), // Convert to string for Decimal
             menuItemId: item.id,
-            orderId: newOrder!.id, // Safe to use non-null assertion as we've checked above
+            orderId: createdOrder!.id, // Safe to use non-null assertion as we've checked above
           }));
           
           await tx.orderItem.createMany({
@@ -153,22 +161,141 @@ export const orderRouter = router({
           if (payment.paymentMethod === "mobile_money") {
             await tx.paymentTransaction.create({
               data: {
-                orderId: newOrder!.id,
-                amount: total,
+                orderId: createdOrder!.id,
+                amount: total.toString(), // Convert to string for proper Decimal handling
                 paymentMethod: PaymentMethod.MOBILE_MONEY,
                 status: PaymentStatus.PENDING, // Payments start as pending until confirmed by restaurant
                 transactionId: payment.transactionId,
                 mobileNumber: payment.mobileNumber,
-                providerName: payment.providerName,
+                providerName: payment.providerName || "", // Ensure providerName is not null/undefined
                 customerId: customer.id,
                 restaurantId,
               },
             });
           }
           
-          // Return the created order
-          return newOrder!;
+          return createdOrder;
         });
+        
+        // Order is now created, we can send notifications outside the transaction
+        // These are non-critical operations that don't need to be atomic with the database changes
+        
+        // Send order notification email to restaurant
+        const emailHtml = createOrderNotificationEmail({
+          orderNumber: newOrder.displayOrderNumber,
+          customerName: user.name || "Customer",
+          customerEmail: user.email,
+          customerPhone: user.customer?.phoneNumber,
+          restaurantName: restaurant.name,
+          items: items.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          totalAmount: total,
+          deliveryAddress: delivery.deliveryAddress,
+          customerNotes: delivery.notes,
+          orderDate: newOrder.createdAt,
+          payment: payment.paymentMethod === "mobile_money" ? {
+            method: PaymentMethod.MOBILE_MONEY,
+            mobileNumber: payment.mobileNumber,
+            providerName: payment.providerName,
+            transactionId: payment.transactionId,
+          } : undefined,
+        });
+        
+        // Send email notification to restaurant
+        if (restaurant.email) {
+          try {
+            await sendHtmlEmail(
+              { email: `alvincalvin7@gmail.com`, name: restaurant.name }, // Recipient
+              `New Order Received: ${newOrder.displayOrderNumber}`, // Subject
+              emailHtml // HTML content
+            );
+            
+            console.log(`Order notification email sent to ${restaurant.email} for order ${newOrder.displayOrderNumber}`);
+          } catch (emailError) {
+            console.error(`Failed to send email notification for order ${newOrder.displayOrderNumber}:`, emailError);
+            // Non-critical error, continue with other operations
+          }
+        } else {
+          console.warn(`No email address available for restaurant ${restaurant.name}. Order notification email not sent.`);
+        }
+        
+        // Send order confirmation email to customer
+        if (user.email) {
+          try {
+            // Create customer order confirmation email
+            const customerEmailHtml = createCustomerOrderConfirmationEmail({
+              orderNumber: newOrder.displayOrderNumber,
+              customerName: user.name || "Customer",
+              restaurantName: restaurant.name,
+              restaurantImage: restaurant.imageUrl,
+              restaurantPhone: restaurant.phoneNumber,
+              items: items.map(item => ({
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+              })),
+              totalAmount: total,
+              deliveryAddress: delivery.deliveryAddress,
+              customerNotes: delivery.notes,
+              orderDate: newOrder.createdAt,
+              estimatedDeliveryTime: restaurant.preparationTime,
+              payment: payment.paymentMethod === "mobile_money" ? {
+                method: PaymentMethod.MOBILE_MONEY,
+                mobileNumber: payment.mobileNumber,
+                providerName: payment.providerName,
+                transactionId: payment.transactionId,
+              } : undefined,
+            });
+            
+            // Send email to customer
+            await sendHtmlEmail(
+              { email: user.email, name: user.name || "Customer" }, // Recipient 
+              `Order Confirmation: ${newOrder.displayOrderNumber}`, // Subject
+              customerEmailHtml // HTML content
+            );
+            
+            console.log(`Order confirmation email sent to ${user.email} for order ${newOrder.displayOrderNumber}`);
+          } catch (emailError) {
+            console.error(`Failed to send customer confirmation email for order ${newOrder.displayOrderNumber}:`, emailError);
+            // Non-critical error, continue with other operations
+          }
+        } else {
+          console.warn(`No email address available for customer. Order confirmation email not sent.`);
+        }
+        
+        // Due to sms credit being expensive, we will not send SMS notifications for now. We can uncomment when we are ready for production
+        // if (restaurant.phoneNumber) {
+        //   try {
+        //     // Create SMS message content
+        //     const smsMessage = createOrderNotificationSMS({
+        //       orderNumber: newOrder.displayOrderNumber,
+        //       customerName: user.name || "Customer",
+        //       restaurantName: restaurant.name,
+        //       totalAmount: total,
+        //       deliveryAddress: delivery.deliveryAddress,
+        //     });
+            
+        //     // Send SMS
+        //     const smsResponse = await sendSMSMessage({
+        //       to: { phoneNumber: `+243849108485` },
+        //       message: smsMessage
+        //     });
+              
+        //     // Log the SMS response for monitoring and debugging
+        //     console.log(`SMS API Response for order ${newOrder.displayOrderNumber}:`, JSON.stringify(smsResponse, null, 2));
+        //     console.log(`Order notification SMS sent to +243849108485 for order ${newOrder.displayOrderNumber}`);
+        //   } catch (smsError) {
+        //     console.error(`Failed to send SMS notification for order ${newOrder.displayOrderNumber}:`, smsError);
+        //     // Non-critical error, continue with other operations
+        //   }
+        // } else {
+        //   console.warn(`No phone number available for restaurant ${restaurant.name}. Order notification SMS not sent.`);
+        // }
+        
+        const order = newOrder;
         
         return {
           status: "success",
@@ -525,16 +652,16 @@ export const orderRouter = router({
         let orderStatuses;
         switch (status) {
           case "pending":
-            orderStatuses = ["NEW", "PREPARING", "READY"];
+            orderStatuses = ["PLACED", "PREPARING", "DISPATCHED"];
             break;
           case "delivered":
-            orderStatuses = ["COMPLETED"];
+            orderStatuses = ["DELIVERED"];
             break;
           case "failed":
             orderStatuses = ["CANCELLED"];
             break;
           default:
-            orderStatuses = ["NEW", "PREPARING", "READY", "COMPLETED", "CANCELLED"];
+            orderStatuses = ["PLACED", "PREPARING", "DISPATCHED", "DELIVERED", "CANCELLED"];
         }
 
         // Build the query
@@ -632,7 +759,7 @@ export const orderRouter = router({
         filters: z
           .object({
             orderId: z.string().optional(),
-            status: z.enum(["ALL", "NEW", "PREPARING", "READY", "COMPLETED", "CANCELLED"]).optional(),
+            status: z.enum(["ALL", "PLACED", "PREPARING", "DISPATCHED", "DELIVERED", "CANCELLED"]).optional(),
             startDate: z.string().optional(), // ISO date string
             endDate: z.string().optional(), // ISO date string
           })

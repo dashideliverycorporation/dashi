@@ -12,7 +12,7 @@ import { isLanguageSupported, getDefaultLanguage } from "./settings";
 const LANGUAGE_PREFERENCE_KEY = "i18nextLng";
 
 /**
- * Save the user's language preference to local storage
+ * Save the user's language preference to local storage and cookies
  *
  * @param languageCode - The language code to save (e.g., 'en', 'fr')
  * @returns True if successfully saved, false otherwise
@@ -25,7 +25,12 @@ export function saveLanguagePreference(languageCode: string): boolean {
   try {
     // Only save supported languages
     if (isLanguageSupported(languageCode)) {
+      // Save to localStorage
       localStorage.setItem(LANGUAGE_PREFERENCE_KEY, languageCode);
+      
+      // Save to cookies for SSR persistence (30 days expiry)
+      document.cookie = `i18next=${languageCode}; path=/; max-age=${60*60*24*30}; SameSite=Strict`;
+      
       return true;
     }
     return false;
@@ -36,7 +41,7 @@ export function saveLanguagePreference(languageCode: string): boolean {
 }
 
 /**
- * Retrieve the user's language preference from local storage
+ * Retrieve the user's language preference from local storage or cookies
  *
  * @returns The saved language code or null if not found
  */
@@ -46,10 +51,25 @@ export function getLanguagePreference(): string | null {
   }
 
   try {
-    const languageCode = localStorage.getItem(LANGUAGE_PREFERENCE_KEY);
+    // First check cookies (higher priority for SSR consistency)
+    const cookieMatch = document.cookie.match(/i18next=([^;]+)/);
+    const cookieLang = cookieMatch ? cookieMatch[1] : null;
+    
+    // Then check localStorage
+    const localStorageLang = localStorage.getItem(LANGUAGE_PREFERENCE_KEY);
+    
+    // Use the first valid language found
+    const languageCode = cookieLang || localStorageLang;
 
     // Validate the stored language is still supported
     if (languageCode && isLanguageSupported(languageCode)) {
+      // Ensure both storage mechanisms have the same value
+      if (cookieLang && !localStorageLang) {
+        localStorage.setItem(LANGUAGE_PREFERENCE_KEY, cookieLang);
+      } else if (!cookieLang && localStorageLang) {
+        document.cookie = `i18next=${localStorageLang}; path=/; max-age=${60*60*24*30}; SameSite=Strict`;
+      }
+      
       return languageCode;
     }
 
@@ -61,7 +81,7 @@ export function getLanguagePreference(): string | null {
 }
 
 /**
- * Clear the user's language preference from local storage
+ * Clear the user's language preference from local storage and cookies
  *
  * @returns True if successfully cleared, false otherwise
  */
@@ -71,7 +91,12 @@ export function clearLanguagePreference(): boolean {
   }
 
   try {
+    // Clear from localStorage
     localStorage.removeItem(LANGUAGE_PREFERENCE_KEY);
+    
+    // Clear from cookies (set expired date)
+    document.cookie = "i18next=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict";
+    
     return true;
   } catch (error) {
     console.error("Failed to clear language preference:", error);

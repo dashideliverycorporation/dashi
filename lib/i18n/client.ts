@@ -163,6 +163,11 @@ export const changeLanguage = (lng: string) => {
   if (isLanguageSupported(lng)) {
     // Save the language preference to localStorage
     saveLanguagePreference(lng);
+    
+    // Set cookie for SSR persistence (30 days expiry)
+    if (typeof document !== "undefined") {
+      document.cookie = `i18next=${lng}; path=/; max-age=${60*60*24*30}; SameSite=Strict`;
+    }
 
     // Update the HTML lang attribute for accessibility
     if (typeof document !== "undefined") {

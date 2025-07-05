@@ -43,9 +43,14 @@ async function main() {
       email: "info@pizzapalace.com",
       phoneNumber: "+243123456789",
       address: "123 Main St, Goma, DRC",
+      serviceArea: "Central Goma, Himbi, Katindo areas",
       imageUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
       category: "Italian",
-      preparationTime: "20-30 minutes",
+      preparationTime: "20-30",
+      deliveryFee: 2.50,
+      discountTag: "Free Delivery on Orders Over $25",
+      rating: 4.5,
+      ratingCount: 127,
       manager: {
         email: "manager@pizzapalace.com",
         name: "Mario Pizza",
@@ -57,9 +62,14 @@ async function main() {
       email: "info@burgerbliss.com",
       phoneNumber: "+243987654321",
       address: "456 Oak Ave, Goma, DRC",
+      serviceArea: "Downtown Goma, Mugunga, Sake areas",
       imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
       category: "Fast Food",
-      preparationTime: "15-25 minutes",
+      preparationTime: "15-25",
+      deliveryFee: 1.75,
+      discountTag: "20% OFF First Order",
+      rating: 4.2,
+      ratingCount: 89,
       manager: {
         email: "manager@burgerbliss.com",
         name: "Bob Burger",
@@ -71,9 +81,14 @@ async function main() {
       email: "info@sushisensation.com",
       phoneNumber: "+243456789123",
       address: "789 Elm Blvd, Goma, DRC",
+      serviceArea: "Les Volcans, Birere, Ndosho areas",
       imageUrl: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
       category: "Japanese",
-      preparationTime: "25-40 minutes",
+      preparationTime: "25-40",
+      deliveryFee: 3.00,
+      discountTag: null,
+      rating: 4.8,
+      ratingCount: 56,
       manager: {
         email: "manager@sushisensation.com",
         name: "Sakura Sushi",
@@ -234,7 +249,7 @@ async function createMenuItems(restaurantId: string) {
 }
 
 /**
- * Create sample orders
+ * Create sample orders with various statuses and payment transactions
  */
 async function createSampleOrders() {
   // Get customers
@@ -247,10 +262,24 @@ async function createSampleOrders() {
     include: { menuItems: true },
   });
 
+  // Order statuses to use for variety
+  const orderStatuses: ("PLACED" | "PREPARING" | "DISPATCHED" | "DELIVERED" | "CANCELLED")[] = [
+    "PLACED", "PREPARING", "DISPATCHED", "DELIVERED", "CANCELLED"
+  ];
+  
+  // Payment methods to use
+  const paymentMethods: ("MOBILE_MONEY" | "CARD" | "CASH")[] = ["MOBILE_MONEY", "CARD", "CASH"];
+  
+  // Payment statuses
+  const paymentStatuses: ("PENDING" | "COMPLETED" | "FAILED")[] = ["PENDING", "COMPLETED", "FAILED"];
+
   // For each customer, create a couple of orders
   for (const customer of customers) {
-    // Create orders from different restaurants
-    for (const restaurant of restaurants) {
+    // Create 2-3 orders from different restaurants per customer
+    const numOrders = Math.floor(Math.random() * 2) + 2; // 2-3 orders
+    
+    for (let i = 0; i < numOrders && i < restaurants.length; i++) {
+      const restaurant = restaurants[i];
       if (restaurant.menuItems.length === 0) continue;
 
       // Select random menu items (1-3 items)
@@ -259,11 +288,11 @@ async function createSampleOrders() {
         Math.floor(Math.random() * 3) + 1
       );
 
-      // Calculate total amount
-      let totalAmount = 0;
+      // Calculate total amount including delivery fee
+      let subtotal = 0;
       const orderItems = menuItems.map((item) => {
         const quantity = Math.floor(Math.random() * 2) + 1;
-        totalAmount += Number(item.price) * quantity;
+        subtotal += Number(item.price) * quantity;
 
         return {
           menuItemId: item.id,
@@ -272,30 +301,74 @@ async function createSampleOrders() {
         };
       });
 
+      const totalAmount = subtotal + Number(restaurant.deliveryFee);
+
       // Generate a random 4-digit number for order number
       const randomNumber = Math.floor(1000 + Math.random() * 9000);
       const displayOrderNumber = `#${randomNumber}`;
       
+      // Pick a random status
+      const status = orderStatuses[Math.floor(Math.random() * orderStatuses.length)];
+      
+      // Add cancellation reason if cancelled
+      const cancellationReason = status === "CANCELLED" ? "Customer requested cancellation" : null;
+      
       // Create the order
-      await prisma.order.create({
+      const order = await prisma.order.create({
         data: {
           totalAmount,
-          status: "PLACED", // Initial status
+          status,
           customerId: customer.id,
           restaurantId: restaurant.id,
           customerNotes: "Please deliver ASAP. Thank you!",
           deliveryAddress: customer.address || "Default Address",
-          orderNumber: randomNumber, // Add orderNumber
-          displayOrderNumber: displayOrderNumber, // Add displayOrderNumber
+          orderNumber: randomNumber,
+          displayOrderNumber: displayOrderNumber,
+          cancellationReason,
           orderItems: {
             create: orderItems,
           },
         },
       });
+
+      // Create payment transaction for each order
+      const paymentMethod = paymentMethods[Math.floor(Math.random() * paymentMethods.length)];
+      let paymentStatus = paymentStatuses[Math.floor(Math.random() * paymentStatuses.length)];
+      
+      // Ensure cancelled orders have failed/pending payments
+      if (status === "CANCELLED") {
+        paymentStatus = Math.random() > 0.5 ? "FAILED" : "PENDING";
+      }
+      // Ensure delivered orders have completed payments
+      else if (status === "DELIVERED") {
+        paymentStatus = "COMPLETED";
+      }
+
+      // Create payment transaction data
+      const paymentData: any = {
+        orderId: order.id,
+        amount: totalAmount,
+        paymentMethod,
+        status: paymentStatus,
+        customerId: customer.id,
+        restaurantId: restaurant.id,
+        notes: `Payment via ${paymentMethod.toLowerCase().replace('_', ' ')}`,
+      };
+
+      // Add mobile money specific fields
+      if (paymentMethod === "MOBILE_MONEY") {
+        paymentData.transactionId = `MM${Math.floor(100000 + Math.random() * 900000)}`;
+        paymentData.mobileNumber = customer.phoneNumber;
+        paymentData.providerName = Math.random() > 0.5 ? "Orange Money" : "Airtel Money";
+      }
+
+      await prisma.paymentTransaction.create({
+        data: paymentData,
+      });
     }
   }
 
-  console.log("📦 Created sample orders");
+  console.log("📦 Created sample orders with payment transactions");
 }
 
 /**
@@ -303,12 +376,16 @@ async function createSampleOrders() {
  */
 async function clearDatabase() {
   // Order of deletion matters due to foreign key constraints
+  await prisma.paymentTransaction.deleteMany();
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
   await prisma.menuItem.deleteMany();
   await prisma.restaurantManager.deleteMany();
   await prisma.restaurant.deleteMany();
   await prisma.customer.deleteMany();
+  await prisma.account.deleteMany();
+  await prisma.session.deleteMany();
+  await prisma.verificationToken.deleteMany();
   await prisma.user.deleteMany();
 
   console.log("🗑️ Cleared existing data");

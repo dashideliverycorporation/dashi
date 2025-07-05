@@ -1,6 +1,6 @@
 "use client";
 
-import { useState} from "react";
+import { useState, useEffect } from "react";
 import { Footer } from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { Container } from "@/components/layout/Container";
@@ -17,6 +17,12 @@ import { trpc } from "@/lib/trpc/client";
 export default function Home() {
   const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState("all");
+  const [isClient, setIsClient] = useState(false);
+  
+  // Set isClient to true after hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Fetch restaurants from the API
   const { data: restaurants, isLoading } = trpc.restaurant.getPublicRestaurants.useQuery(
@@ -39,13 +45,13 @@ export default function Home() {
           <div className="py-16 md:py-20 flex flex-col items-center justify-center text-center">
             <div className="max-w-3xl">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-                {t("home.heroTitle", "Delicious Food Delivered To Your Door")}
+                {isClient ? t("home.heroTitle", "Delicious Food Delivered To Your Door") : "Delicious Food Delivered To Your Door"}
               </h1>
               <p className="text-lg mb-8">
-                {t(
-                  "home.heroSubtitle",
-                  "Order from your favorite restaurants and track your delivery in real-time"
-                )}
+                {isClient 
+                  ? t("home.heroSubtitle", "Order from your favorite restaurants and track your delivery in real-time")
+                  : "Order from your favorite restaurants and track your delivery in real-time"
+                }
               </p>
 
               {/* Search Bar */}
@@ -77,7 +83,7 @@ export default function Home() {
           {/* Categories Section */}
           <div className="mb-10">
             <h2 className="text-xl font-bold mb-5">
-              {t("home.categories", "Categories")}
+              {isClient ? t("home.categories", "Categories") : "Categories"}
             </h2>
             <div className="grid grid-cols-3 sm:grid-cols-8 gap-4 w-full">
               {/* Pizza */}
@@ -103,7 +109,7 @@ export default function Home() {
                   </svg>
                 </div>{" "}
                 <span className="text-sm">
-                  {t("home.categoryPizza", "Pizza")}
+                  {isClient ? t("home.categoryPizza", "Pizza") : "Pizza"}
                 </span>
               </div>
 
@@ -130,7 +136,7 @@ export default function Home() {
                   </svg>
                 </div>{" "}
                 <span className="text-sm">
-                  {t("home.categoryCoffee", "Coffee")}
+                  {isClient ? t("home.categoryCoffee", "Coffee") : "Coffee"}
                 </span>
               </div>
 
@@ -155,7 +161,7 @@ export default function Home() {
                   </svg>
                 </div>{" "}
                 <span className="text-sm">
-                  {t("home.categorySalads", "Salads")}
+                  {isClient ? t("home.categorySalads", "Salads") : "Salads"}
                 </span>
               </div>
 
@@ -178,7 +184,7 @@ export default function Home() {
                   </svg>
                 </div>{" "}
                 <span className="text-sm">
-                  {t("home.categoryDessert", "Dessert")}
+                  {isClient ? t("home.categoryDessert", "Dessert") : "Dessert"}
                 </span>
               </div>
 
@@ -205,7 +211,7 @@ export default function Home() {
                   </svg>
                 </div>{" "}
                 <span className="text-sm">
-                  {t("home.categoryBurgers", "Burgers")}
+                  {isClient ? t("home.categoryBurgers", "Burgers") : "Burgers"}
                 </span>
               </div>
 
@@ -231,7 +237,7 @@ export default function Home() {
                   </svg>
                 </div>{" "}
                 <span className="text-sm">
-                  {t("home.categorySandwiches", "Sandwiches")}
+                  {isClient ? t("home.categorySandwiches", "Sandwiches") : "Sandwiches"}
                 </span>
               </div>
             </div>
@@ -239,7 +245,7 @@ export default function Home() {
           {/* Restaurants Section with Filters */}
           <div className="mb-8">
             <h2 className="text-xl font-bold mb-4">
-              {t("home.nearYou", "Restaurants Near You")}
+              {isClient ? t("home.nearYou", "Restaurants Near You") : "Restaurants Near You"}
             </h2>{" "}
             {/* Filter Badges */}
             <div className="flex overflow-x-auto gap-4 mb-6 pb-2 px-1">
@@ -255,7 +261,7 @@ export default function Home() {
                 `}
                 onClick={() => setActiveFilter("all")}
               >
-                {t("home.filterAll", "All")}
+                {isClient ? t("home.filterAll", "All") : "All"}
               </Badge>
               <Badge
                 variant="outline"
@@ -269,7 +275,7 @@ export default function Home() {
                 `}
                 onClick={() => setActiveFilter("fastest")}
               >
-                {t("home.filterFastest", "Fastest Delivery")}
+                {isClient ? t("home.filterFastest", "Fastest Delivery") : "Fastest Delivery"}
               </Badge>
               <Badge
                 variant="outline"
@@ -283,7 +289,7 @@ export default function Home() {
                 `}
                 onClick={() => setActiveFilter("topRated")}
               >
-                {t("home.filterTopRated", "Top Rated")}
+                {isClient ? t("home.filterTopRated", "Top Rated") : "Top Rated"}
               </Badge>
               <Badge
                 variant="outline"
@@ -297,7 +303,7 @@ export default function Home() {
                 `}
                 onClick={() => setActiveFilter("price")}
               >
-                {t("home.filterPrice", "Price")}
+                {isClient ? t("home.filterPrice", "Price") : "Price"}
               </Badge>
               <Badge
                 variant="outline"
@@ -311,7 +317,7 @@ export default function Home() {
                 `}
                 onClick={() => setActiveFilter("promotions")}
               >
-                {t("home.filterPromotions", "Promotions")}
+                {isClient ? t("home.filterPromotions", "Promotions") : "Promotions"}
               </Badge>
             </div>
             <RestaurantGrid restaurants={restaurants || []} isLoading={isLoading} />

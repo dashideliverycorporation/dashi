@@ -113,7 +113,19 @@
     "itemCount_plural": "{{count}} items",
     "quantity": "Quantity",
     "remove": "Remove",
-    "deliveryFee": "Delivery fee"
+    "deliveryFee": "Delivery fee",
+    "added": {
+      "title": "Added to Cart",
+      "message": "{{itemName}} added to your cart"
+    },
+    "removed": {
+      "title": "Item Removed",
+      "message": "Item removed from your cart"
+    },
+    "cleared": {
+      "title": "Cart Cleared",
+      "message": "All items removed from your cart"
+    }
   },
   "order": {
     "title": "Order",
@@ -162,6 +174,23 @@
     "noAccount": "Don't have an account?",
     "createAccount": "Create Account",
     "loginRequired": "Please login to continue"
+  },
+  "signIn": {
+    "title": "Sign in to your account",
+    "email": "Email address",
+    "password": "Password",
+    "forgotPassword": "Forgot your password?",
+    "rememberMe": "Remember me",
+    "signIn": "Sign in",
+    "signingIn": "Signing In...",
+    "orContinueWith": "Or",
+    "signInWithGoogle": "Sign in with Google",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "••••••••",
+    "invalidCredentials": "Invalid email or password. Please try again.",
+    "unexpectedError": "An unexpected error occurred. Please try again.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "user": {
     "profile": "Profile",

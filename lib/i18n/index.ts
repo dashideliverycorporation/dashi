@@ -16,6 +16,7 @@ export interface TranslationOptions {
   keyPrefix?: string;
   defaultValue?: string;
   count?: number;
+  [key: string]: string | number | undefined; // Allow any interpolation variables
 }
 
 /**

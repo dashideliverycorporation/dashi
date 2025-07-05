@@ -1,7 +1,9 @@
 import { SignInForm } from "@/components/auth/SignInForm";
+import { SignInHeader } from "@/components/auth/SignInHeader";
 import { Metadata } from "next";
 import { JSX } from "react/jsx-runtime";
 import Image from "next/image";
+import Link from "next/link";
 
 /**
  * Metadata for the sign-in page
@@ -23,6 +25,7 @@ export default function SignInPage(): JSX.Element {
     <div className="flex min-h-screen w-full items-center justify-center bg-white">
       <div className="flex w-full max-w-md flex-col items-center px-4">
         {/* Logo */}
+        <Link href="/">
         <div className="flex justify-center py-8">
           <Image
             src="/logo.svg"
@@ -32,17 +35,10 @@ export default function SignInPage(): JSX.Element {
             priority
           />
         </div>
+        </Link>
 
-        {/* Title */}
-        <h1 className="mb-2 text-center text-3xl font-bold text-gray-900">
-          Sign in to your account
-        </h1>
-        <p className="mb-8 text-center text-base text-gray-600">
-          Or{" "}
-          <a href="/signup" className="text-primary text-base hover:underline">
-            create a new account
-          </a>
-        </p>
+        {/* Title - Using the translated client component */}
+        <SignInHeader />
 
         {/* Form container */}
         <div className="w-full">
