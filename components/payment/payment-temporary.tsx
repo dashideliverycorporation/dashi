@@ -24,7 +24,6 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import {
   CheckCircle,
@@ -317,7 +316,7 @@ export function TemporaryPaymentForm({
                 )}
               />
             </CardContent>
-            <CardFooter className="flex flex-col">
+            <div>
               <Button
                 type="submit"
                 className="w-full py-6 text-lg font-bold transition-all text-white bg-orange-600 hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
@@ -335,7 +334,7 @@ export function TemporaryPaymentForm({
                   </div>
                 )}
               </Button>
-            </CardFooter>
+            </div>
           </Card>
         </div>
       </form>

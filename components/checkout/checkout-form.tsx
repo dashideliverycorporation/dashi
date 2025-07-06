@@ -8,12 +8,12 @@ import { useEffect } from "react";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   FormField,
   FormItem,
   FormLabel,
   FormControl,
-  FormDescription,
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
@@ -52,6 +52,7 @@ export function CheckoutForm({
   const isAuthenticated = !!session?.user;
 
   // Fetch current customer data if the user is authenticated
+  // isLoadingCustomer will be used to display skeleton loaders
   const { data: customerData, isLoading: isLoadingCustomer } = trpc.user.getCurrentCustomer.useQuery(
     undefined,
     {
@@ -98,6 +99,55 @@ export function CheckoutForm({
   const handleSubmit = (values: CheckoutFormValues) => {
     onSubmit(values);
   };
+
+  // Show loading skeletons when customer data is being loaded
+  if (isAuthenticated && isLoadingCustomer) {
+    return (
+      <div className="space-y-6 w-full">
+        <h1 className="text-xl md:text-2xl font-bold mb-6">
+          {t("checkout.deliveryDetails", "Delivery Details")}
+        </h1>
+
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="space-y-2">
+              <Skeleton className="h-5 w-28" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-5 w-28" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="space-y-2">
+              <Skeleton className="h-5 w-28" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-5 w-28" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-36" />
+            <Skeleton className="h-24 w-full" />
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-36" />
+            <Skeleton className="h-20 w-full" />
+          </div>
+        </div>
+
+        <div className="mt-6 block lg:hidden">
+          <Skeleton className="h-11 w-full rounded" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>
@@ -225,12 +275,12 @@ export function CheckoutForm({
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
+                {/* <FormDescription>
                   {t(
                     "checkout.deliveryAddressDescription",
                     "Please provide a complete address where your order should be delivered"
                   )}
-                </FormDescription>
+                </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -248,18 +298,18 @@ export function CheckoutForm({
                   <Textarea
                     placeholder={t(
                       "checkout.enterAdditionalNotes",
-                      "Special instructions for delivery or food preparation (optional)"
+                      "Special instructions for delivery (optional)"
                     )}
                     className="min-h-[80px] resize-y border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
+                {/* <FormDescription>
                   {t(
                     "checkout.additionalNotesDescription",
                     "Any dietary restrictions, delivery instructions, or special requests"
                   )}
-                </FormDescription>
+                </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
