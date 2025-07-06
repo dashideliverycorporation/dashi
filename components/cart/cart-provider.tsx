@@ -146,12 +146,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         };
 
         // Show toast notification
-        toastNotification.success(
-          t("cart.added.title"),
-          t("cart.added.message", {
-            itemName: item.name
-          })
-        );
+        // toastNotification.success(
+        //   t("cart.added.title"),
+        //   t("cart.added.message", {
+        //     itemName: item.name
+        //   })
+        // );
 
         return newState;
       });

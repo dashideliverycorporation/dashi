@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { LogOut, Menu, Moon, Sun} from "lucide-react";
+import { LogOut, Menu} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "./Container";
 import NavLinks from "./NavLinks";
@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes";
 import Image from "next/image";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 import useTranslation from "@/hooks/useTranslation";
@@ -44,7 +44,7 @@ export function Header({ className }: HeaderProps) {
   const { t } = useTranslation();
   const { itemCount } = useCart();
   const { data: session, status } = useSession();
-  const { setTheme } = useTheme();
+  // const { setTheme } = useTheme();
   const [isClient, setIsClient] = useState(false);
   
   // Set isClient to true after hydration
@@ -89,9 +89,7 @@ export function Header({ className }: HeaderProps) {
           {/* Right side buttons */}
           <div className="flex items-center space-x-2">
             {/* Language Switcher - Desktop */}
-            <div className="hidden md:flex">
               <LanguageSwitcher variant="simple" />
-            </div>
             {/* Shopping Cart */}
             <CartIcon />
             {/* Auth Buttons or User Menu - Desktop */}
@@ -105,7 +103,7 @@ export function Header({ className }: HeaderProps) {
                     aria-label="User menu"
                   >
                     <Avatar>
-                      <AvatarImage src="https://github.com/shad.png" />
+                      <AvatarImage src="" />
                       <AvatarFallback>
                         {session.user.name 
                           ? (session.user.name.split(' ').length > 1 
@@ -132,7 +130,7 @@ export function Header({ className }: HeaderProps) {
                       {isClient ? t("order.history", "Order History") : "Order History"}
                     </DropdownMenuItem>
                   </Link>
-                  <DropdownMenu>
+                  {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <DropdownMenuItem className="flex items-center gap-2 text-sm font-medium rounded-md p-2 cursor-pointer">
                         <span className="relative flex items-center gap-2 ">
@@ -154,7 +152,7 @@ export function Header({ className }: HeaderProps) {
                         {isClient ? t("common.system", "System") : "System"}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
-                  </DropdownMenu>
+                  </DropdownMenu> */}
                   <DropdownMenuItem
                     onClick={handleLogout}
                     className="cursor-pointer rounded-md"
@@ -215,7 +213,7 @@ export function Header({ className }: HeaderProps) {
                       <div className="px-6 py-4 border-t border-border">
                         <div className="flex items-center gap-3 mb-4">
                           <Avatar className="h-10 w-10">
-                            <AvatarImage src="https://github.com/shad.png" />
+                            <AvatarImage src="" />
                             <AvatarFallback>
                               {session.user.name 
                                 ? (session.user.name.split(' ').length > 1 
@@ -234,7 +232,7 @@ export function Header({ className }: HeaderProps) {
                             {isClient ? t("order.history", "Order History") : "Order History"}
                           </Button>
                         </Link>
-                        <Button 
+                        {/* <Button 
                           variant="ghost" 
                           className="w-full justify-start mb-2"
                           onClick={() => setTheme(theme => theme === "light" ? "dark" : "light")}
@@ -244,10 +242,10 @@ export function Header({ className }: HeaderProps) {
                             <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                             <span>{t("common.toggleTheme", "Toggle theme")}</span>
                           </span>
-                        </Button>
+                        </Button> */}
                         <Button 
                           variant="ghost" 
-                          className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+                          className="w-full justify-start text-orange-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
                           onClick={handleLogout}
                         >
                           <LogOut className="h-4 w-4 mr-2" />
@@ -268,9 +266,9 @@ export function Header({ className }: HeaderProps) {
                     )}
                     
                     {/* Language Switcher - Mobile */}
-                    <div className="px-6 py-4 border-t border-border">
+                    {/* <div className="px-6 py-4 border-t border-border">
                       <LanguageSwitcher variant="full" />
-                    </div>
+                    </div> */}
                   </div>
                 </SheetContent>
               </Sheet>

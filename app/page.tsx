@@ -6,7 +6,6 @@ import Header from "@/components/layout/Header";
 import { Container } from "@/components/layout/Container";
 import { RestaurantGrid } from "@/components/restaurant/RestaurantGrid";
 import { useTranslation } from "@/hooks/useTranslation";
-import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc/client";
 
 /**
@@ -16,7 +15,7 @@ import { trpc } from "@/lib/trpc/client";
  */
 export default function Home() {
   const { t } = useTranslation();
-  const [activeFilter, setActiveFilter] = useState("all");
+  // const [activeFilter, setActiveFilter] = useState("all");
   const [isClient, setIsClient] = useState(false);
   
   // Set isClient to true after hydration
@@ -81,12 +80,12 @@ export default function Home() {
       <main className="flex-1 py-10">
         <Container>
           {/* Categories Section */}
-          <div className="mb-10">
+          {/* <div className="mb-10">
             <h2 className="text-xl font-bold mb-5">
               {isClient ? t("home.categories", "Categories") : "Categories"}
             </h2>
             <div className="grid grid-cols-3 sm:grid-cols-8 gap-4 w-full">
-              {/* Pizza */}
+           
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-1">
                   <svg
@@ -113,7 +112,7 @@ export default function Home() {
                 </span>
               </div>
 
-              {/* Coffee */}
+          
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-1">
                   <svg
@@ -140,7 +139,6 @@ export default function Home() {
                 </span>
               </div>
 
-              {/* Salads */}
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-1">
                   <svg
@@ -165,7 +163,6 @@ export default function Home() {
                 </span>
               </div>
 
-              {/* Dessert */}
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-1">
                   <svg
@@ -188,7 +185,6 @@ export default function Home() {
                 </span>
               </div>
 
-              {/* Burgers */}
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-1">
                   <svg
@@ -215,7 +211,6 @@ export default function Home() {
                 </span>
               </div>
 
-              {/* Sandwiches */}
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-1">
                   <svg
@@ -241,14 +236,14 @@ export default function Home() {
                 </span>
               </div>
             </div>
-          </div>
+          </div> */}
           {/* Restaurants Section with Filters */}
           <div className="mb-8">
             <h2 className="text-xl font-bold mb-4">
               {isClient ? t("home.nearYou", "Restaurants Near You") : "Restaurants Near You"}
             </h2>{" "}
-            {/* Filter Badges */}
-            <div className="flex overflow-x-auto gap-4 mb-6 pb-2 px-1">
+         
+            {/* <div className="flex overflow-x-auto gap-4 mb-6 pb-2 px-1">
               <Badge
                 variant="outline"
                 className={`
@@ -319,7 +314,7 @@ export default function Home() {
               >
                 {isClient ? t("home.filterPromotions", "Promotions") : "Promotions"}
               </Badge>
-            </div>
+            </div> */}
             <RestaurantGrid restaurants={restaurants || []} isLoading={isLoading} />
           </div>
         </Container>

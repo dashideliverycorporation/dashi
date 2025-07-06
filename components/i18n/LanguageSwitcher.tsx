@@ -95,7 +95,7 @@ export default function LanguageSwitcher({
         className="px-2 w-12 flex justify-center"
       >
         <span className="text-lg" aria-hidden="true">
-          {isClient ? currentLanguage.flag : defaultLanguage.flag}
+          {isClient ? currentLanguage.flag : defaultLanguage.flag} 
         </span>
       </Button>
     );

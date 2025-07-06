@@ -32,49 +32,53 @@ export default function CheckoutPage() {
   const { status } = useSession();
   const { state } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
 
+    useEffect(() => {
+      setIsClient(true);
+    }, []);
   // Check if the cart is empty
-  const isCartEmpty = state.items.length === 0;
+  // const isCartEmpty = state.items.length === 0;
   
   // Protect the route from unauthenticated users and empty carts
-  useEffect(() => {
-    // Check authentication status - handled by useSession
+  // useEffect(() => {
+  //   // Check authentication status - handled by useSession
     
-    // Check if cart is empty
-    if (status !== "loading" && isCartEmpty) {
-      router.push("/");
-      toastNotification.info(
-        t("cart.empty", "Your cart is empty"),
-        t("checkout.emptyCartMessage", "Your cart is empty. Please add items before proceeding to checkout.")
-      );
-      return;
-    }
+  //   // Check if cart is empty
+  //   if (status !== "loading" && isCartEmpty) {
+  //     router.push("/");
+  //     toastNotification.info(
+  //       t("cart.empty", "Your cart is empty"),
+  //       t("checkout.emptyCartMessage", "Your cart is empty. Please add items before proceeding to checkout.")
+  //     );
+  //     return;
+  //   }
     
-    // Check if we just returned from authentication (via localStorage flag)
-    const authReturn = localStorage.getItem('authCallbackUrl') === '/checkout';
-    if (authReturn && status === 'authenticated') {
-      console.debug("Detected return to checkout after authentication");
-      localStorage.removeItem('authCallbackUrl');
-    }
-  }, [status, isCartEmpty, router, t]);
+  //   // Check if we just returned from authentication (via localStorage flag)
+  //   const authReturn = localStorage.getItem('authCallbackUrl') === '/checkout';
+  //   if (authReturn && status === 'authenticated') {
+  //     console.debug("Detected return to checkout after authentication");
+  //     localStorage.removeItem('authCallbackUrl');
+  //   }
+  // }, [status, isCartEmpty, router, t]);
   
   // Handle authentication redirection
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      // Save the current URL for redirection after authentication
-      localStorage.setItem('authCallbackUrl', '/checkout');
-      console.debug("Saving /checkout to localStorage and redirecting to signin");
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     // Save the current URL for redirection after authentication
+  //     localStorage.setItem('authCallbackUrl', '/checkout');
+  //     console.log("Saving /checkout to localStorage and redirecting to signin");
       
-      // Redirect to sign in page
-      router.push("/signin");
+  //     // Redirect to sign in page
+  //     router.push("/signin");
       
-      // Show notification
-      toastNotification.info(
-        t("auth.loginRequired", "Login Required"),
-        t("checkout.loginRequired", "Please login to proceed to checkout")
-      );
-    }
-  }, [status, router, t]);
+  //     // Show notification
+  //     toastNotification.info(
+  //       t("auth.loginRequired", "Login Required"),
+  //       t("checkout.loginRequired", "Please login to proceed to checkout")
+  //     );
+  //   }
+  // }, [status, router, t]);
 
   // Handle form submission
   const handleSubmit = async (data: CheckoutFormValues) => {
@@ -140,7 +144,7 @@ export default function CheckoutPage() {
                 <span className="text-sm">✓</span>
               </div>
               <span className="text-xs text-gray-600">
-                {t("cart.title", "Your Cart")}
+                {isClient ? t("cart.title", "Your Cart") : "Your Cart"}
               </span>
             </div>
 
