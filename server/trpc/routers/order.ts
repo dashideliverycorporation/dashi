@@ -65,6 +65,27 @@ export const orderRouter = router({
         // At this point, we know customer exists because of the check above
         const { customer } = user;
         
+        // Determine if we need to update the customer profile
+        const updateData: Record<string, string> = {};
+        
+        // Check if phone number is missing and available in the delivery info
+        if ((!customer.phoneNumber || customer.phoneNumber === "") && delivery.phoneNumber) {
+          updateData.phoneNumber = delivery.phoneNumber;
+        }
+        
+        // Check if address is missing and available in the delivery info
+        if ((!customer.address || customer.address === "") && delivery.deliveryAddress) {
+          updateData.address = delivery.deliveryAddress;
+        }
+        
+        // Update customer profile if needed
+        if (Object.keys(updateData).length > 0) {
+          await prisma.customer.update({
+            where: { id: customer.id },
+            data: updateData,
+          });
+        }
+        
         // Verify restaurant exists
         const restaurant = await prisma.restaurant.findUnique({
           where: { id: restaurantId },

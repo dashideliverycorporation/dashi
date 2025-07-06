@@ -285,7 +285,7 @@
     "enterTransactionId": "Enter the transaction ID from your payment",
     "transactionIdDescription": "The reference or ID provided after completing your mobile money payment",
     "providerName": "Mobile Money Provider",
-    "enterProviderName": "Enter your mobile money provider name",
+    "enterProviderName": "Enter your mobile money provider name (e.g., Vodacom, Orange, Airtel)",
     "providerNameDescription": "The mobile money provider you used (e.g., Vodacom, Orange, Airtel)",
     "processing": "Processing...",
     "completeOrder": "Complete Order"

@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import Loading from "@/app/loading";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -53,11 +54,12 @@ export function SignInForm(): JSX.Element {
   const { t } = useTranslation();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
-  
+   // Clean up from old implementation
   // Use useEffect to handle client-side rendering
   // This prevents hydration errors by ensuring the server and client render the same initial content
   useEffect(() => {
@@ -83,29 +85,10 @@ export function SignInForm(): JSX.Element {
    * Handle form submission - authenticates the user with NextAuth
    *
    * @param {SignInFormValues} values - The form values
-   */  // Get callback URL from query string if available
-  const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
-  
-  // Get callback URL from query string or localStorage
-  useEffect(() => {
-    // Check for URL parameters when running on client side
-    if (typeof window !== 'undefined') {
-      // Parse URL params
-      const params = new URLSearchParams(window.location.search);
-      const urlCallbackParam = params.get('callbackUrl');
-      
-      // Check localStorage for saved callback URL
-      const savedCallback = localStorage.getItem('authCallbackUrl');
-      
-      // Use URL param first, then localStorage, default to "/"
-      const finalCallback = urlCallbackParam || savedCallback || "/";
-      console.debug("SignInForm callbackUrl from:", 
-        urlCallbackParam ? "URL param" : savedCallback ? "localStorage" : "default",
-        "Value:", finalCallback);
-      
-      setCallbackUrl(finalCallback);
-    }
-  }, []);
+   */  // Get returnUrl directly from URL search params
+  const returnUrl = typeof window !== 'undefined' 
+    ? new URLSearchParams(window.location.search).get('returnUrl') || '/'
+    : '/';
   
   const onSubmit = async (values: SignInFormValues): Promise<void> => {
     try {
@@ -117,7 +100,7 @@ export function SignInForm(): JSX.Element {
         email: values.email,
         password: values.password,
         redirect: false,
-        callbackUrl: callbackUrl || "/",
+        callbackUrl: returnUrl,
       });
       
       if (result?.error) {
@@ -133,9 +116,7 @@ export function SignInForm(): JSX.Element {
           const sessionData = await session.json();
           const userRole = sessionData?.user?.role;
           
-          // Clear saved callback URL from localStorage
-          localStorage.removeItem('authCallbackUrl');
-          console.debug("Cleared authCallbackUrl from localStorage after successful sign in");
+          // No need to clear localStorage as we don't use it anymore
           
           // Redirect based on user role
           if (userRole === "ADMIN") {
@@ -145,17 +126,16 @@ export function SignInForm(): JSX.Element {
             // Restaurant always goes to restaurant dashboard
             router.push("/restaurant");
           } else {
-            // For customers, use callback URL or default to home
-            const redirectUrl = callbackUrl || "/";
-            console.debug("Customer redirecting to:", redirectUrl);
-            router.push(redirectUrl);
+            // For customers, redirect to the return URL
+            console.debug("Customer redirecting to:", returnUrl);
+            router.push(returnUrl);
           }
           
           router.refresh(); // Refresh to update auth state in the UI
         } catch (sessionError) {
           console.error("Error fetching session:", sessionError);
           // Default redirect if we can't determine role
-          router.push(callbackUrl || "/");
+          router.push(returnUrl );
           router.refresh();
         }
       }
@@ -172,6 +152,7 @@ export function SignInForm(): JSX.Element {
   };
   return (
     <div className="w-full max-w-md mx-auto">
+      {(isGoogleLoading || isLoading) && <Loading />}
       {error && (
         <Alert variant="destructive" className="mb-6">
           <AlertDescription className="text-base">{error}</AlertDescription>
@@ -186,7 +167,7 @@ export function SignInForm(): JSX.Element {
               className="flex w-full items-center justify-center gap-3 cursor-pointer text-foreground h-12 text-base"
               onClick={() => {
                 setError(null);
-                signIn("google", { callbackUrl: callbackUrl || "/" });
+                signIn("google", { callbackUrl: returnUrl });
               }}
               disabled={isLoading}
             >
@@ -230,9 +211,12 @@ export function SignInForm(): JSX.Element {
                         className="flex w-full items-center justify-center gap-3 cursor-pointer text-foreground h-12 text-base"
                         onClick={() => {
                 setError(null);
-                signIn("google", { callbackUrl: callbackUrl || "/" });
+                setIsGoogleLoading(true);
+                signIn("google", { callbackUrl: returnUrl }).catch(() => {
+                  setIsGoogleLoading(false);
+                });
               }}
-              disabled={isLoading}
+              disabled={isLoading || isGoogleLoading}
                       >
                         <svg className="h-6 w-6" aria-hidden="true" viewBox="0 0 24 24">
                           <path
@@ -252,7 +236,9 @@ export function SignInForm(): JSX.Element {
                             fill="#EA4335"
                           />
                         </svg>
-                                     <span className="text-base">{isClient ? t("signIn.signInWithGoogle", "Sign in with Google") : "Sign in with Google"}</span>
+                        <span className="text-base">
+                          {isClient ? t("signIn.signInWithGoogle", "Sign in with Google") : "Sign in with Google"}
+                        </span>
                       </Button>
                     </div>
                     <div className="relative my-3">

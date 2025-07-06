@@ -269,7 +269,7 @@
     "enterTransactionId": "Entrez l'ID de transaction de votre paiement",
     "transactionIdDescription": "La référence ou l'ID fourni après avoir effectué votre paiement mobile money",
     "providerName": "Fournisseur de Mobile Money",
-    "enterProviderName": "Entrez le nom de votre fournisseur de mobile money",
+    "enterProviderName": "Entrez le nom de votre fournisseur de mobile money (Vodacom, Orange, Airtel)",
     "providerNameDescription": "Le fournisseur de mobile money que vous avez utilisé (par exemple, Vodacom, Orange, Airtel)",
     "processing": "Traitement en cours...",
     "completeOrder": "Finaliser la Commande"

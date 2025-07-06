@@ -57,21 +57,21 @@ export function Footer() {
             <h2 className="text-xl font-bold mb-4">
               {isClient ? t("footer.contact", "Contact") : "Contact"}
             </h2>
-            <div className="space-y-3">
+            <div className="space-y-3 text-sm">
               <div className="flex items-start">
-                <MapPin className="mr-2 h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                <MapPin size={20} className="mr-2 h-5 w-5 flex-shrink-0 mt-0.5" />
                 <span className="text-gray-300">
                   {isClient ? t("footer.address", "123 Delivery St, Food City, FC 12345") : "123 Delivery St, Food City, FC 12345"}
                 </span>
               </div>
               <div className="flex items-start">
-                <Phone className="mr-2 h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                <Phone className="mr-2 h-5 w-5 flex-shrink-0 mt-0.5" />
                 <span className="text-gray-300">
                   {isClient ? t("footer.phone", "+1 (555) 123-4567") : "+1 (555) 123-4567"}
                 </span>
               </div>
               <div className="flex items-start">
-                <Mail className="mr-2 h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                <Mail className="mr-2 h-5 w-5 flex-shrink-0 mt-0.5" />
                 <span className="text-gray-300">
                   {isClient ? t("footer.email", "support@dashi.com") : "support@dashi.com"}
                 </span>

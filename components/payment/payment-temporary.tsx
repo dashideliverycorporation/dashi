@@ -16,7 +16,6 @@ import {
   FormItem,
   FormLabel,
   FormControl,
-  FormDescription,
   FormMessage,
 } from "@/components/ui/form";
 import {
@@ -28,12 +27,9 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import {
-  AlertCircle,
   CheckCircle,
-  Phone,
-  Smartphone,
 } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 /**
  * Schema for mobile money payment form validation
@@ -131,7 +127,7 @@ export function TemporaryPaymentForm({
             {t("payment.mobileMoneyTitle", "Mobile Money Payment")}
           </h2>
           
-          <Alert className="bg-blue-50 text-blue-800 border-blue-200">
+          {/* <Alert className="bg-blue-50 text-blue-800 border-blue-200">
             <AlertCircle className="h-5 w-5" />
             <AlertTitle className="font-semibold">
               {t("payment.temporaryNotice", "Temporary Payment Solution")}
@@ -142,12 +138,12 @@ export function TemporaryPaymentForm({
                 "This is a temporary payment solution. Please follow the instructions below to complete your payment."
               )}
             </AlertDescription>
-          </Alert>
+          </Alert> */}
 
           <Card className="border-none shadow-none">
             <CardHeader className="bg-orange-50 border-b border-orange-100 p-4 rounded-md">
               <CardTitle className="text-lg text-orange-900 flex items-center gap-2">
-                <Phone className="h-5 w-5" />
+                {/* <Phone className="h-5 w-5" /> */}
                 {t("payment.restaurantPaymentDetails", "Restaurant Payment Details")}
               </CardTitle>
               <CardDescription className="text-orange-700">
@@ -160,36 +156,36 @@ export function TemporaryPaymentForm({
                   <p>{t("common.loading", "Loading...")}</p>
                 </div>
               ) : (
-                <div className="space-y-4 w-full">
-                  <div className="flex gap-4 flex-wrap">
-                    <h3 className="font-medium text-gray-700">
+                <div className="space-y-2 w-full">
+                  <div className="flex gap-2 flex-wrap">
+                    <h3 className="font-medium text-base text-gray-700">
                       {t("restaurant.name", "Restaurant")}:
                     </h3>
-                    <p className="text-lg font-semibold">{state.restaurantName}</p>
+                    <p className="text-base font-semibold">{state.restaurantName}</p>
                   </div>
                   
-                  <div className="flex gap-4 flex-wrap">
-                    <h3 className="font-medium text-gray-700">
+                  <div className="flex gap-2 flex-wrap">
+                    <h3 className="font-medium text-base text-gray-700">
                       {t("restaurant.phoneNumber", "Mobile Money Number")}:
                     </h3>
-                    <p className="text-lg font-semibold flex items-center gap-2">
-                      <Smartphone className="h-5 w-5 text-orange-500" />
+                    <p className="text-base font-semibold flex items-center gap-2">
+                      {/* <Smartphone className="h-5 w-5 text-orange-500" /> */}
                       {restaurantPhone || t("common.unavailable", "Unavailable")}
                     </p>
                   </div>
                   
                   <div className="flex gap-4 flex-wrap">
-                    <h3 className="font-medium text-gray-700">
+                    <h3 className="font-medium text-base text-gray-700">
                       {t("payment.amountToSend", "Amount to Send")}:
                     </h3>
-                    <p className="text-xl font-bold text-orange-600">
+                    <p className="text-base font-bold text-orange-600">
                       ${(state.subtotal + state.deliveryFee).toFixed(2)}
                     </p>
                   </div>
                   
-                  <div className="h-px w-full bg-gray-200 my-4"></div>
+                  {/* <div className="h-px w-full bg-gray-200 my-4"></div> */}
                   
-                  <div className="bg-yellow-50 p-4 rounded-md ">
+                  {/* <div className="bg-yellow-50 p-4 rounded-md ">
                     <h3 className="font-medium text-yellow-800">
                       {t("payment.instructions", "Payment Instructions")}:
                     </h3>
@@ -214,7 +210,7 @@ export function TemporaryPaymentForm({
                         )}
                       </li>
                     </ol>
-                  </div>
+                  </div> */}
                 </div>
               )}
             </CardContent>
@@ -252,12 +248,12 @@ export function TemporaryPaymentForm({
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
+                    {/* <FormDescription>
                       {t(
                         "payment.mobileNumberDescription",
                         "The mobile number you used to make the payment"
                       )}
-                    </FormDescription>
+                    </FormDescription> */}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -281,12 +277,12 @@ export function TemporaryPaymentForm({
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
+                    {/* <FormDescription>
                       {t(
                         "payment.transactionIdDescription",
                         "The reference or ID provided after completing your mobile money payment"
                       )}
-                    </FormDescription>
+                    </FormDescription> */}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -310,12 +306,12 @@ export function TemporaryPaymentForm({
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
+                    {/* <FormDescription>
                       {t(
                         "payment.providerNameDescription",
                         "The mobile money provider you used (e.g., Vodacom, Orange, Airtel)"
                       )}
-                    </FormDescription>
+                    </FormDescription> */}
                     <FormMessage />
                   </FormItem>
                 )}
