@@ -11,10 +11,14 @@ import {
   Package,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { OrderStatus } from "@/prisma/app/generated/prisma/client";
 import { format } from "date-fns";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import { WhatsAppSupportButton } from "@/components/custom/whatsapp-support-button";
 
 /**
  * Order Confirmation page shown after a successful order placement
@@ -95,20 +99,53 @@ export default function OrderConfirmationPage() {
   }, [data, error]);
 
   return (
+    <>
+     <Header/>
     <div className="container mx-auto py-12 px-4 flex flex-col items-center justify-center min-h-[60vh]">
       <div className="w-full max-w-md bg-white p-4 rounded-lg text-center shadow-sm">
         <h1 className="text-xl lg:text-2xl font-bold mb-1">
           {t("order.thankYou", "Thank you for your order!")}
         </h1>
 
-        <p className="lg:text-lg text-gray-700 mb-6">
-          {t("order.number", "Order ")}
-          {orderNumber}
-        </p>
+        {/* Show skeleton for order number during loading */}
+        {isLoading || isLoadingLocal ? (
+          <div className="flex items-center justify-center space-x-1 mb-6">
+            {/* <span className="lg:text-lg text-gray-700">{t("order.number", "Order ")}</span> */}
+            <Skeleton className="h-6 w-40" />
+          </div>
+        ) : (
+          <p className="lg:text-lg text-gray-700 mb-6">
+            {t("order.number", "Order ")}
+            {orderNumber}
+          </p>
+        )}
 
         {isLoading || isLoadingLocal ? (
-          <div className="py-10 text-center">
-            <p>{t("common.loading", "Loading order details...")}</p>
+          <div className="bg-gray-50 p-6 rounded-lg mb-6">
+            {/* Order status header skeleton */}
+            <Skeleton className="h-7 w-40 mb-2" />
+            <Skeleton className="h-5 w-56 mb-4" />
+            
+            {/* Order progress bar skeleton */}
+            <div className="relative w-full h-2 bg-gray-200 rounded-full mb-4">
+              <Skeleton className="absolute left-0 top-0 h-full w-1/4 rounded-full" />
+            </div>
+            
+            {/* Progress step indicators skeleton */}
+            <div className="flex justify-between text-xs text-gray-500 mb-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="flex flex-col items-center">
+                  <Skeleton className="w-8 h-8 rounded-full mb-1" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+              ))}
+            </div>
+            
+            {/* Estimated arrival section skeleton */}
+            <div className="mt-6">
+              <Skeleton className="h-5 w-44 mb-2" />
+              <Skeleton className="h-5 w-36" />
+            </div>
           </div>
         ) : error || errorLocal ? (
           <div className="py-10 text-center">
@@ -199,24 +236,51 @@ export default function OrderConfirmationPage() {
           </div>
         )}
 
-        <div className="border-t border-gray-200 pt-6 mt-6 space-y-4">
-          <Button
-            onClick={() => router.push("/order-history")}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 font-medium"
-          >
-            {t("order.track", "Track your order")}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+        {/* Skeleton for buttons when loading */}
+        {(isLoading || isLoadingLocal) && (
+          <div className="border-t border-gray-200 pt-6 mt-6 space-y-4">
+            <Skeleton className="h-12 w-full rounded" />
+            <Skeleton className="h-12 w-full rounded" />
+          </div>
+        )}
+        
+        {/* Real buttons when not loading */}
+        {!(isLoading || isLoadingLocal) && (
+          <div className="border-t border-gray-200 pt-6 mt-6 space-y-4">
+            <Button
+              onClick={() => router.push("/order-history")}
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 font-medium"
+            >
+              {t("order.track", "Track your order")}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
 
-          <Button
-            onClick={() => router.push("/")}
-            className="w-full bg-white border border-orange-500 hover:bg-orange-50 text-orange-500 py-4 font-medium"
-          >
-            {t("order.orderMore", "Order more food")}
-            <Home className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
+            <Button
+              onClick={() => router.push("/")}
+              className="w-full bg-white border border-orange-500 hover:bg-orange-50 text-orange-500 py-4 font-medium"
+            >
+              {t("order.orderMore", "Order more food")}
+              <Home className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
+    <Footer/>
+    
+    {/* WhatsApp Chat Support Button */}
+    {data?.order && (
+      <WhatsAppSupportButton 
+        orderNumber={orderNumber} 
+        restaurantName={data.order.restaurant.name}
+        customerName={data.order.customer?.user?.name || undefined}
+        orderTime={data.order.createdAt}
+      />
+    )}
+    
+    {!data?.order && !isLoading && !isLoadingLocal && (
+      <WhatsAppSupportButton orderNumber={orderNumber} />
+    )}
+    </>
   );
 }

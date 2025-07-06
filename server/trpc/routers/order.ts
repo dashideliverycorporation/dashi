@@ -567,6 +567,20 @@ export const orderRouter = router({
                 preparationTime: true,
               }
             },
+            customer: {
+              select: {
+                id: true,
+                phoneNumber: true,
+                address: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                  }
+                }
+              }
+            },
             orderItems: {
               include: {
                 menuItem: {

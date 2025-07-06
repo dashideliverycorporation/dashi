@@ -145,7 +145,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           deliveryFee: prevState.restaurantId === restaurantId ? prevState.deliveryFee : deliveryFee,
         };
 
-        // Show toast notification
+        // Show toast notification - note that we use t() directly, not from the dependency array
         // toastNotification.success(
         //   t("cart.added.title"),
         //   t("cart.added.message", {
@@ -156,7 +156,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         return newState;
       });
     },
-    [calculateSubtotal, t]
+    [calculateSubtotal]
   );
   /**
    * Decrease the quantity of an item in the cart
