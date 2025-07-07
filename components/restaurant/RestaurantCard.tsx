@@ -81,26 +81,16 @@ export function RestaurantCard({
             </div>
           )}
 
-          {imageUrl ? (
+          {
             <Image
-              src={imageUrl}
+              src={imageUrl || "/image_placeholder.png"}
               alt={name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
               className="object-cover w-full h-full"
               priority
             />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-slate-100">
-              <Image
-                src="/empty-restaurant.svg"
-                alt="Restaurant"
-                width={48}
-                height={48}
-                className="opacity-50"
-              />
-            </div>
-          )}
+         }
         </div>
 
         <CardContent className="p-4">

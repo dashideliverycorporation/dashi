@@ -106,7 +106,7 @@ export default function RestaurantMenuPage() {
         </Link>
 
         <Image
-          src={restaurant.imageUrl}
+          src={restaurant.imageUrl || "/image_placeholder.png"}
           alt={restaurant.name}
           fill
           className="object-cover"
@@ -196,7 +196,7 @@ export default function RestaurantMenuPage() {
                 <div key={item.id} className="flex items-start pb-4">
                   <div className="w-24 h-24 lg:w-22 lg:h-22 relative rounded-lg overflow-hidden mr-4 flex-shrink-0">
                     <Image
-                      src={item.imageUrl}
+                      src={item.imageUrl || "/image_placeholder.png"}
                       alt={item.name}
                       fill
                       className="object-cover"

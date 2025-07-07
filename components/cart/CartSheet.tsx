@@ -79,16 +79,16 @@ export const CartSheet: React.FC<CartSheetProps> = ({ open, onOpenChange }) => {
                 {state.items.map((item) => (
                   <div key={item.id} className="px-2 py-2">
                     <div className="flex items-start p-2 rounded-lg bg-background">
-                      {item.imageUrl && (
+                      {
                         <div className="w-24 h-24 relative rounded-md overflow-hidden mr-4 flex-shrink-0">
                           <Image
-                            src={item.imageUrl}
+                            src={item.imageUrl || "/image_placeholder.png"}
                             alt={item.name}
                             fill
                             className="object-cover"
                           />
                         </div>
-                      )}
+                      }
 
                       <div className="flex-1">
                         <h3 className="font-medium text-base mb-1">

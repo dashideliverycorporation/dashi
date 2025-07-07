@@ -384,7 +384,7 @@ export default function OrderHistoryPage() {
                             >
                               <div className="w-24 h-20 rounded overflow-hidden flex-shrink-0">
                                 <Image
-                                  src={getImageUrl(item)}
+                                  src={getImageUrl(item) || "/image_placeholder.png"}
                                   alt={item.name}
                                   width={64}
                                   height={64}
