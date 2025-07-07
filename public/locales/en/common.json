@@ -18,6 +18,12 @@
     "yes": "Yes",
     "no": "No"
   },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "Oops! The page you're looking for doesn't exist or has been moved.",
+    "back": "Go Back",
+    "home": "Return to Homepage"
+  },
   "home": {
     "heroTitle": "Delicious Food Delivered To Your Door",
     "heroSubtitle": "Order from your favorite restaurants and track your delivery in real-time",
@@ -657,7 +663,12 @@
     },
     "error": {
       "unableToLoad": "Unable to load sales data",
-      "restaurantInfoNotAvailable": "Your restaurant information is not available. Please try refreshing or contact support."
+      "restaurantInfoNotAvailable": "Your restaurant information is not available. Please try refreshing or contact support.",
+      "somethingWentWrong": "Something went wrong",
+      "unexpectedHappened": "We're sorry, but something unexpected happened.",
+      "unexpectedError": "An unexpected error occurred",
+      "tryAgain": "Try Again",
+      "returnHome": "Return to Home"
     }
   }
 }

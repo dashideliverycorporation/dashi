@@ -19,6 +19,7 @@ import {
 import { CheckoutFormValues } from "@/server/schemas/order.schema";
 import OrderSummary from "@/components/checkout/order-summary";
 import { CheckoutForm } from "@/components/checkout/checkout-form";
+import { WhatsAppSupportButton } from "@/components/custom/whatsapp-support-button";
 
 /**
  * Checkout page component
@@ -255,6 +256,7 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+       <WhatsAppSupportButton/>
     </div>
   );
 }

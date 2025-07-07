@@ -7,6 +7,7 @@ import { Container } from "@/components/layout/Container";
 import { RestaurantGrid } from "@/components/restaurant/RestaurantGrid";
 import { useTranslation } from "@/hooks/useTranslation";
 import { trpc } from "@/lib/trpc/client";
+import { WhatsAppSupportButton } from "@/components/custom/whatsapp-support-button";
 
 /**
  * HomePage component displaying the list of restaurants
@@ -320,6 +321,7 @@ export default function Home() {
         </Container>
       </main>
       <Footer />
+      <WhatsAppSupportButton/>
     </div>
   );
 }

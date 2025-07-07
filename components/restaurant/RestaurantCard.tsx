@@ -69,7 +69,7 @@ export function RestaurantCard({
     <Link href={`/restaurants/${slug || id}`} className="block h-full">
       <Card
         className={cn(
-          "h-full transition-all hover:shadow-lg hover:-translate-y-0.5 border border-gray-200 overflow-hidden",
+          "h-full border-none shadow-none transition-all hover:shadow-lg hover:-translate-y-0.5 border border-gray-200 overflow-hidden",
           className
         )}
       >

@@ -7,8 +7,8 @@ import {
   ArrowRight,
   Store,
   ChefHat,
-  Truck,
   Package,
+  Bike,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -170,8 +170,8 @@ export default function OrderConfirmationPage() {
             </div>
 
             {/* Progress step indicators */}
-            <div className="flex justify-between text-xs text-gray-500 mb-6">
-              <div className="flex flex-col items-center">
+            <div className="flex justify-between text-xs text-gray-500 mb-6 gap-10">
+              <div className="flex flex-col items-center mr-2">
                 <div className={`w-8 h-8 ${data.order.status === OrderStatus.PLACED || data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
                   <Store className={`w-4 h-4 ${data.order.status === OrderStatus.PLACED || data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500' : 'text-gray-500'}`} />
                 </div>
@@ -179,7 +179,7 @@ export default function OrderConfirmationPage() {
                   {t("order.received", "Received")}
                 </span>
               </div>
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center mr-2">
                 <div className={`w-8 h-8 ${data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
                   <ChefHat className={`w-4 h-4 ${data.order.status === OrderStatus.PREPARING || data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500' : 'text-gray-500'}`} />
                 </div>
@@ -187,9 +187,9 @@ export default function OrderConfirmationPage() {
                   {t("order.preparing", "Preparing")}
                 </span>
               </div>
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center mr-2">
                 <div className={`w-8 h-8 ${data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'bg-orange-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mb-1`}>
-                  <Truck className={`w-4 h-4 ${data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500' : 'text-gray-500'}`} />
+                  <Bike className={`w-4 h-4 ${data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500' : 'text-gray-500'}`} />
                 </div>
                 <span className={`${data.order.status === OrderStatus.DISPATCHED || data.order.status === OrderStatus.DELIVERED ? 'text-orange-500 font-medium' : ''}`}>
                   {t("order.onTheWay", "On the way")}

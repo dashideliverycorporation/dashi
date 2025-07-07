@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import OrderSummary from "@/components/checkout/order-summary";
 import TemporaryPaymentForm, { type MobileMoneyFormValues } from "@/components/payment/payment-temporary";
+import { WhatsAppSupportButton } from "@/components/custom/whatsapp-support-button";
 
 /**
  * Payment page component
@@ -34,6 +35,7 @@ export default function PaymentPage() {
   const { state, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deliveryInfo, setDeliveryInfo] = useState<CheckoutFormValues | null>(null);
+  
 
   // Retrieve delivery details from session storage (without auth checks)
   useEffect(() => {
@@ -78,6 +80,7 @@ export default function PaymentPage() {
         t("order.error.title", "Order Failed"),
         error.message || t("order.error.message", "Failed to place your order. Please try again.")
       );
+      throw new Error(error.message || "Failed to place order");
     },
   });
 
@@ -118,7 +121,7 @@ export default function PaymentPage() {
         t("payment.error", "Payment Error"),
         t(
           "payment.errorProcessing",
-          "There was an error processing your payment. Please try again."
+          `There was an error processing your order ${error}`
         )
       );
     }
@@ -270,6 +273,7 @@ export default function PaymentPage() {
           </div>
         </div>
       </div>
+      <WhatsAppSupportButton/>
     </div>
   );
 }
