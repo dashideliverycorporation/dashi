@@ -11,15 +11,16 @@ import { PaymentMethod } from '@/prisma/app/generated/prisma/client';
 export interface CustomerOrderConfirmationEmailData {
   orderNumber: string;
   customerName: string;
+  customerPhone: string;
   restaurantName: string;
   restaurantImage?: string;
-  restaurantPhone?: string;
   items: Array<{
     name: string;
     quantity: number;
     price: number;
   }>;
   totalAmount: number;
+  deliveryFee?: number;
   deliveryAddress: string;
   customerNotes?: string;
   orderDate: Date;
@@ -71,24 +72,23 @@ export const createCustomerOrderConfirmationEmail = (orderData: CustomerOrderCon
         <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
           <div>
             <p style="margin: 5px 0;"><strong>Order Number:</strong> ${orderData.orderNumber}</p>
-            <p style="margin: 5px 0;"><strong>Order Date:</strong> ${orderData.orderDate.toLocaleString()}</p>
-            ${orderData.estimatedDeliveryTime ? `<p style="margin: 5px 0;"><strong>Estimated Delivery:</strong> ${orderData.estimatedDeliveryTime}</p>` : ''}
+            <p style="margin: 5px 0;"><strong>Restaurant:</strong> ${orderData.restaurantName}</p>
+            <p style="margin: 5px 0;"><strong>Date, Time:</strong> ${orderData.orderDate.toLocaleString()}</p>
+            ${orderData.payment ? `<p style="margin: 5px 0;"><strong>Payment Method:</strong> ${orderData.payment.method}</p>` : ''}
           </div>
         </div>
       </div>
 
       <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 25px; margin-bottom: 25px;">
-        <h3 style="color: #f97316; margin-top: 0;">Restaurant Information</h3>
-        <p style="margin: 5px 0;"><strong>Name:</strong> ${orderData.restaurantName}</p>
-        ${orderData.restaurantPhone ? `<p style="margin: 5px 0;"><strong>Phone:</strong> ${orderData.restaurantPhone}</p>` : ''}
+        <h3 style="color: #f97316; margin-top: 0;">Delivery Information</h3>
         <p style="margin: 5px 0;"><strong>Delivery Address:</strong> ${orderData.deliveryAddress}</p>
+        ${orderData.customerPhone ? `<p style="margin: 5px 0;"><strong>Phone Number:</strong> ${orderData.customerPhone}</p>` : ''}
         ${orderData.customerNotes ? `<p style="margin: 5px 0;"><strong>Special Instructions:</strong> ${orderData.customerNotes}</p>` : ''}
       </div>
 
-      ${orderData.payment ? `
+      ${orderData.payment && (orderData.payment.mobileNumber || orderData.payment.providerName || orderData.payment.transactionId) ? `
       <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 25px; margin-bottom: 25px;">
-        <h3 style="color: #f97316; margin-top: 0;">Payment Information</h3>
-        <p style="margin: 5px 0;"><strong>Payment Method:</strong> ${orderData.payment.method}</p>
+        <h3 style="color: #f97316; margin-top: 0;">Payment Details</h3>
         ${orderData.payment.mobileNumber ? `<p style="margin: 5px 0;"><strong>Mobile Number:</strong> ${orderData.payment.mobileNumber}</p>` : ''}
         ${orderData.payment.providerName ? `<p style="margin: 5px 0;"><strong>Provider:</strong> ${orderData.payment.providerName}</p>` : ''}
         ${orderData.payment.transactionId ? `<p style="margin: 5px 0;"><strong>Reference Number:</strong> ${orderData.payment.transactionId}</p>` : ''}
@@ -96,7 +96,7 @@ export const createCustomerOrderConfirmationEmail = (orderData: CustomerOrderCon
       ` : ''}
 
       <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 25px; margin-bottom: 25px;">
-        <h3 style="color: #f97316; margin-top: 0;">Your Order Items</h3>
+        <h3 style="color: #f97316; margin-top: 0;">Order Details</h3>
         <table style="width: 100%; border-collapse: collapse;">
           <thead>
             <tr style="background-color: #f8fafc;">
@@ -108,6 +108,14 @@ export const createCustomerOrderConfirmationEmail = (orderData: CustomerOrderCon
           </thead>
           <tbody>
             ${itemsHtml}
+            ${orderData.deliveryFee ? `
+            <tr style="border-bottom: 1px solid #e5e7eb;">
+              <td style="padding: 12px; text-align: left;"><em>Delivery Fee</em></td>
+              <td style="padding: 12px; text-align: center;">-</td>
+              <td style="padding: 12px; text-align: right;">-</td>
+              <td style="padding: 12px; text-align: right;">$${orderData.deliveryFee.toFixed(2)}</td>
+            </tr>
+            ` : ''}
           </tbody>
         </table>
         
