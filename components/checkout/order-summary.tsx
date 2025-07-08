@@ -162,19 +162,15 @@ function OrderItem({ item }: OrderItemProps) {
     <li className="flex items-center">
       <div className="flex items-start gap-3 flex-1">
         <div className="relative h-12 w-12 overflow-hidden rounded-md bg-gray-100 flex items-center justify-center">
-          {imageUrl ? (
+          {
             <Image
-              src={imageUrl}
+              src={imageUrl || "/image_placeholder.png"}
               alt={name}
               fill
               sizes="48px"
               className="object-cover"
             />
-          ) : (
-            <div className="text-sm text-gray-400">
-              {name.substring(0, 2).toUpperCase()}
-            </div>
-          )}
+          }
         </div>
 
         <div className="flex-1 min-w-0">

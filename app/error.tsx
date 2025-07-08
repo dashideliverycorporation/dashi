@@ -5,6 +5,8 @@ import { AlertCircle, RefreshCw } from 'lucide-react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/hooks/useTranslation';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -43,6 +45,8 @@ export default function Error({ error, reset }: ErrorProps) {
   };
 
   return (
+    <>
+    <Header/>
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 py-16 md:px-6">
       <div className="flex flex-col items-center max-w-md text-center gap-6">
         <AlertCircle className="h-16 w-16 text-destructive" />
@@ -78,5 +82,7 @@ export default function Error({ error, reset }: ErrorProps) {
         </div>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 }

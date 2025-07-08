@@ -21,6 +21,7 @@ export interface OrderNotificationEmailData {
   }>;
   totalAmount: number;
   deliveryAddress: string;
+  deliveryFee?: number;
   customerNotes?: string;
   orderDate: Date;
   payment?: {
@@ -108,6 +109,14 @@ export const createOrderNotificationEmail = (orderData: OrderNotificationEmailDa
           </thead>
           <tbody>
             ${itemsHtml}
+            ${orderData.deliveryFee ? `
+            <tr style="border-bottom: 1px solid #e5e7eb;">
+              <td style="padding: 12px; text-align: left;"><em>Delivery Fee</em></td>
+              <td style="padding: 12px; text-align: center;">-</td>
+              <td style="padding: 12px; text-align: right;">-</td>
+              <td style="padding: 12px; text-align: right;">$${orderData.deliveryFee.toFixed(2)}</td>
+            </tr>
+            ` : ''}
           </tbody>
         </table>
         
