@@ -270,7 +270,7 @@ export function TemporaryPaymentForm({
                       <Input
                         placeholder={t(
                           "payment.enterTransactionId",
-                          "Enter the transaction ID from your payment"
+                          "Enter the transaction ID"
                         )}
                         className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                         {...field}
