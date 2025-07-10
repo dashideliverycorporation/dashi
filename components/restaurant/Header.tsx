@@ -34,7 +34,7 @@ export function Header({ restaurantName, username, email }: HeaderProps) {
 
       <div className="ml-auto flex items-center">
                   
-                      <LanguageSwitcher variant="simple" />
+        <LanguageSwitcher variant="simple" />
                   
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -57,4 +57,7 @@ export interface AddToCartButtonProps {
   restaurantId: string;
   restaurantName: string;
   deliveryFee?: number;
+  children?: React.ReactNode;
+  isPopupButton?: boolean;
+  onClick?: (e: React.MouseEvent) => void;
 }

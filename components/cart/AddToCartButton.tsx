@@ -17,15 +17,30 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   restaurantId,
   restaurantName,
   deliveryFee = 0,
+  onClick,
+  isPopupButton = false,
 }) => {
   const { addItem } = useCart();
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    if (onClick) {
+      onClick(e);
+    }
     addItem(restaurantId, restaurantName, item, deliveryFee);
   };
 
   return (
-    <Button
+    <>
+    {isPopupButton ? (<Button
+      
+      className=""
+      onClick={handleAddToCart}
+      aria-label="Add to cart"
+    >
+      <Plus className="h-4 w-4 text-white ml-1" />
+      Add To Cart
+      
+    </Button> ):(<Button
       size="sm"
       variant="ghost"
       className="flex items-center justify-center rounded-full h-8 w-8 bg-orange-500 hover:bg-orange-300 border border-orange-200"
@@ -33,7 +48,10 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       aria-label="Add to cart"
     >
       <Plus className="h-4 w-4 text-white" />
-    </Button>
+      
+    </Button>) }
+    </>
+    
   );
 };
 
