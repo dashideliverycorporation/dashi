@@ -103,7 +103,7 @@ export function Header({ className }: HeaderProps) {
                     aria-label="User menu"
                   >
                     <Avatar>
-                      <AvatarImage src="" />
+                      <AvatarImage src={`${session.user.image}`} />
                       <AvatarFallback>
                         {session.user.name 
                           ? (session.user.name.split(' ').length > 1 

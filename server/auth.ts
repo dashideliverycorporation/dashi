@@ -138,33 +138,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
-      // If this is a Google sign-in, ensure we create a customer profile if needed
-      if (account?.provider === "google") {
-        try {
-          // First, check if the user already exists in our database
-          const existingUser = await db.user.findUnique({
-            where: { email: user.email! },
-            include: { customer: true }
-          });
-          
-          // If user exists but doesn't have a customer profile, create one
-          if (existingUser && !existingUser.customer) {
-            await db.customer.create({
-              data: {
-                userId: existingUser.id,
-                phoneNumber: "", // Default empty phone number that can be updated later
-              }
-            });
-          }
-          
-          return true;
-        } catch (error) {
-          console.error("Error in Google sign-in callback:", error);
-          return true; // Still allow sign-in even if profile creation fails
-        }
-      }
-      
+    async signIn() {
       return true;
     },
     async jwt({ token, user, account, trigger }) {
@@ -172,6 +146,31 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.role = user.role;
         token.id = user.id;
+        
+        // If this is a Google sign-in, ensure we create a customer profile if needed
+        if (account?.provider === "google") {
+          try {
+            // Check if the user has a customer profile
+            const existingUser = await db.user.findUnique({
+              where: { id: user.id },
+              include: { customer: true }
+            });
+            
+            // If user exists but doesn't have a customer profile, create one
+            if (existingUser && !existingUser.customer) {
+              await db.customer.create({
+                data: {
+                  userId: existingUser.id,
+                  phoneNumber: "", // Default empty phone number that can be updated later
+                  address: "", // Default empty address that can be updated later
+                }
+              });
+            }
+          } catch (error) {
+            console.error("Error creating customer profile for Google user:", error);
+            // Don't throw error here as it would break the sign-in process
+          }
+        }
       }
       
       // If this is an update session trigger, check for updated user data
