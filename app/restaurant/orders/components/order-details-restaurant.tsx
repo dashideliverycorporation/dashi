@@ -352,10 +352,6 @@ export default function OrderDetailsRestaurant({ order, onClose }: OrderDetailsR
                       <span className="text-gray-600">{t("orders.reference", "Reference Number")}:</span>
                       <span className="font-medium">{order.paymentTransaction.transactionId || '-'}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">{t("orders.paymentStatus", "Status")}:</span>
-                      <span className="font-medium">{order.paymentTransaction.status || '-'}</span>
-                    </div>
                   </div>
                 ) : (
                   <p className="text-gray-400 text-sm">{t("orders.noPaymentInfo", "No payment information available")}</p>

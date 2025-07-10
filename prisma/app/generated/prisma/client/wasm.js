@@ -194,6 +194,7 @@ exports.Prisma.RestaurantScalarFieldEnum = {
   rating: 'rating',
   ratingCount: 'ratingCount',
   isActive: 'isActive',
+  isOpen: 'isOpen',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

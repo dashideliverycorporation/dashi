@@ -73,7 +73,9 @@
     "viewMenu": "Voir le menu",
     "delivery": "livraison",
     "deliveryFee": "Frais de livraison:",
-    "popularItems": "Articles les plus populaires"
+    "popularItems": "Articles les plus populaires",
+    "closedWarning": "Le restaurant est actuellement fermé",
+    "closedWarningDetail": "Ce restaurant n'accepte pas de commandes pour le moment. Veuillez réessayer plus tard lorsqu'il sera ouvert."
   },
   "discountTags": {
     "FREE_DELIVERY": "LIVRAISON GRATUITE",
@@ -201,8 +203,8 @@
     "copyright": "© 2025 Dashi. Tous droits réservés.",
     "slogan": "Des plats délicieux livrés à votre porte, à tout moment et partout.",
     "address": "123 Rue de Livraison, Ville Gourmande, FC 12345",
-    "phone": "+1 (555) 123-4567",
-    "email": "support@dashi.com"
+    "phone": "+243849108485",
+    "email": "dashideliverycorporation@gmail.com"
   },
   "language": {
     "title": "Langue",
@@ -654,5 +656,38 @@
       "tryAgain": "Réessayer",
       "returnHome": "Retour à l'accueil"
     }
+  },
+  "restaurantSettings": {
+    "title": "Paramètres",
+    "statusOpenLabel": "Ouvert",
+    "statusClosedLabel": "Fermé",
+    "toggleStatus": "Basculer le statut du restaurant",
+    "tooltipOpen": "Votre restaurant est actuellement ouvert et accepte les commandes. Basculez pour fermer.",
+    "tooltipClosed": "Votre restaurant est fermé. Les clients ne peuvent pas passer de commandes lorsque vous êtes fermé. Basculez pour ouvrir.",
+    "statusOpenSuccess": "Le restaurant est maintenant ouvert",
+    "statusClosedSuccess": "Le restaurant est maintenant fermé",
+    "statusUpdateDetail": "Le statut a été mis à jour avec succès",
+    "statusUpdateError": "Échec de la mise à jour du statut du restaurant",
+    "statusUpdateErrorDetail": "Veuillez réessayer plus tard",
+    "updateSuccess": "Paramètres du restaurant mis à jour avec succès",
+    "updateSuccessDetail": "Vos modifications ont été enregistrées",
+    "updateError": "Échec de la mise à jour des paramètres du restaurant",
+    "updateErrorDetail": "Veuillez vérifier votre saisie et réessayer",
+    "restaurantImage": "Image du restaurant",
+    "uploadImage": "Télécharger l'image du restaurant",
+    "imageFileTypes": "PNG, JPG ou JPEG, jusqu'à 5 Mo",
+    "imageSelected": "Image sélectionnée",
+    "clickToChangeImage": "Cliquez pour changer l'image",
+    "name": "Nom du restaurant",
+    "category": "Catégorie",
+    "description": "Description",
+    "email": "Email",
+    "phoneNumber": "Numéro de téléphone",
+    "address": "Adresse",
+    "serviceArea": "Zone de service",
+    "preparationTime": "Temps de préparation",
+    "deliveryFee": "Frais de livraison",
+    "saving": "Enregistrement...",
+    "save": "Enregistrer les modifications"
   }
 }

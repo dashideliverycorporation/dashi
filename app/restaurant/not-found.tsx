@@ -4,9 +4,6 @@ import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
 import { Home, ArrowLeft } from "lucide-react";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import { WhatsAppSupportButton } from "@/components/custom/whatsapp-support-button";
 
 /**
  * Custom 404 Not Found page component
@@ -20,7 +17,6 @@ export default function NotFound() {
 
   return (
     <>
-    <Header/>
     <div className="container mx-auto py-12 flex flex-col items-center justify-center min-h-[80vh]">
       <div className="text-center space-y-6 max-w-md">
         {/* SVG or icon */}
@@ -74,8 +70,6 @@ export default function NotFound() {
         </div>
       </div>
     </div>
-    <WhatsAppSupportButton/>
-    <Footer/>
     </>
   );
 }

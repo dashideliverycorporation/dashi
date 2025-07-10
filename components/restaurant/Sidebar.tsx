@@ -6,12 +6,12 @@ import {
   Utensils,
   ChevronLeft,
   ChevronRight,
-  LayoutDashboard,
   Menu,
   ShoppingBag,
   Settings,
   DollarSign,
   X,
+  Home,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,7 @@ export function Sidebar({
 
   const navItems: NavItem[] = [
     {
-      icon: LayoutDashboard,
+      icon: Home,
       labelKey: "restaurantSidebar.dashboard",
       href: "/restaurant",
     },
@@ -173,7 +173,7 @@ export function Sidebar({
                   <Link
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 transition-colors",
+                      "flex items-center gap-3 rounded-md px-3 py-2 transition-colors text-base font-medium",
                       isActive
                         ? "bg-sidebar-primary text-sidebar-primary-foreground"
                         : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
