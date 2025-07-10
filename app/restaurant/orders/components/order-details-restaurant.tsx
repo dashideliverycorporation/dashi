@@ -30,6 +30,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useOrderStatus } from "@/components/context/order-status-provider";
 
 interface OrderDetailsRestaurantProps {
   order: Order | null;
@@ -40,6 +41,8 @@ export default function OrderDetailsRestaurant({ order, onClose }: OrderDetailsR
   const { t } = useTranslation();
   // Get TRPC utils for query invalidation
   const utils = trpc.useContext();
+  // Get order status context for real-time updates
+  const { updateOrderStatus } = useOrderStatus();
   
   // State for the order status and cancellation reason
   // Initialize with the existing cancellation reason if available
@@ -55,6 +58,14 @@ export default function OrderDetailsRestaurant({ order, onClose }: OrderDetailsR
   // Setup mutation for updating order status
   const updateOrderStatusMutation = trpc.order.updateOrderStatus.useMutation({
     onSuccess: () => {
+      // Update the order status context for real-time sync across components
+      updateOrderStatus({
+        orderId: order.id,
+        status: status,
+        cancellationReason: status === ORDER_STATUS.CANCELLED ? cancellationReason : undefined,
+        displayOrderNumber: order.displayOrderNumber || `#${order.orderNumber}`,
+      });
+      
       // Invalidate orders query to refresh data
       utils.order.getRestaurantOrders.invalidate();
       toastNotification.success(

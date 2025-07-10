@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { getDefaultLanguage } from "@/lib/i18n/settings";
 import I18nProvider from "@/components/custom/i18n-provider";
 import CartProvider from "@/components/cart/cart-provider";
+import { OrderStatusProvider } from "@/components/context/order-status-provider";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 // const geistSans = Geist({
@@ -110,8 +111,10 @@ export default async function RootLayout({
                 disableTransitionOnChange
               >
                 <CartProvider>
-                  {children}
-                  <Toaster />
+                  <OrderStatusProvider>
+                    {children}
+                    <Toaster />
+                  </OrderStatusProvider>
                 </CartProvider>
               </ThemeProvider>
             </I18nProvider>
