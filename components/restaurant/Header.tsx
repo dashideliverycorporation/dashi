@@ -44,7 +44,7 @@ export function Header({ restaurantName, username, email }: HeaderProps) {
               aria-label="User menu"
             >
               <Avatar>
-                <AvatarImage src="https://github.com/shad.png" />
+                <AvatarImage src="" />
                 <AvatarFallback>
                   {username.split(" ").length > 1
                     ? `${username.split(" ")[0][0].toUpperCase()}${username

@@ -23,6 +23,7 @@ interface RestaurantGridProps {
     deliveryFee?: string;
     discount?: string;
     specialTag?: string;
+    isOpen?: boolean;
   }>;
   /**
    * Whether the grid is in loading state
@@ -113,6 +114,7 @@ export function RestaurantGrid({
           deliveryFee={restaurant.deliveryFee}
           discount={restaurant.discount}
           specialTag={restaurant.specialTag}
+          isOpen={restaurant.isOpen}
         />
       ))}
     </div>

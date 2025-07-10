@@ -87,7 +87,6 @@ export const restaurantRouter = router({
         select: {
           id: true,
           name: true,
-          // slug: true,
           description: true,
           imageUrl: true,
           category: true,
@@ -96,6 +95,7 @@ export const restaurantRouter = router({
           discountTag: true,
           rating: true,
           ratingCount: true,
+          isOpen: true,
         },
       });
 
@@ -112,6 +112,7 @@ export const restaurantRouter = router({
         reviews: restaurant.ratingCount || 0,
         deliveryTime: restaurant.preparationTime || "30-45 min",
         deliveryFee: restaurant.deliveryFee ? restaurant.deliveryFee.toString() : "0",
+        isOpen: restaurant.isOpen,
       }));
 
       return formattedRestaurants;
@@ -154,6 +155,7 @@ export const restaurantRouter = router({
             discountTag: true,
             rating: true,
             ratingCount: true,
+            isOpen: true,
             menuItems: {
               where: {
                 isAvailable: true,
@@ -196,6 +198,7 @@ export const restaurantRouter = router({
           deliveryTime: restaurant.preparationTime || "30-45 min",
           deliveryFee: restaurant.deliveryFee ? restaurant.deliveryFee.toString() : "0",
           discountTag: restaurant.discountTag || "",
+          isOpen: restaurant.isOpen,
           menuItems: restaurant.menuItems.map((item) => ({
             id: item.id,
             name: item.name,
@@ -1217,8 +1220,8 @@ export const restaurantRouter = router({
   }),
 
   /**
-   * Get the restaurant name for the authenticated manager
-   * Returns the name of the restaurant associated with the logged-in manager
+   * Get the restaurant info for the authenticated manager
+   * Returns the info of the restaurant associated with the logged-in manager
    */
   getMyRestaurant: restaurantProcedure.query(async ({ ctx }) => {
     try {
@@ -1228,11 +1231,7 @@ export const restaurantRouter = router({
       const restaurantManager = await prisma.restaurantManager.findUnique({
         where: { userId },
         include: {
-          restaurant: {
-            select: {
-              name: true,
-            },
-          },
+          restaurant: true,
         },
       });
 
@@ -1243,18 +1242,148 @@ export const restaurantRouter = router({
         });
       }
 
-      return {
-        name: restaurantManager.restaurant.name,
-      };
+      return restaurantManager.restaurant;
     } catch (error) {
-      console.error("Error fetching restaurant name:", error);
+      console.error("Error fetching restaurant:", error);
       if (error instanceof TRPCError) {
         throw error;
       }
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to fetch restaurant name",
+        message: "Failed to fetch restaurant data",
       });
     }
   }),
+
+  /**
+   * Update the restaurant information for the authenticated manager
+   * Allows restaurant managers to update their own restaurant details
+   */
+  updateMyRestaurant: restaurantProcedure
+    .input(z.object({
+      name: z
+        .string()
+        .min(2, "Restaurant name must be at least 2 characters")
+        .max(100, "Restaurant name must be at most 100 characters"),
+      description: z
+        .string()
+        .max(500, "Description must be at most 500 characters")
+        .optional(),
+      email: z.string().email("Please enter a valid email address").optional(),
+      phoneNumber: z
+        .string()
+        .min(1, "Phone number is required")
+        .regex(/^\+?[0-9\s\-()]+$/, "Please enter a valid phone number"),
+      address: z.string().optional(),
+      serviceArea: z
+        .string()
+        .max(200, "Service area description must be at most 200 characters")
+        .optional(),
+      imageUrl: z.string().url("Please enter a valid URL").optional(),
+      category: z.string().max(100, "Category must be at most 100 characters").optional(),
+      preparationTime: z.string().max(50, "Preparation time must be at most 50 characters").optional(),
+      deliveryFee: z.string().regex(/^\d+(\.\d{1,2})?$/, "Please enter a valid delivery fee").optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const userId = ctx.session.user.id;
+        
+        // Get the restaurant manager to find the associated restaurant
+        const restaurantManager = await prisma.restaurantManager.findUnique({
+          where: { userId },
+          select: { restaurantId: true },
+        });
+
+        if (!restaurantManager) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "User is not associated with any restaurant",
+          });
+        }
+
+        // Process the image if provided and it's a data URL
+        let finalImageUrl = input.imageUrl;
+        if (input.imageUrl && input.imageUrl !== "") {
+          finalImageUrl = await processImageUrl(input.imageUrl, 'restaurant');
+        }
+
+        // Update the restaurant
+        const updatedRestaurant = await prisma.restaurant.update({
+          where: { id: restaurantManager.restaurantId },
+          data: {
+            name: input.name,
+            description: input.description,
+            email: input.email,
+            phoneNumber: input.phoneNumber,
+            address: input.address,
+            serviceArea: input.serviceArea,
+            imageUrl: finalImageUrl,
+            category: input.category,
+            preparationTime: input.preparationTime,
+            deliveryFee: input.deliveryFee ? parseFloat(input.deliveryFee) : undefined,
+          },
+        });
+
+        return updatedRestaurant;
+      } catch (error) {
+        console.error("Error updating restaurant:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update restaurant data",
+        });
+      }
+    }),
+
+  /**
+   * Toggle the open status of the restaurant for the authenticated manager
+   * Allows restaurant managers to open or close their restaurant for orders
+   */
+  toggleRestaurantActiveStatus: restaurantProcedure
+    .input(z.object({
+      isOpen: z.boolean(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const userId = ctx.session.user.id;
+        
+        // Get the restaurant manager to find the associated restaurant
+        const restaurantManager = await prisma.restaurantManager.findUnique({
+          where: { userId },
+          select: { restaurantId: true },
+        });
+
+        if (!restaurantManager) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "User is not associated with any restaurant",
+          });
+        }
+
+        // Update the restaurant's open status
+        const updatedRestaurant = await prisma.restaurant.update({
+          where: { id: restaurantManager.restaurantId },
+          data: {
+            isOpen: input.isOpen,
+          },
+        });
+
+        return {
+          status: "success",
+          isOpen: updatedRestaurant.isOpen,
+        };
+      } catch (error) {
+        console.error("Error updating restaurant status:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update restaurant status",
+        });
+      }
+    }),
+
 });

@@ -88,7 +88,9 @@
     "viewMenu": "View Menu",
     "delivery": "delivery",
     "deliveryFee": "Delivery fee:",
-    "popularItems": "Popular Items"
+    "popularItems": "Popular Items",
+    "closedWarning": "Restaurant is currently closed",
+    "closedWarningDetail": "This restaurant is not accepting orders at the moment. Please try again later when they are open."
   },
   "discountTags": {
     "FREE_DELIVERY": "FREE DELIVERY",
@@ -216,8 +218,8 @@
     "copyright": "© 2025 Dashi. All rights reserved.",
     "slogan": "Delicious food delivered to your door, anytime and anywhere.",
     "address": "123 Delivery St, Food City, FC 12345",
-    "phone": "+1 (555) 123-4567",
-    "email": "support@dashi.com"
+    "phone": "+243849108485",
+    "email": "dashideliverycorporation@gmail.com"
   },
   "language": {
     "title": "Language",
@@ -670,5 +672,38 @@
       "tryAgain": "Try Again",
       "returnHome": "Return to Home"
     }
+  },
+  "restaurantSettings": {
+    "title": "Settings",
+    "statusOpenLabel": "Open",
+    "statusClosedLabel": "Closed",
+    "toggleStatus": "Toggle restaurant status",
+    "tooltipOpen": "Your restaurant is currently open and accepting orders. Toggle to close.",
+    "tooltipClosed": "Your restaurant is closed. Customers cannot place orders when you are closed. Toggle to open.",
+    "statusOpenSuccess": "Restaurant is now open",
+    "statusClosedSuccess": "Restaurant is now closed",
+    "statusUpdateDetail": "Status has been updated successfully",
+    "statusUpdateError": "Failed to update restaurant status",
+    "statusUpdateErrorDetail": "Please try again later",
+    "updateSuccess": "Restaurant settings updated successfully",
+    "updateSuccessDetail": "Your changes have been saved",
+    "updateError": "Failed to update restaurant settings",
+    "updateErrorDetail": "Please check your input and try again",
+    "restaurantImage": "Restaurant Image",
+    "uploadImage": "Upload restaurant image",
+    "imageFileTypes": "PNG, JPG or JPEG, up to 5MB",
+    "imageSelected": "Image selected",
+    "clickToChangeImage": "Click to change image",
+    "name": "Restaurant Name",
+    "category": "Category",
+    "description": "Description",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "address": "Address",
+    "serviceArea": "Service Area",
+    "preparationTime": "Preparation Time",
+    "deliveryFee": "Delivery Fee",
+    "saving": "Saving...",
+    "save": "Save Changes"
   }
 }

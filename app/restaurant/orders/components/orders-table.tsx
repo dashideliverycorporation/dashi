@@ -48,9 +48,9 @@ import {
   ChevronDown,
   ChevronUp,
   Clock,
-  CheckCircle2,
-  Truck,
-  ChefHat
+  Bike,
+  ChefHat,
+  Box
 } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -596,7 +596,7 @@ export default function OrdersTable({
                   <p className="text-2xl font-bold">{data.orders.filter(o => o.status === "DISPATCHED").length}</p>
                 </div>
                 <div className="bg-green-100 p-2 rounded-full">
-                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <Bike className="h-5 w-5 text-green-600" />
                 </div>
               </div>
             </div>
@@ -607,7 +607,7 @@ export default function OrdersTable({
                   <p className="text-2xl font-bold">{data.orders.filter(o => o.status === "DELIVERED").length}</p>
                 </div>
                 <div className="bg-purple-100 p-2 rounded-full">
-                  <Truck className="h-5 w-5 text-purple-600" />
+                  <Box className="h-5 w-5 text-purple-600" />
                 </div>
               </div>
             </div>

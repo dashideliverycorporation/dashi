@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { Instagram, Mail, MapPin, Phone, Twitter } from "lucide-react";
 import { Container } from "./Container";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -33,13 +33,13 @@ export function Footer() {
             </p>
             <div className="flex space-x-4">
               <Link
-                href="https://facebook.com"
+                href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-orange-500 transition-colors"
                 aria-label="Visit our Facebook page"
               >
-                <Facebook size={20} />
+                <Twitter size={20} />
               </Link>
               <Link
                 href="https://instagram.com"
@@ -48,7 +48,7 @@ export function Footer() {
                 className="hover:text-orange-500 transition-colors"
                 aria-label="Visit our Instagram page"
               >
-                <Instagram size={20} />{" "}
+                <Instagram size={20} />
               </Link>
             </div>
           </div>
@@ -67,13 +67,13 @@ export function Footer() {
               <div className="flex items-start">
                 <Phone className="mr-2 h-5 w-5 flex-shrink-0 mt-0.5" />
                 <span className="text-gray-300">
-                  {isClient ? t("footer.phone", "+1 (555) 123-4567") : "+1 (555) 123-4567"}
+                  {isClient ? t("footer.phone", "+243849108485") : "+243849108485"}
                 </span>
               </div>
               <div className="flex items-start">
                 <Mail className="mr-2 h-5 w-5 flex-shrink-0 mt-0.5" />
                 <span className="text-gray-300">
-                  {isClient ? t("footer.email", "support@dashi.com") : "support@dashi.com"}
+                  {isClient ? t("footer.email", "dashideliverycorporation@gmail.com") : "dashideliverycorporation@gmail.com"}
                 </span>
               </div>
             </div>{" "}

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { Header } from "@/components/restaurant/Header";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { trpc } from "@/lib/trpc/client";
+import { WhatsAppSupportButton } from "@/components/custom/whatsapp-support-button";
 
 export default function RestaurantLayout({
   children,
@@ -62,6 +63,7 @@ export default function RestaurantLayout({
         {/* Page Content with theme-aware background */}
         <ScrollArea className="flex-1 overflow-hidden p-6 md:p-8 rounded-md">
           {children}
+           <WhatsAppSupportButton/>
         </ScrollArea>
       </div>
     </div>

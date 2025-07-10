@@ -8633,6 +8633,7 @@ export namespace Prisma {
     rating: number | null
     ratingCount: number | null
     isActive: boolean | null
+    isOpen: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -8654,6 +8655,7 @@ export namespace Prisma {
     rating: number | null
     ratingCount: number | null
     isActive: boolean | null
+    isOpen: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -8675,6 +8677,7 @@ export namespace Prisma {
     rating: number
     ratingCount: number
     isActive: number
+    isOpen: number
     deletedAt: number
     createdAt: number
     updatedAt: number
@@ -8710,6 +8713,7 @@ export namespace Prisma {
     rating?: true
     ratingCount?: true
     isActive?: true
+    isOpen?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -8731,6 +8735,7 @@ export namespace Prisma {
     rating?: true
     ratingCount?: true
     isActive?: true
+    isOpen?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -8752,6 +8757,7 @@ export namespace Prisma {
     rating?: true
     ratingCount?: true
     isActive?: true
+    isOpen?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -8860,6 +8866,7 @@ export namespace Prisma {
     rating: number
     ratingCount: number
     isActive: boolean
+    isOpen: boolean
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -8900,6 +8907,7 @@ export namespace Prisma {
     rating?: boolean
     ratingCount?: boolean
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8925,6 +8933,7 @@ export namespace Prisma {
     rating?: boolean
     ratingCount?: boolean
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8946,6 +8955,7 @@ export namespace Prisma {
     rating?: boolean
     ratingCount?: boolean
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8967,12 +8977,13 @@ export namespace Prisma {
     rating?: boolean
     ratingCount?: boolean
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RestaurantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "email" | "phoneNumber" | "address" | "serviceArea" | "imageUrl" | "category" | "preparationTime" | "deliveryFee" | "discountTag" | "rating" | "ratingCount" | "isActive" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurant"]>
+  export type RestaurantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "email" | "phoneNumber" | "address" | "serviceArea" | "imageUrl" | "category" | "preparationTime" | "deliveryFee" | "discountTag" | "rating" | "ratingCount" | "isActive" | "isOpen" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurant"]>
   export type RestaurantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     menuItems?: boolean | Restaurant$menuItemsArgs<ExtArgs>
     orders?: boolean | Restaurant$ordersArgs<ExtArgs>
@@ -9005,6 +9016,7 @@ export namespace Prisma {
       rating: number
       ratingCount: number
       isActive: boolean
+      isOpen: boolean
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -9449,6 +9461,7 @@ export namespace Prisma {
     readonly rating: FieldRef<"Restaurant", 'Float'>
     readonly ratingCount: FieldRef<"Restaurant", 'Int'>
     readonly isActive: FieldRef<"Restaurant", 'Boolean'>
+    readonly isOpen: FieldRef<"Restaurant", 'Boolean'>
     readonly deletedAt: FieldRef<"Restaurant", 'DateTime'>
     readonly createdAt: FieldRef<"Restaurant", 'DateTime'>
     readonly updatedAt: FieldRef<"Restaurant", 'DateTime'>
@@ -14810,6 +14823,7 @@ export namespace Prisma {
     rating: 'rating',
     ratingCount: 'ratingCount',
     isActive: 'isActive',
+    isOpen: 'isOpen',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -15465,6 +15479,7 @@ export namespace Prisma {
     rating?: FloatFilter<"Restaurant"> | number
     ratingCount?: IntFilter<"Restaurant"> | number
     isActive?: BoolFilter<"Restaurant"> | boolean
+    isOpen?: BoolFilter<"Restaurant"> | boolean
     deletedAt?: DateTimeNullableFilter<"Restaurant"> | Date | string | null
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
     updatedAt?: DateTimeFilter<"Restaurant"> | Date | string
@@ -15489,6 +15504,7 @@ export namespace Prisma {
     rating?: SortOrder
     ratingCount?: SortOrder
     isActive?: SortOrder
+    isOpen?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15516,6 +15532,7 @@ export namespace Prisma {
     rating?: FloatFilter<"Restaurant"> | number
     ratingCount?: IntFilter<"Restaurant"> | number
     isActive?: BoolFilter<"Restaurant"> | boolean
+    isOpen?: BoolFilter<"Restaurant"> | boolean
     deletedAt?: DateTimeNullableFilter<"Restaurant"> | Date | string | null
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
     updatedAt?: DateTimeFilter<"Restaurant"> | Date | string
@@ -15540,6 +15557,7 @@ export namespace Prisma {
     rating?: SortOrder
     ratingCount?: SortOrder
     isActive?: SortOrder
+    isOpen?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15569,6 +15587,7 @@ export namespace Prisma {
     rating?: FloatWithAggregatesFilter<"Restaurant"> | number
     ratingCount?: IntWithAggregatesFilter<"Restaurant"> | number
     isActive?: BoolWithAggregatesFilter<"Restaurant"> | boolean
+    isOpen?: BoolWithAggregatesFilter<"Restaurant"> | boolean
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Restaurant"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
@@ -16369,6 +16388,7 @@ export namespace Prisma {
     rating?: number
     ratingCount?: number
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16393,6 +16413,7 @@ export namespace Prisma {
     rating?: number
     ratingCount?: number
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16417,6 +16438,7 @@ export namespace Prisma {
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    isOpen?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16441,6 +16463,7 @@ export namespace Prisma {
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    isOpen?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16465,6 +16488,7 @@ export namespace Prisma {
     rating?: number
     ratingCount?: number
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16486,6 +16510,7 @@ export namespace Prisma {
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    isOpen?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16507,6 +16532,7 @@ export namespace Prisma {
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    isOpen?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17384,6 +17410,7 @@ export namespace Prisma {
     rating?: SortOrder
     ratingCount?: SortOrder
     isActive?: SortOrder
+    isOpen?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17411,6 +17438,7 @@ export namespace Prisma {
     rating?: SortOrder
     ratingCount?: SortOrder
     isActive?: SortOrder
+    isOpen?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17432,6 +17460,7 @@ export namespace Prisma {
     rating?: SortOrder
     ratingCount?: SortOrder
     isActive?: SortOrder
+    isOpen?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19287,6 +19316,7 @@ export namespace Prisma {
     rating?: number
     ratingCount?: number
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19310,6 +19340,7 @@ export namespace Prisma {
     rating?: number
     ratingCount?: number
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19384,6 +19415,7 @@ export namespace Prisma {
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    isOpen?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19407,6 +19439,7 @@ export namespace Prisma {
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    isOpen?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19654,6 +19687,7 @@ export namespace Prisma {
     rating?: number
     ratingCount?: number
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19677,6 +19711,7 @@ export namespace Prisma {
     rating?: number
     ratingCount?: number
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19744,6 +19779,7 @@ export namespace Prisma {
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    isOpen?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19767,6 +19803,7 @@ export namespace Prisma {
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    isOpen?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19842,6 +19879,7 @@ export namespace Prisma {
     rating?: number
     ratingCount?: number
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19865,6 +19903,7 @@ export namespace Prisma {
     rating?: number
     ratingCount?: number
     isActive?: boolean
+    isOpen?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19996,6 +20035,7 @@ export namespace Prisma {
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    isOpen?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20019,6 +20059,7 @@ export namespace Prisma {
     rating?: FloatFieldUpdateOperationsInput | number
     ratingCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    isOpen?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
