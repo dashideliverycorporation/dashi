@@ -241,14 +241,18 @@ export function SignInForm(): JSX.Element {
                         </span>
                       </Button>
                     </div>
-                    <div className="relative my-3">
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-300"></div>
-                      </div>
-                      <div className="relative flex justify-center text-sm">
-                        {isClient ? t("signIn.orContinueWith", "Or") : "Or"}
-                      </div>
-                    </div>
+                    
+
+            <div className="relative my-3">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-base">
+              <span className="bg-white px-6 text-gray-500 font-medium">
+                {isClient ? t("signIn.orContinueWith", "Or") : "Or"}
+              </span>
+            </div>
+            </div>
          
           <div className="space-y-4">
             <FormField

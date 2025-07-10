@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Moon, Sun} from "lucide-react";
+import { LogOut} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LanguageSwitcher from "../i18n/LanguageSwitcher";
 type HeaderProps = {
@@ -21,7 +21,7 @@ type HeaderProps = {
 };
 
 export function Header({ restaurantName, username, email }: HeaderProps) {
-  const { setTheme } = useTheme();
+  // const { setTheme } = useTheme();
   const handleLogout = async () => {
     await signOut({ redirect: true, callbackUrl: "/signin" });
   };
@@ -67,7 +67,7 @@ export function Header({ restaurantName, username, email }: HeaderProps) {
               <span className="text-xs text-muted-foreground">{email}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <DropdownMenuItem className="flex items-center gap-2 text-sm font-medium rounded-md p-2 cursor-pointer">
                   <span className="relative flex items-center gap-2 ">
@@ -89,7 +89,7 @@ export function Header({ restaurantName, username, email }: HeaderProps) {
                   System
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
             <DropdownMenuItem
               onClick={handleLogout}
               className="cursor-pointer rounded-md"

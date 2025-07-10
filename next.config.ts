@@ -24,6 +24,16 @@ const nextConfig: NextConfig = {
         hostname: "dashi-restaurant-menu.s3.eu-north-1.amazonaws.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        pathname: "/**",
+      },
     ],
   },
 };
