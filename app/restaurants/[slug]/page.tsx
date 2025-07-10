@@ -12,6 +12,7 @@ import { Footer } from "@/components/layout/Footer";
 import { useCart } from "@/components/cart/use-cart";
 import CartSheet from "@/components/cart/CartSheet";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
+import { MenuPopup } from "./components/menu-popup";
 import { trpc } from "@/lib/trpc/client";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -44,6 +45,8 @@ function translateDiscountTag(tag: string, exists: (key: string) => boolean, t: 
 export default function RestaurantMenuPage() {
   const { slug } = useParams() as { slug: string };
   const [activeCategory, setActiveCategory] = useState("popular");
+  const [selectedMenuItem, setSelectedMenuItem] = useState(null);
+  const [isMenuPopupOpen, setIsMenuPopupOpen] = useState(false);
   const { t, exists } = useTranslation();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { itemCount } = useCart();
@@ -60,6 +63,13 @@ export default function RestaurantMenuPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
+  };
+
+  // Handle menu item click
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleMenuItemClick = (item: any) => {
+    setSelectedMenuItem(item);
+    setIsMenuPopupOpen(true);
   };
 
   if (isLoading) {
@@ -193,7 +203,11 @@ export default function RestaurantMenuPage() {
                   activeCategory === "popular"
               )
               .map((item) => (
-                <div key={item.id} className="flex items-start pb-4">
+                <div 
+                  key={item.id} 
+                  className="flex items-start pb-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                  onClick={() => handleMenuItemClick(item)}
+                >
                   <div className="w-24 h-24 lg:w-22 lg:h-22 relative rounded-lg overflow-hidden mr-4 flex-shrink-0">
                     <Image
                       src={item.imageUrl || "/image_placeholder.png"}
@@ -216,12 +230,12 @@ export default function RestaurantMenuPage() {
                           id: item.id,
                           name: item.name,
                           price: item.price,
-                          imageUrl: item.imageUrl,
+                          imageUrl: item.imageUrl || undefined,
                         }}
                         restaurantId={restaurant.id}
                         restaurantName={restaurant.name}
                         deliveryFee={parseFloat(restaurant.deliveryFee as string)}
-                        
+                        onClick={(e) => e.stopPropagation()}
                       />
                     </div>
                   </div>
@@ -244,6 +258,19 @@ export default function RestaurantMenuPage() {
         </div>
       )}{" "}
       <CartSheet open={isCartOpen} onOpenChange={setIsCartOpen} />
+      
+      {/* Menu Item Popup */}
+      {selectedMenuItem && (
+        <MenuPopup
+          item={selectedMenuItem}
+          restaurantId={restaurant.id}
+          restaurantName={restaurant.name}
+          deliveryFee={parseFloat(restaurant.deliveryFee as string)}
+          open={isMenuPopupOpen}
+          onOpenChange={setIsMenuPopupOpen}
+        />
+      )}
+      
       <Footer />
     </div>
   );
