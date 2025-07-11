@@ -12,6 +12,7 @@ import { Footer } from "@/components/layout/Footer";
 import { useCart } from "@/components/cart/use-cart";
 import CartSheet from "@/components/cart/CartSheet";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
+import { toastNotification } from "@/components/custom/toast-notification";
 import { MenuPopup } from "./components/menu-popup";
 import { trpc } from "@/lib/trpc/client";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -235,7 +236,13 @@ export default function RestaurantMenuPage() {
                         restaurantId={restaurant.id}
                         restaurantName={restaurant.name}
                         deliveryFee={parseFloat(restaurant.deliveryFee as string)}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={e => {
+                          e.stopPropagation();
+                          toastNotification.success(
+                            "Added to cart",
+                            `${item.name} has been added to your cart.`
+                          );
+                        }}
                       />
                     </div>
                   </div>

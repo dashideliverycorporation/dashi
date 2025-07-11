@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
+import { toastNotification } from "@/components/custom/toast-notification";
 
 interface MenuItem {
   id: string;
@@ -84,7 +85,6 @@ export function MenuPopup({
             <span className="text-2xl font-bold text-gray-900">
               ${item.price.toFixed(2)}
             </span>
-            
             <AddToCartButton
               item={{
                 id: item.id,
@@ -96,7 +96,14 @@ export function MenuPopup({
               restaurantName={restaurantName}
               deliveryFee={deliveryFee}
               isPopupButton
-              onClick={() => onOpenChange(false)}
+              onClick={() => {
+                toastNotification.success(
+                  "Added to cart",
+                  `${item.name} has been added to your cart.`
+                );
+                // Delay closing popup slightly to ensure toast is visible
+                setTimeout(() => onOpenChange(false), 200);
+              }}
             />
           </div>
         </div>

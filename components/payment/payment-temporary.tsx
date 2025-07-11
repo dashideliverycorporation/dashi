@@ -76,6 +76,7 @@ export function TemporaryPaymentForm({
 }: TemporaryPaymentFormProps) {
   const { t } = useTranslation();
   const { state } = useCart();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [restaurantPhone, setRestaurantPhone] = useState<string | null>(null);
   const { restaurantId } = state;
   
@@ -117,34 +118,27 @@ export function TemporaryPaymentForm({
         className="space-y-2"
       >
         <div className="space-y-2">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-2xl font-bold mb-2">
             {t("payment.mobileMoneyTitle", "Mobile Money Payment")}
           </h2>
-          {/* ...existing code... */}
-          <Card className="border-none shadow-none">
-            <CardHeader className="bg-orange-50 border-b border-orange-100 p-4 rounded-md">
+          <Card className="border-none shadow-none m-0 p-0">
+            <CardHeader className="border-b border-orange-100 p-0 rounded-md">
               {isLoading ? (
-                <div className="w-full">
+                <div className="w-full p-4">
                   <span className="inline-block h-6 w-1/2 bg-orange-100 rounded animate-pulse mb-2" />
                   <div>
                     <span className="inline-block h-5 w-2/3 bg-orange-100 rounded animate-pulse" />
                   </div>
                 </div>
               ) : (
-                <>
-                  <CardTitle className="text-lg text-orange-900 flex items-center gap-2">
-                    {/* <Phone className="h-5 w-5" /> */}
-                    {t("payment.restaurantPaymentDetails", "Restaurant Payment Details")}
-                  </CardTitle>
-                  <CardDescription className="text-orange-700">
-                    {t("payment.transferInstructions", {
-                      amount: (state.subtotal + state.deliveryFee).toFixed(2),
-                      number: restaurantPhone || t("common.unavailable", "Unavailable"),
-                    })}
-                  </CardDescription>
-                </>
+                <CardDescription className="text-lg text-black m-0">
+                  {t("payment.transferInstructions", {
+                    amount: 'FRW 6,300',
+                    number: '0780776255',
+                  })}
+                </CardDescription>
               )}
-            </CardHeader>  
+            </CardHeader>
           </Card>
           {!showPaymentCard && <Button className="w-full font-bold text-lg" type="button" onClick={() => setShowPaymentCard(true)}>Continue</Button>}
               {showPaymentCard && <Separator className="my-4"/>}
