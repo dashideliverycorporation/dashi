@@ -95,7 +95,8 @@ export function MenuPopup({
               restaurantId={restaurantId}
               restaurantName={restaurantName}
               deliveryFee={deliveryFee}
-                isPopupButton
+              isPopupButton
+              onClick={() => onOpenChange(false)}
             />
           </div>
         </div>

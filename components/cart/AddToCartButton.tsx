@@ -19,6 +19,7 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   deliveryFee = 0,
   onClick,
   isPopupButton = false,
+  
 }) => {
   const { addItem } = useCart();
 

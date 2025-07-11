@@ -104,8 +104,6 @@ export default function PaymentPage() {
         payment: {
           paymentMethod: "mobile_money" as const,
           mobileNumber: data.mobileNumber,
-          transactionId: data.transactionId,
-          providerName: data.providerName
         },
         items: state.items,
         restaurantId: state.restaurantId,
