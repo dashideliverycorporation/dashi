@@ -25,8 +25,6 @@ export type CheckoutFormValues = z.infer<typeof checkoutSchema>;
 export const mobileMoneyPaymentSchema = z.object({
   paymentMethod: z.literal("mobile_money"),
   mobileNumber: z.string().min(10),
-  transactionId: z.string().min(6).max(20),
-  providerName: z.string().min(2).optional(),
 });
 
 /**

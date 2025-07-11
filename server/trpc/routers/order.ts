@@ -178,22 +178,20 @@ export const orderRouter = router({
             data: orderItemsData,
           });
           
-          // Create payment transaction record
-          if (payment.paymentMethod === "mobile_money") {
-            await tx.paymentTransaction.create({
-              data: {
-                orderId: createdOrder!.id,
-                amount: total.toString(), // Convert to string for proper Decimal handling
-                paymentMethod: PaymentMethod.MOBILE_MONEY,
-                status: PaymentStatus.PENDING, // Payments start as pending until confirmed by restaurant
-                transactionId: payment.transactionId,
-                mobileNumber: payment.mobileNumber,
-                providerName: payment.providerName || "", // Ensure providerName is not null/undefined
-                customerId: customer.id,
-                restaurantId,
-              },
-            });
-          }
+        // Create payment transaction record
+        if (payment.paymentMethod === "mobile_money") {
+          await tx.paymentTransaction.create({
+            data: {
+              orderId: createdOrder!.id,
+              amount: total.toString(), // Convert to string for proper Decimal handling
+              paymentMethod: PaymentMethod.MOBILE_MONEY,
+              status: PaymentStatus.PENDING, // Payments start as pending until confirmed by restaurant
+              mobileNumber: payment.mobileNumber,
+              customerId: customer.id,
+              restaurantId,
+            },
+          });
+        }
           
           return createdOrder;
         });
@@ -221,8 +219,6 @@ export const orderRouter = router({
           payment: payment.paymentMethod === "mobile_money" ? {
             method: PaymentMethod.MOBILE_MONEY,
             mobileNumber: payment.mobileNumber,
-            providerName: payment.providerName,
-            transactionId: payment.transactionId,
           } : undefined,
         });
         
@@ -268,8 +264,6 @@ export const orderRouter = router({
               payment: payment.paymentMethod === "mobile_money" ? {
                 method: PaymentMethod.MOBILE_MONEY,
                 mobileNumber: payment.mobileNumber,
-                providerName: payment.providerName,
-                transactionId: payment.transactionId,
               } : undefined,
             });
             

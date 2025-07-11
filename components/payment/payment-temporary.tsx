@@ -28,6 +28,7 @@ import {
 import {
   CheckCircle,
 } from "lucide-react";
+import { Separator } from "../ui/separator";
 // import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 /**
@@ -37,20 +38,15 @@ const mobileMoneySchema = z.object({
   mobileNumber: z
     .string()
     .min(10, { message: "Mobile number must be at least 10 digits" })
-    .regex(/^\d+$/, { message: "Mobile number must contain only digits" }),
-  transactionId: z
-    .string()
-    .min(6, { message: "Transaction ID must be at least 6 characters" })
-    .max(20, { message: "Transaction ID cannot exceed 20 characters" }),
-  providerName: z
-    .string()
-    .min(2, { message: "Provider name is required" }),
+    .regex(/^[\d]+$/, { message: "Mobile number must contain only digits" }),
 });
 
 /**
  * Type for mobile money form values
  */
-export type MobileMoneyFormValues = z.infer<typeof mobileMoneySchema>;
+export type MobileMoneyFormValues = {
+  mobileNumber: string;
+};
 
 /**
  * Props for the TemporaryPaymentForm component
@@ -103,8 +99,6 @@ export function TemporaryPaymentForm({
     resolver: zodResolver(mobileMoneySchema),
     defaultValues: {
       mobileNumber: "",
-      transactionId: "",
-      providerName: "",
     },
   });
 
@@ -115,227 +109,151 @@ export function TemporaryPaymentForm({
     onSubmit(values);
   };
 
+  const [showPaymentCard, setShowPaymentCard] = useState(false);
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-8"
+        className="space-y-2"
       >
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold">
+        <div className="space-y-2">
+          <h2 className="text-xl font-bold">
             {t("payment.mobileMoneyTitle", "Mobile Money Payment")}
           </h2>
-          
-          {/* <Alert className="bg-blue-50 text-blue-800 border-blue-200">
-            <AlertCircle className="h-5 w-5" />
-            <AlertTitle className="font-semibold">
-              {t("payment.temporaryNotice", "Temporary Payment Solution")}
-            </AlertTitle>
-            <AlertDescription className="text-blue-700">
-              {t(
-                "payment.temporaryDescription",
-                "This is a temporary payment solution. Please follow the instructions below to complete your payment."
-              )}
-            </AlertDescription>
-          </Alert> */}
-
+          {/* ...existing code... */}
           <Card className="border-none shadow-none">
             <CardHeader className="bg-orange-50 border-b border-orange-100 p-4 rounded-md">
-              <CardTitle className="text-lg text-orange-900 flex items-center gap-2">
-                {/* <Phone className="h-5 w-5" /> */}
-                {t("payment.restaurantPaymentDetails", "Restaurant Payment Details")}
-              </CardTitle>
-              <CardDescription className="text-orange-700">
-                {t("payment.transferInstructions", "Transfer the total amount to this mobile number")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-0">
               {isLoading ? (
-                <div className="flex items-center justify-center h-10 animate-pulse">
-                  <p>{t("common.loading", "Loading...")}</p>
+                <div className="w-full">
+                  <span className="inline-block h-6 w-1/2 bg-orange-100 rounded animate-pulse mb-2" />
+                  <div>
+                    <span className="inline-block h-5 w-2/3 bg-orange-100 rounded animate-pulse" />
+                  </div>
                 </div>
               ) : (
-                <div className="space-y-2 w-full">
-                  <div className="flex gap-2 flex-wrap">
-                    <h3 className="font-medium text-base text-gray-700">
-                      {t("restaurant.name", "Restaurant")}:
-                    </h3>
-                    <p className="text-base font-semibold">{state.restaurantName}</p>
-                  </div>
-                  
-                  <div className="flex gap-2 flex-wrap">
-                    <h3 className="font-medium text-base text-gray-700">
-                      {t("restaurant.phoneNumber", "Mobile Money Number")}:
-                    </h3>
-                    <p className="text-base font-semibold flex items-center gap-2">
-                      {/* <Smartphone className="h-5 w-5 text-orange-500" /> */}
-                      {restaurantPhone || t("common.unavailable", "Unavailable")}
-                    </p>
-                  </div>
-                  
-                  <div className="flex gap-4 flex-wrap">
-                    <h3 className="font-medium text-base text-gray-700">
-                      {t("payment.amountToSend", "Amount to Send")}:
-                    </h3>
-                    <p className="text-base font-bold text-orange-600">
-                      ${(state.subtotal + state.deliveryFee).toFixed(2)}
-                    </p>
-                  </div>
-                  
-                  {/* <div className="h-px w-full bg-gray-200 my-4"></div> */}
-                  
-                  {/* <div className="bg-yellow-50 p-4 rounded-md ">
-                    <h3 className="font-medium text-yellow-800">
-                      {t("payment.instructions", "Payment Instructions")}:
-                    </h3>
-                    <ol className="list-decimal list-inside space-y-2 mt-2 text-yellow-700">
-                      <li>{t("payment.step1", "Open your mobile money app")}</li>
-                      <li>
-                        {t(
-                          "payment.step2",
-                          "Send the exact amount shown above to the restaurant's number"
-                        )}
-                      </li>
-                      <li>
-                        {t(
-                          "payment.step3",
-                          "Note the transaction ID/reference from your mobile money confirmation"
-                        )}
-                      </li>
-                      <li>
-                        {t(
-                          "payment.step4",
-                          "Enter the transaction ID below to complete your order"
-                        )}
-                      </li>
-                    </ol>
-                  </div> */}
-                </div>
+                <>
+                  <CardTitle className="text-lg text-orange-900 flex items-center gap-2">
+                    {/* <Phone className="h-5 w-5" /> */}
+                    {t("payment.restaurantPaymentDetails", "Restaurant Payment Details")}
+                  </CardTitle>
+                  <CardDescription className="text-orange-700">
+                    {t("payment.transferInstructions", {
+                      amount: (state.subtotal + state.deliveryFee).toFixed(2),
+                      number: restaurantPhone || t("common.unavailable", "Unavailable"),
+                    })}
+                  </CardDescription>
+                </>
               )}
-            </CardContent>
+            </CardHeader>  
           </Card>
+          {!showPaymentCard && <Button className="w-full font-bold text-lg" type="button" onClick={() => setShowPaymentCard(true)}>Continue</Button>}
+              {showPaymentCard && <Separator className="my-4"/>}
+          {showPaymentCard && (
+            <Card className="p-0 md:p-6 border-none shadow-none md:shadow-sm">
+              <CardHeader className="p-0">
+                <CardTitle className="text-lg">
+                  {t("payment.confirmPayment", "Confirm Your Payment")}
+                </CardTitle>
+                <CardDescription>
+                  {t(
+                    "payment.enterDetails",
+                    "Enter the mobile money number you used to transfer the amount above"
+                  )}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 p-0">
+                <FormField
+                  control={form.control}
+                  name="mobileNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium">
+                        {t("payment.yourMobileNumber", "Your Mobile Number")}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={t(
+                            "payment.enterMobileNumber",
+                            "Enter the number you used for payment"
+                          )}
+                          type="tel"
+                          className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <Card className="p-0 md:p-6 border-none shadow-none md:shadow-sm">
-            <CardHeader className="p-0">
-              <CardTitle className="text-lg">
-                {t("payment.confirmPayment", "Confirm Your Payment")}
-              </CardTitle>
-              <CardDescription>
-                {t(
-                  "payment.enterDetails",
-                  "Enter your details and the transaction ID to complete the order"
-                )}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 p-0">
-              <FormField
-                control={form.control}
-                name="mobileNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-medium">
-                      {t("payment.yourMobileNumber", "Your Mobile Number")}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t(
-                          "payment.enterMobileNumber",
-                          "Enter the number you used for payment"
-                        )}
-                        type="tel"
-                        className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    {/* <FormDescription>
-                      {t(
-                        "payment.mobileNumberDescription",
-                        "The mobile number you used to make the payment"
-                      )}
-                    </FormDescription> */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                {/* <FormField
+                  control={form.control}
+                  name="transactionId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium">
+                        {t("payment.transactionId", "Transaction ID/Reference")}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={t(
+                            "payment.enterTransactionId",
+                            "Enter the transaction ID"
+                          )}
+                          className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                          {...field}
+                        />
+                      </FormControl>
+                     
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                /> */}
 
-              <FormField
-                control={form.control}
-                name="transactionId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-medium">
-                      {t("payment.transactionId", "Transaction ID/Reference")}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t(
-                          "payment.enterTransactionId",
-                          "Enter the transaction ID"
-                        )}
-                        className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    {/* <FormDescription>
-                      {t(
-                        "payment.transactionIdDescription",
-                        "The reference or ID provided after completing your mobile money payment"
-                      )}
-                    </FormDescription> */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="providerName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-medium">
-                      {t("payment.providerName", "Mobile Money Provider")}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t(
-                          "payment.enterProviderName",
-                          "Enter your mobile money provider name"
-                        )}
-                        className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    {/* <FormDescription>
-                      {t(
-                        "payment.providerNameDescription",
-                        "The mobile money provider you used (e.g., Vodacom, Orange, Airtel)"
-                      )}
-                    </FormDescription> */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-            <div>
-              <Button
-                type="submit"
-                className="w-full py-6 text-lg font-bold transition-all text-white bg-orange-600 hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center gap-2">
-                    <div className="h-5 w-5 border-t-2 border-r-2 border-white rounded-full animate-spin"></div>
-                    {t("payment.processing", "Processing...")}
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5" />
-                    {t("payment.completeOrder", "Complete Order")}
-                  </div>
-                )}
-              </Button>
-            </div>
-          </Card>
+                {/* <FormField
+                  control={form.control}
+                  name="providerName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium">
+                        {t("payment.providerName", "Mobile Money Provider")}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={t(
+                            "payment.enterProviderName",
+                            "Enter your mobile money provider name"
+                          )}
+                          className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                /> */}
+              </CardContent>
+              <div>
+                <Button
+                  type="submit"
+                  className="w-full py-6 text-lg font-bold transition-all text-white bg-orange-600 hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center gap-2">
+                      <div className="h-5 w-5 border-t-2 border-r-2 border-white rounded-full animate-spin"></div>
+                      {t("payment.processing", "Processing...")}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5" />
+                      {t("payment.completeOrder", "Complete Order")}
+                    </div>
+                  )}
+                </Button>
+              </div>
+            </Card>
+          )}
         </div>
       </form>
     </Form>
