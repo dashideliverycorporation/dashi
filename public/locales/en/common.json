@@ -277,7 +277,7 @@
     "temporaryNotice": "Temporary Payment Solution",
     "temporaryDescription": "This is a temporary payment solution. Please follow the instructions below to complete your payment.",
     "restaurantPaymentDetails": "Payment Details",
-    "transferInstructions": "Transfer ${{amount}} to {{number}} using mobile money after press the continue button",
+    "transferInstructions": "Transfer {{amount}} to {{number}} using mobile money after press the continue button",
     "amountToSend": "Amount to Send",
     "instructions": "Payment Instructions",
     "step1": "Open your mobile money app",
